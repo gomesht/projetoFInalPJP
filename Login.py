@@ -19,7 +19,11 @@ def Login(email, senha):
         cursor.execute('SELECT email,senha FROM cadastro')
         for item in cursor.fetchall():
             if email == item[0] and senha == item[1]:
-                validador = 1
-                break
+                cursor.close()
+                conexao.close()
+                return True
+                
             else:
-                validador = 2
+                cursor.close()
+                conexao.close()
+                return False
