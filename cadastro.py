@@ -28,6 +28,24 @@ def cadastro():
     
     usuario = Cadastro(nome, endereco, cpf, telefone, email, senha, tipo_de_conta)
 def criarTabelas():
-    conexao = 
-def armazenarNoDB():
+    conexao = sqlite3.connect("DataBase.db")
+    cursor = conexao.cursor()
+    cursor.execute('CREATE TABLE IF NOT EXISTS cadastro('
+    'id	INTEGER,'
+	'nome	TEXT NOT NULL,'
+	'endereco	TEXT NOT NULL,'
+	'cpf	TEXT NOT NULL UNIQUE,'
+	'telefone	TEXT NOT NULL,'
+	'email	TEXT NOT NULL UNIQUE,'
+	'tipo_de_conta	INTEGER NOT NULL,'
+	'senha	TEXT NOT NULL,'
+	'PRIMARY KEY(id AUTOINCREMENT)'
+    ')')
+    cursor.execute('CREATE TABLE IF NOT EXISTS Livros('
+
+        ')')
+    ...
+
+def armazenar():
+
     ...
