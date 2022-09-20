@@ -1,20 +1,19 @@
 import sqlite3
 
-def Login():
+def Login(email, senha):
     conexao = sqlite3.connect("cadastro_de_usuarios.db")
     cursor = conexao.cursor()
     validador = 0
+
     while True:
         if validador == 1:
             break
         if validador == 2:
-            print('\nEmail ou senha incorretos\n')
+            raise ValueError("Email ou senha Incorretos")
         while True: 
-            email = str(input('Email: ')).lower()
             if email != "":
                 break
         while True:
-            senha = str(input('Senha: '))
             if senha != "":
                 break
         cursor.execute('SELECT email,senha FROM cadastro')
@@ -24,17 +23,3 @@ def Login():
                 break
             else:
                 validador = 2
-
-Login()
-                
-
-
-        
-
-
-
-
-
-
-
-
