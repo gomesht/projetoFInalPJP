@@ -13,20 +13,14 @@ class Cadastro:
         ...
 
 
-def cadastro():
-    tipo_de_conta = int(input("Tipo de conta(0 admin/ 1 usuário "))
-    nome = input("Nome: ")
-    cpf = input("CPF: ")
-    endereco = input("Endereço: ")
-    telefone = input("Telefone: ")
-    email = input("E-mail: ")
-    while True:
-        senha = input("Senha: ")
-        confirma_senha = input("Digite a senha novamente: ")
-        if senha == confirma_senha:
-            break
-    
+def cadastro(tipo_de_conta, nome, cpf, endereco, telefone, email, senha):
+    # while True:
+    #     senha = input("Senha: ")
+    #     confirma_senha = input("Digite a senha novamente: ")
+    #     if senha == confirma_senha:
+    #         break
     usuario = Cadastro(nome, endereco, cpf, telefone, email, senha, tipo_de_conta)
+
 def criarTabelas():
     conexao = sqlite3.connect("DataBase.db")
     cursor = conexao.cursor()
@@ -42,6 +36,14 @@ def criarTabelas():
 	'PRIMARY KEY(id AUTOINCREMENT)'
     ')')
     cursor.execute('CREATE TABLE IF NOT EXISTS Livros('
+    'Nome	TEXT NOT NULL,'
+	'Autor	TEXT NOT NULL,'
+	'Gênero	TEXT,'
+	'Quantidade	INTEGER NOT NULL,'
+	'Código	INTEGER NOT NULL UNIQUE,'
+	'Estante	TEXT,'
+	'Link de Amostra	TEXT,'
+	'PRIMARY KEY(Código AUTOINCREMENT)'
 
         ')')
     ...
