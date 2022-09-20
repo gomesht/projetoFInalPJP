@@ -1,6 +1,7 @@
 import sqlite3
 
 def inicializar():
+    """ Inicializa o cursor do sql. Use isto antes de qualquer método deste arquivo"""
     global conexão, cursor
 
     conexão = sqlite3.connect("DataBase.db")
@@ -31,6 +32,8 @@ def getLivros(**filtros):
     return resultados
 
 def fechar():    
+    """ Fecha o cursor do sql. Use isto depois de usar qualquer método deste arquivo"""
+
     cursor.close()
     conexão.close()
 
