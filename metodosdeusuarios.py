@@ -48,4 +48,9 @@ def Login(email, senha):
                 fechar()
                 return False
 
+def remover_usuario(id):
+
+    inicializar
+    cursor.execute('DELETE FROM cadastro WHERE id = ? ', id)
+    fechar()
 
