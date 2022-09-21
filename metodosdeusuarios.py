@@ -48,25 +48,4 @@ def Login(email, senha):
                 fechar()
                 return False
 
-def armazenar():
-
-    ...
-
-def cadastro_livros(l_nome,l_autor,l_genero,l_quantidade,l_estante,l_link_amostra):
-
-
-    conexao = sqlite3.connect("DataBase.db")
-    cursor = conexao.cursor()
-    cursor.execute('INSERT INTO Livros(Nome,Autor,Gênero,Quantidade,Estante,"Link de Amostra") VALUES (?,?,?,?,?,?)',(l_nome,l_autor,l_genero,l_quantidade,l_estante,l_link_amostra))
-    cursor.close()
-    conexao.close()
-
-def remover_livro(codigo):
-    conexao = sqlite3.connect("DataBase.db")
-    cursor = conexao.cursor()
-    cursor.execute('DELETE FROM Livros WHERE Código = ? ', codigo)
-    cursor.close()
-    conexao.close()
-
-cadastro_livros('O Bartolomeu','Jiroba Schuteke','Romance',2,'A','Algo')
 
