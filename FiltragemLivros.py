@@ -2,10 +2,10 @@ import sqlite3
 
 def inicializar():
     """ Inicializa o cursor do sql. Use isto antes de qualquer método deste arquivo"""
-    global conexão, cursor
+    global conexao, cursor
 
-    conexão = sqlite3.connect("DataBase.db")
-    cursor = conexão.cursor()
+    conexao = sqlite3.connect("DataBase.db")
+    cursor = conexao.cursor()
 
 def getLivros(**filtros):
     """ Retorna os valores encontrados na tabela livros que são iguais aos valores entrados. A key de entrada deve ser igual ao nome da coluna procurada e o valor o valor a ser encontrado. 
@@ -48,7 +48,7 @@ def fechar():
     """ Fecha o cursor do sql. Use isto depois de usar qualquer método deste arquivo """
 
     cursor.close()
-    conexão.close()
+    conexao.close()
 
 
 inicializar()

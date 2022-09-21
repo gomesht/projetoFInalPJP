@@ -1,15 +1,15 @@
 import sqlite3
+from FiltragemLivros import inicializar, fechar
+global conexao, cursor
+
 class Cadastro:
     def __init__(self,nome, endereco, cpf, telefone, email, senha, tipo_de_conta) -> None:
-        conexao = sqlite3.connect("DataBase.db")
-        cursor = conexao.cursor()
+        inicializar()
         cursor.execute("INSERT INTO cadastro (nome, endereco, cpf, telefone, email, senha, tipo_de_conta) VALUES (?,?,?,?,?,?,?)",(nome, endereco, cpf, telefone, email, senha, tipo_de_conta))
-        cursor.close()
-        conexao.close()
-        
-def criarTabelas():
-    conexao = sqlite3.connect("DataBase.db")
-    cursor = conexao.cursor()
+        fechar()
+
+def criarTabelasContas():
+    inicializar()
     cursor.execute('CREATE TABLE IF NOT EXISTS cadastro('
     'id	INTEGER,'
 	'nome	TEXT NOT NULL,'
@@ -21,22 +21,10 @@ def criarTabelas():
 	'senha	TEXT NOT NULL,'
 	'PRIMARY KEY(id AUTOINCREMENT)'
     ')')
-    cursor.execute('CREATE TABLE IF NOT EXISTS Livros('
-    'Nome	TEXT NOT NULL,'
-	'Autor	TEXT NOT NULL,'
-	'Gênero	TEXT,'
-	'Código	INTEGER NOT NULL UNIQUE,'
-	'Estante	TEXT,'
-	'Link de Amostra	TEXT,'
-	'PRIMARY KEY(Código AUTOINCREMENT)'
-
-        ')')
-    cursor.close()
-    conexao.close()
+    fechar()
 
 def Login(email, senha):
-    conexao = sqlite3.connect("DataBase.db")
-    cursor = conexao.cursor()
+    inicializar()
     validador = 0
 
     while True:
@@ -53,13 +41,11 @@ def Login(email, senha):
         cursor.execute('SELECT email,senha FROM cadastro')
         for item in cursor.fetchall():
             if email == item[0] and senha == item[1]:
-                cursor.close()
-                conexao.close()
+                fechar()
                 return True
                 
             else:
-                cursor.close()
-                conexao.close()
+                fechar()
                 return False
 
 def armazenar():
