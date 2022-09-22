@@ -10,7 +10,7 @@ class Cadastro:
         cursor.execute("INSERT INTO cadastro (nome, endereco, cpf, telefone, email, senha, tipo_de_conta) VALUES (?,?,?,?,?,?,?)",(nome, endereco, cpf, telefone, email, senha, tipo_de_conta))
         fechar()
 
-def criarTabelasContas():
+def criarTabelaContas():
 
     inicializar()
 
@@ -28,7 +28,7 @@ def criarTabelasContas():
 
     fechar()
 
-def criarTabelasEmprestimos():
+def criarTabelaEmprestimos():
 
     inicializar()
 
@@ -43,7 +43,8 @@ def criarTabelasEmprestimos():
     ')')
 
     fechar()
-
+def criarTabelaSugestoes():
+    pass
 def Login(email, senha):
     """Entrada email e senha de um usuário, saída True se email e senha estiverem corretos e Falso caso contrário."""
 
@@ -51,16 +52,16 @@ def Login(email, senha):
 
     validador = 0
     while True:
-        if validador == 1:
-            break
-        if validador == 2:
-            raise ValueError("Email ou senha Incorretos")
-        while True: 
-            if email != "":
-                break
-        while True:
-            if senha != "":
-                break
+        # if validador == 1:
+        #     break
+        # if validador == 2:
+        #     raise ValueError("Email ou senha Incorretos")
+        # while True: 
+        #     if email != "":
+        #         break
+        # while True:
+        #     if senha != "":
+        #         break
         cursor.execute('SELECT email,senha FROM cadastro')
         for item in cursor.fetchall():
             if email == item[0] and senha == item[1]:

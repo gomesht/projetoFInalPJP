@@ -92,3 +92,7 @@ def getLivros(**filtros):
 # print(getLivros(Nome="teste", Autor="teste", Código = None))
 
 # fechar()
+
+
+
+def sugestao_livros(livro,):
