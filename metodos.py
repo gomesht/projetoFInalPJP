@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import sqlite3, datetime
 global conexao, cursor
 
@@ -47,9 +48,9 @@ def criarTabelaEmprestimos():
     'data_emprestimo BLOB NOT NULL,'
     'data_devolucao BLOB NOT NULL,'
     'id_usuario INTEGER NOT NULL,'
-    'codigo_livro INTEGER NOT NULL'
-    'status TEXT NOT NULL'
-    'FOREIGN KEY (id_usuario) REFERENCES cadastro (id) ON DELETE CASCADE ON UPDATE CASCADE'
+    'codigo_livro INTEGER NOT NULL,'
+    'status TEXT NOT NULL,'
+    'FOREIGN KEY (id_usuario) REFERENCES cadastro (id) ON DELETE CASCADE ON UPDATE CASCADE,'
     'FOREIGN KEY (codigo_livro) REFERENCES Livros (codigo)'
     ')')
 
@@ -81,35 +82,58 @@ def getLivros(**filtros):
     getLivros(Nome="Crime e Castigo", Autor="Dostoievsky")
 
     Isso retornará todos os nomes e os autores dos livros que correspondem ao que foi pedido. Algo como:\n
-    (("Crime e Castigo","Dostoievsky"),("Crime e Castigo","Dostoievsky"),("Crime e Castigo","Dostoievsky"))\n
-
-    Caso você queira que outras informações sejam retornadas, adicione-as com o valor None. Assim, elas serão retornadas entretanto serão ignoradas na filtragem. 
-    Ex:\n
-    getLivros(Nome="Crime e Castigo", Autor="Dostoievsky", Código=None)
-
-    Isso retornará algo como:\n
-    (("Crime e Castigo","Dostoievsky", 996),("Crime e Castigo","Dostoievsky", 0),("Crime e Castigo","Dostoievsky", 20))\n
+    (("Crime e Castigo","Dostoievsky", "ficção", " 1 ", "e1", "http: blabla.com" ),
+    ("Crime e Castigo", "Dostoievsky", "ficção", " 55", "e1", "http: blabla.com" ),
+    ("Crime e Castigo", "Dostoievsky", "ficção", "297", "e1", "http: blabla.com" ))\n
 
     """
-    filtersSTR = ""
-    for filtro in filtros:
-        filtersSTR += filtro + ", "
-    filtersSTR = filtersSTR[0:-2]
 
-    cursor.execute("SELECT " + filtersSTR + " FROM Livros")
+    Nome = None
+    Autor = None
+    Genero = None
+    Codigo = None
+    Estante = None
+    LdeAmostra = None
+    count = 0
+    for filtro in filtros:
+        match filtro:
+            case "Nome":
+                Nome = tuple(filtros.values())[count]
+            case "Autor":
+                Autor = tuple(filtros.values())[count]
+            case "Genero":
+                Genero = tuple(filtros.values())[count]
+            case "Codigo":
+                Codigo = tuple(filtros.values())[count]
+            case "Estante":
+                Estante = tuple(filtros.values())[count]
+            case "Link de Amostra":
+                LdeAmostra = tuple(filtros.values())[count]
+            case _:
+                raise ValueError
+        
+        count += 1
+    
+    valDeFiltragem = [ Nome,Autor,Genero,Codigo,Estante,LdeAmostra ]
+
+    cursor.execute("SELECT * FROM Livros")
 
     resultados = []
     for item in cursor.fetchall():
         i = 0
         Valuable = True
         for index in item:
-            if tuple(filtros.values())[i] != None:
-                if index != tuple(filtros.values())[i]:
+            if valDeFiltragem[i] != None:
+                if index != valDeFiltragem[i]:
                     Valuable = False
                     break
             i += 1
         if Valuable:
             resultados.append(item)
+    
+    for resultado in resultados:
+        resultado = tuple(list(resultado).append(disponibilidadeLivro(resultado[3])))
+
     return resultados
 
 def sugestoes_livros(livro,id_usuario):
@@ -159,8 +183,8 @@ def usuariosComAtraso():
     return cursor.fetchall()
 
 
-def RegistrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status):
-    """"Insere dados de emprestimos para o banco de dados"""
+def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status):
+    """Insere os dados de emprestimos do banco de dados"""
     cursor.execute('INSERT INTO emprestimos (data_emprestimo, data_devoluçao, id_usuario, codigo_livro, status VALUES (?,?,?,?,?)',(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status))
     conexao.commit()
 
@@ -169,4 +193,19 @@ def baixaEmprestimo(codigo):
 
     cursor.execute('UPDATE emprestimos SET status = ? WHERE codigo_livro = ?', ('entregue', codigo))
     conexao.commit()
+
+def renovaçãoEmprestimo(nova_data_devolução,codigo_livro):
+    """Altera os dados de emprestimos do banco de dados"""
+    cursor.execute('UPDATE emprestimos SET data_devoluçao = ? WHERE codigo_livro = ?', (nova_data_devolução,codigo_livro))
+    conexao.commit()
+
+def disponibilidadeLivro(codigo):
+    cursor.execute('SELECT codigo_livro,status FROM emprestimos')
+    for item in cursor.fetchall():
+        if codigo == item[0] and item[1] != "entregue":
+            return item[1]
+    return "disponivel"
+    
+    
+    
 
