@@ -1,6 +1,5 @@
 import sqlite3
 global conexao, cursor
-
 def inicializar():
     """ Inicializa o cursor do sql. Use isto antes de qualquer método deste arquivo"""
     global conexao, cursor
@@ -75,5 +74,10 @@ def getLivros(**filtros):
             resultados.append(item)
     return resultados
 
-def sugestao_livros(livro,):
-    pass
+def sugestoes_livros(livro,id_usuario):
+    cursor.execute('INSERT INTO sugestoes(livro,id_usuario) VALUES (?,?)',(livro,id_usuario))
+    conexao.commit()
+
+
+
+

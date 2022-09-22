@@ -35,28 +35,20 @@ def criarTabelaEmprestimos():
 
 
 def criarTabelaSugestoes():
-    pass
+    cursor.execute('CREATE TABLE IF NOT EXISTS sugestoes ('
+    'livro TEXT NOT NULL,'
+    'id_usuario INTEGER NOT NULL,'
+    'FOREIGN KEY (id_usuario) REFERENCES cadastro (id) ON DELETE CASCADE ON UPDATE CASCADE'
+    ')')
 
 def Login(email, senha):
     """Entrada email e senha de um usuário, saída True se email e senha estiverem corretos e Falso caso contrário."""
 
-    validador = 0
-    while True:
-        # if validador == 1:
-        #     break
-        # if validador == 2:
-        #     raise ValueError("Email ou senha Incorretos")
-        # while True: 
-        #     if email != "":
-        #         break
-        # while True:
-        #     if senha != "":
-        #         break
-        cursor.execute('SELECT email,senha FROM cadastro')
-        for item in cursor.fetchall():
-            if email == item[0] and senha == item[1]:
-                return True              
-        return False
+    cursor.execute('SELECT email,senha FROM cadastro')
+    for item in cursor.fetchall():
+        if email == item[0] and senha == item[1]:
+            return True              
+    return False
 
 def remover_usuario(id):
 
@@ -80,7 +72,7 @@ def usuariosComAtraso():
     cursor.execute('SELECT id_usuario FROM emprestimos WHERE status = ?', 'atrasado')
     return cursor.fetchall()
         
-       
+
 
 
 
