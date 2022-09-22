@@ -21,8 +21,8 @@ def criarTabelaLivros():
     cursor.execute('CREATE TABLE IF NOT EXISTS Livros('
     'Nome	TEXT NOT NULL,'
 	'Autor	TEXT NOT NULL,'
-	'Gênero	TEXT,'
-	'Código	INTEGER NOT NULL UNIQUE,'
+	'Genero	TEXT,'
+	'Codigo	INTEGER NOT NULL UNIQUE,'
 	'Estante	TEXT,'
 	'Link_de_Amostra	TEXT,'
 	'PRIMARY KEY(Código AUTOINCREMENT)'
@@ -73,7 +73,7 @@ def cadastro_livros(l_nome,l_autor,l_genero,l_quantidade,l_estante,l_link_amostr
 
 def remover_livro(codigo):
 
-    cursor.execute('DELETE FROM Livros WHERE Código = ? ', codigo)
+    cursor.execute('DELETE FROM Livros WHERE Código = ? ', (codigo,))
     conexao.commit()
 
 def getLivros(**filtros):
@@ -141,6 +141,7 @@ def sugestoes_livros(livro,id_usuario):
 ########################################################################################
 
 def cadastroUsuario(nome, endereco, cpf, telefone, email, senha, tipo_de_conta):
+    """tipo de conta 0 para admin e 1 para usuários"""
     
     cursor.execute("INSERT INTO cadastro (nome, endereco, cpf, telefone, email, senha, tipo_de_conta) VALUES (?,?,?,?,?,?,?)",(nome, endereco, cpf, telefone, email, senha, tipo_de_conta))
     conexao.commit()
@@ -156,13 +157,14 @@ def Login(email, senha):
 
 def remover_usuario(id):
 
-    cursor.execute('DELETE FROM cadastro WHERE id = ? ', id)
-    conexao.commit()
+    cursor.execute('DELETE FROM cadastro WHERE id = ? ', (id,))
+    cursor.commit()
+
 
 def EmprestimosUsuario(id):
     """Entrada ID do usuário, saída relatório dos emprestimos de livros com código do livro, data de emprestimo e data de devolução"""
 
-    cursor.execute('SELECT codigo_livro, data_emprestimo, data_devolucao FROM emprestimos WHERE id_usuario = ?', id)
+    cursor.execute('SELECT codigo_livro, data_emprestimo, data_devolucao FROM emprestimos WHERE id_usuario = ?', (id,))
     return cursor.fetchall()
 
 def atualizaStatus():
@@ -175,3 +177,31 @@ def usuariosComAtraso():
     """Retorna uma lista com os id dos usuários em atraso"""
     cursor.execute('SELECT id_usuario FROM emprestimos WHERE status = ?', 'atrasado')
     return cursor.fetchall()
+
+
+def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status):
+    """Insere os dados de emprestimos do banco de dados"""
+    cursor.execute('INSERT INTO emprestimos (data_emprestimo, data_devoluçao, id_usuario, codigo_livro, status VALUES (?,?,?,?,?)',(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status))
+    conexao.commit()
+
+
+def baixaEmprestimo(codigo):
+
+    cursor.execute('UPDATE emprestimos SET status = ? WHERE codigo_livro = ?', ('entregue', codigo))
+    conexao.commit()
+
+def renovaçãoEmprestimo(nova_data_devolução,codigo_livro):
+    """Altera os dados de emprestimos do banco de dados"""
+    cursor.execute('UPDATE emprestimos SET data_devoluçao = ? WHERE codigo_livro = ?', (nova_data_devolução,codigo_livro))
+    conexao.commit()
+
+def disponibildiadeLivro(codigo):
+    cursor.execute('SELECT codigo,status FROM emprestimos')
+    for item in cursor.fetchall():
+        if codigo == item[0] and item[1] != "entregue":
+            return item[1]
+    return "disponivel"
+    
+    
+    
+
