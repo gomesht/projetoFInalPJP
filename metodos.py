@@ -124,7 +124,7 @@ def cadastroUsuario(nome, endereco, cpf, telefone, email, senha, tipo_de_conta):
     """tipo de conta 0 para admin e 1 para usuários"""
     
     cursor.execute("INSERT INTO cadastro (nome, endereco, cpf, telefone, email, senha, tipo_de_conta) VALUES (?,?,?,?,?,?,?)",(nome, endereco, cpf, telefone, email, senha, tipo_de_conta))
-    cursor.commit()
+    conexao.commit()
 
 def Login(email, senha):
     """Entrada email e senha de um usuário, saída True se email e senha estiverem corretos e Falso caso contrário."""
@@ -139,6 +139,7 @@ def remover_usuario(id):
 
     cursor.execute('DELETE FROM cadastro WHERE id = ? ', (id,))
     cursor.commit()
+
 
 def EmprestimosUsuario(id):
     """Entrada ID do usuário, saída relatório dos emprestimos de livros com código do livro, data de emprestimo e data de devolução"""
