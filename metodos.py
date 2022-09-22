@@ -123,7 +123,7 @@ def sugestoes_livros(livro,id_usuario):
 def cadastroUsuario(nome, endereco, cpf, telefone, email, senha, tipo_de_conta):
     
     cursor.execute("INSERT INTO cadastro (nome, endereco, cpf, telefone, email, senha, tipo_de_conta) VALUES (?,?,?,?,?,?,?)",(nome, endereco, cpf, telefone, email, senha, tipo_de_conta))
-    cursor.commit()
+    conexao.commit()
 
 def Login(email, senha):
     """Entrada email e senha de um usuário, saída True se email e senha estiverem corretos e Falso caso contrário."""
@@ -137,7 +137,7 @@ def Login(email, senha):
 def remover_usuario(id):
 
     cursor.execute('DELETE FROM cadastro WHERE id = ? ', id)
-    cursor.commit()
+    conexao.commit()
 
 def EmprestimosUsuario(id):
     """Entrada ID do usuário, saída relatório dos emprestimos de livros com código do livro, data de emprestimo e data de devolução"""
