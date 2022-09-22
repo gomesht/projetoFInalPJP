@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import sqlite3, datetime
 global conexao, cursor
 
@@ -81,30 +82,49 @@ def getLivros(**filtros):
     getLivros(Nome="Crime e Castigo", Autor="Dostoievsky")
 
     Isso retornará todos os nomes e os autores dos livros que correspondem ao que foi pedido. Algo como:\n
-    (("Crime e Castigo","Dostoievsky"),("Crime e Castigo","Dostoievsky"),("Crime e Castigo","Dostoievsky"))\n
-
-    Caso você queira que outras informações sejam retornadas, adicione-as com o valor None. Assim, elas serão retornadas entretanto serão ignoradas na filtragem. 
-    Ex:\n
-    getLivros(Nome="Crime e Castigo", Autor="Dostoievsky", Código=None)
-
-    Isso retornará algo como:\n
-    (("Crime e Castigo","Dostoievsky", 996),("Crime e Castigo","Dostoievsky", 0),("Crime e Castigo","Dostoievsky", 20))\n
+    (("Crime e Castigo","Dostoievsky", "ficção", " 1 ", "e1", "http: blabla.com" ),
+    ("Crime e Castigo", "Dostoievsky", "ficção", " 55", "e1", "http: blabla.com" ),
+    ("Crime e Castigo", "Dostoievsky", "ficção", "297", "e1", "http: blabla.com" ))\n
 
     """
-    filtersSTR = ""
-    for filtro in filtros:
-        filtersSTR += filtro + ", "
-    filtersSTR = filtersSTR[0:-2]
 
-    cursor.execute("SELECT " + filtersSTR + " FROM Livros")
+    Nome = None
+    Autor = None
+    Genero = None
+    Codigo = None
+    Estante = None
+    LdeAmostra = None
+    count = 0
+    for filtro in filtros:
+        match filtro:
+            case "Nome":
+                Nome = tuple(filtros.values())[count]
+            case "Autor":
+                Autor = tuple(filtros.values())[count]
+            case "Genero":
+                Genero = tuple(filtros.values())[count]
+            case "Codigo":
+                Codigo = tuple(filtros.values())[count]
+            case "Estante":
+                Estante = tuple(filtros.values())[count]
+            case "Link de Amostra":
+                LdeAmostra = tuple(filtros.values())[count]
+            case _:
+                raise ValueError
+        
+        count += 1
+    
+    valDeFiltragem = [ Nome,Autor,Genero,Codigo,Estante,LdeAmostra ]
+
+    cursor.execute("SELECT * FROM Livros")
 
     resultados = []
     for item in cursor.fetchall():
         i = 0
         Valuable = True
         for index in item:
-            if tuple(filtros.values())[i] != None:
-                if index != tuple(filtros.values())[i]:
+            if valDeFiltragem[i] != None:
+                if index != valDeFiltragem[i]:
                     Valuable = False
                     break
             i += 1
