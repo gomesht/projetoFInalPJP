@@ -159,8 +159,8 @@ def usuariosComAtraso():
     return cursor.fetchall()
 
 
-def RegistrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status):
-    """"Insere dados de emprestimos para o banco de dados"""
+def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status):
+    """Insere os dados de emprestimos do banco de dados"""
     cursor.execute('INSERT INTO emprestimos (data_emprestimo, data_devoluçao, id_usuario, codigo_livro, status VALUES (?,?,?,?,?)',(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status))
     conexao.commit()
 
@@ -169,4 +169,19 @@ def baixaEmprestimo(codigo):
 
     cursor.execute('UPDATE emprestimos SET status = ? WHERE codigo_livro = ?', ('entregue', codigo))
     conexao.commit()
+
+def renovaçãoEmprestimo(nova_data_devolução,codigo_livro):
+    """Altera os dados de emprestimos do banco de dados"""
+    cursor.execute('UPDATE emprestimos SET data_devoluçao = ? WHERE codigo_livro = ?', (nova_data_devolução,codigo_livro))
+    conexao.commit()
+
+def disponibildiadeLivro(codigo):
+    cursor.execute('SELECT codigo,status FROM emprestimos')
+    for item in cursor.fetchall():
+        if codigo == item[0] and item[1] != "entregue":
+            return item[1]
+    return "disponivel"
+    
+    
+    
 
