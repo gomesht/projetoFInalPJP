@@ -1,17 +1,12 @@
 import sqlite3
 global cursor
 
-
-<<<<<<< HEAD
-def criarTabelaContas():
-=======
 def cadastroUsuario(nome, endereco, cpf, telefone, email, senha, tipo_de_conta):
     
     cursor.execute("INSERT INTO cadastro (nome, endereco, cpf, telefone, email, senha, tipo_de_conta) VALUES (?,?,?,?,?,?,?)",(nome, endereco, cpf, telefone, email, senha, tipo_de_conta))
     cursor.commit()
         
-def criarTabelasContas():
->>>>>>> c90d10b90eb8afd556fc5240849db40baf9d9083
+def criarTabelaContas():
 
     cursor.execute('CREATE TABLE IF NOT EXISTS cadastro('
     'id	INTEGER,'
@@ -35,16 +30,12 @@ def criarTabelaEmprestimos():
     'status INTEGER NOT NUL'
     'FOREIGN KEY (id_usuario) REFERENCES cadastro (id) ON DELETE CASCADE ON UPDATE CASCADE'
     'FOREIGN KEY (codigo_livro) REFERENCES Livros (codigo) ON DELETE CASCADE ON UPDATE CASCADE'
-<<<<<<< HEAD
     ')')
 
-    fechar()
+
 def criarTabelaSugestoes():
     pass
-=======
-    ')')   
 
->>>>>>> c90d10b90eb8afd556fc5240849db40baf9d9083
 def Login(email, senha):
     """Entrada email e senha de um usuário, saída True se email e senha estiverem corretos e Falso caso contrário."""
 
