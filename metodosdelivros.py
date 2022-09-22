@@ -17,8 +17,6 @@ def fechar():
 
 
 def criarTabelaLivros():
-    
-    inicializar()
 
     cursor.execute('CREATE TABLE IF NOT EXISTS Livros('
     'Nome	TEXT NOT NULL,'
@@ -29,24 +27,16 @@ def criarTabelaLivros():
 	'Link_de_Amostra	TEXT,'
 	'PRIMARY KEY(Código AUTOINCREMENT)'
     ')')
-    
-    fechar()
 
 def cadastro_livros(l_nome,l_autor,l_genero,l_quantidade,l_estante,l_link_amostra):
 
-    inicializar()
-
     cursor.execute('INSERT INTO Livros(Nome,Autor,Gênero,Quantidade,Estante,"Link de Amostra") VALUES (?,?,?,?,?,?)',(l_nome,l_autor,l_genero,l_quantidade,l_estante,l_link_amostra))
     
-    fechar()
 
 def remover_livro(codigo):
 
-    inicializar()
-
     cursor.execute('DELETE FROM Livros WHERE Código = ? ', codigo)
 
-    fechar()
 
 def getLivros(**filtros):
     """ Retorna os valores encontrados na tabela livros que são iguais aos valores entrados. A key de entrada deve ser igual ao nome da coluna procurada e o valor o valor a ser encontrado. 
@@ -84,6 +74,7 @@ def getLivros(**filtros):
         if Valuable:
             resultados.append(item)
     
+<<<<<<< HEAD
     return resultados
 
     
@@ -96,3 +87,6 @@ def getLivros(**filtros):
 
 
 def sugestao_livros(livro,):
+=======
+    return resultados
+>>>>>>> c90d10b90eb8afd556fc5240849db40baf9d9083
