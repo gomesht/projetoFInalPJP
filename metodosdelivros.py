@@ -74,4 +74,19 @@ def getLivros(**filtros):
         if Valuable:
             resultados.append(item)
     
+<<<<<<< HEAD
     return resultados
+
+    
+# inicializar()
+
+# print(getLivros(Nome="teste", Autor="teste", Código = None))
+
+# fechar()
+
+
+
+def sugestao_livros(livro,):
+=======
+    return resultados
+>>>>>>> c90d10b90eb8afd556fc5240849db40baf9d9083
