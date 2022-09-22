@@ -39,23 +39,11 @@ def criarTabelaSugestoes():
 def Login(email, senha):
     """Entrada email e senha de um usuário, saída True se email e senha estiverem corretos e Falso caso contrário."""
 
-    validador = 0
-    while True:
-        # if validador == 1:
-        #     break
-        # if validador == 2:
-        #     raise ValueError("Email ou senha Incorretos")
-        # while True: 
-        #     if email != "":
-        #         break
-        # while True:
-        #     if senha != "":
-        #         break
-        cursor.execute('SELECT email,senha FROM cadastro')
-        for item in cursor.fetchall():
-            if email == item[0] and senha == item[1]:
-                return True              
-        return False
+    cursor.execute('SELECT email,senha FROM cadastro')
+    for item in cursor.fetchall():
+        if email == item[0] and senha == item[1]:
+            return True              
+    return False
 
 def remover_usuario(id):
 
