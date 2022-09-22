@@ -1,3 +1,4 @@
+from datetime import datetime
 import sqlite3
 global cursor
 
@@ -23,11 +24,11 @@ def criarTabelaContas():
 def criarTabelaEmprestimos():
 
     cursor.execute('CREATE TABLE IF NOT EXISTS emprestimos ('
-    'data_emprestimo TEXT NOT NULL,'
-    'data_devolucao TEXT NOT NULL,'
+    'data_emprestimo BLOB NOT NULL,'
+    'data_devolucao BLOB NOT NULL,'
     'id_usuario INTEGER NOT NULL,'
     'codigo_livro INTEGER NOT NULL'
-    'status INTEGER NOT NUL'
+    'status TEXT NOT NULL'
     'FOREIGN KEY (id_usuario) REFERENCES cadastro (id) ON DELETE CASCADE ON UPDATE CASCADE'
     'FOREIGN KEY (codigo_livro) REFERENCES Livros (codigo) ON DELETE CASCADE ON UPDATE CASCADE'
     ')')
@@ -66,6 +67,17 @@ def EmprestimosUsuario(id):
     """Entrada ID do usuário, saída relatório dos emprestimos de livros com código do livro, data de emprestimo e data de devolução"""
 
     cursor.execute('SELECT codigo_livro, data_emprestimo, data_devolucao FROM emprestimos WHERE id_usuario = ?', id)
+    return cursor.fetchall()
+
+def atualizaStatus():
+    """Altera o status dos usuários em atraso para 0"""
+    data_atual = datetime()
+    cursor.execute('UPDATE emprestimos SET status = ? WHERE data_atual > data_entrega', 'atrasado')
+    conexao.commit()
+
+def usuariosComAtraso():
+    """Retorna uma lista com os id dos usuários em atraso"""
+    cursor.execute('SELECT id_usuario FROM emprestimos WHERE status = ?', 'atrasado')
     return cursor.fetchall()
         
        
