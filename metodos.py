@@ -157,6 +157,7 @@ def usuariosComAtraso():
     return cursor.fetchall()
 
 def RegistrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status):
+    """"Insere dados de emprestimos para o banco de dados"""
     cursor.execute('INSERT INTO emprestimos (data_emprestimo, data_devoluçao, id_usuario, codigo_livro, status VALUES (?,?,?,?,?)',(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status))
     conexao.commit()
 
