@@ -72,7 +72,7 @@ def cadastro_livros(l_nome,l_autor,l_genero,l_quantidade,l_estante,l_link_amostr
 
 def remover_livro(codigo):
 
-    cursor.execute('DELETE FROM Livros WHERE Código = ? ', codigo)
+    cursor.execute('DELETE FROM Livros WHERE Código = ? ', (codigo,))
     conexao.commit()
 
 def getLivros(**filtros):
@@ -121,6 +121,7 @@ def sugestoes_livros(livro,id_usuario):
 ########################################################################################
 
 def cadastroUsuario(nome, endereco, cpf, telefone, email, senha, tipo_de_conta):
+    """tipo de conta 0 para admin e 1 para usuários"""
     
     cursor.execute("INSERT INTO cadastro (nome, endereco, cpf, telefone, email, senha, tipo_de_conta) VALUES (?,?,?,?,?,?,?)",(nome, endereco, cpf, telefone, email, senha, tipo_de_conta))
     cursor.commit()
@@ -136,13 +137,13 @@ def Login(email, senha):
 
 def remover_usuario(id):
 
-    cursor.execute('DELETE FROM cadastro WHERE id = ? ', id)
+    cursor.execute('DELETE FROM cadastro WHERE id = ? ', (id,))
     cursor.commit()
 
 def EmprestimosUsuario(id):
     """Entrada ID do usuário, saída relatório dos emprestimos de livros com código do livro, data de emprestimo e data de devolução"""
 
-    cursor.execute('SELECT codigo_livro, data_emprestimo, data_devolucao FROM emprestimos WHERE id_usuario = ?', id)
+    cursor.execute('SELECT codigo_livro, data_emprestimo, data_devolucao FROM emprestimos WHERE id_usuario = ?', (id,))
     return cursor.fetchall()
 
 def atualizaStatus():
@@ -155,3 +156,8 @@ def usuariosComAtraso():
     """Retorna uma lista com os id dos usuários em atraso"""
     cursor.execute('SELECT id_usuario FROM emprestimos WHERE status = ?', 'atrasado')
     return cursor.fetchall()
+
+def baixaEmprestimo(codigo):
+
+    cursor.execute('UPDATE emprestimos SET status = ? WHERE codigo_livro = ?', ('entregue', codigo))
+    conexao.commit()
