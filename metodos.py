@@ -158,7 +158,15 @@ def usuariosComAtraso():
     cursor.execute('SELECT id_usuario FROM emprestimos WHERE status = ?', 'atrasado')
     return cursor.fetchall()
 
+
+def RegistrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status):
+    """"Insere dados de emprestimos para o banco de dados"""
+    cursor.execute('INSERT INTO emprestimos (data_emprestimo, data_devoluçao, id_usuario, codigo_livro, status VALUES (?,?,?,?,?)',(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status))
+    conexao.commit()
+
+
 def baixaEmprestimo(codigo):
 
     cursor.execute('UPDATE emprestimos SET status = ? WHERE codigo_livro = ?', ('entregue', codigo))
     conexao.commit()
+
