@@ -6,6 +6,7 @@ def inicializar():
     global conexao, cursor
 
     conexao = sqlite3.connect("DataBase.db")
+    conexao.execute("PRAGMA foreign_keys = ON")
     cursor = conexao.cursor()
 
 def fechar():    
