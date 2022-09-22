@@ -34,7 +34,11 @@ def criarTabelaEmprestimos():
 
 
 def criarTabelaSugestoes():
-    pass
+    cursor.execute('CREATE TABLE IF NOT EXISTS sugestoes ('
+    'livro TEXT NOT NULL,'
+    'id_usuario INTEGER NOT NULL,'
+    'FOREIGN KEY (id_usuario) REFERENCES cadastro (id) ON DELETE CASCADE ON UPDATE CASCADE'
+    ')')
 
 def Login(email, senha):
     """Entrada email e senha de um usuário, saída True se email e senha estiverem corretos e Falso caso contrário."""
@@ -68,7 +72,7 @@ def EmprestimosUsuario(id):
     cursor.execute('SELECT codigo_livro, data_emprestimo, data_devolucao FROM emprestimos WHERE id_usuario = ?', id)
     return cursor.fetchall()
         
-       
+
 
 
 
