@@ -31,12 +31,12 @@ def criarTabelaLivros():
 def cadastro_livros(l_nome,l_autor,l_genero,l_quantidade,l_estante,l_link_amostra):
 
     cursor.execute('INSERT INTO Livros(Nome,Autor,Gênero,Quantidade,Estante,"Link de Amostra") VALUES (?,?,?,?,?,?)',(l_nome,l_autor,l_genero,l_quantidade,l_estante,l_link_amostra))
-    
+    conexao.commit()
 
 def remover_livro(codigo):
 
     cursor.execute('DELETE FROM Livros WHERE Código = ? ', codigo)
-
+    conexao.commit()
 
 def getLivros(**filtros):
     """ Retorna os valores encontrados na tabela livros que são iguais aos valores entrados. A key de entrada deve ser igual ao nome da coluna procurada e o valor o valor a ser encontrado. 
