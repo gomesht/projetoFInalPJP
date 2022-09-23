@@ -17,6 +17,9 @@ def menuLogin():
         senha = ("Senha: ")
         Login(email, senha)
         if Login(email, senha):
+            inicializar()
+            cursor.execute('SELECT tipo_de_conta, email FROM cadastro')
+            
             if "admin":
                 menuAdmin()
                 break
