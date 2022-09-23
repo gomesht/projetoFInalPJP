@@ -199,7 +199,7 @@ def usuariosComAtraso():
 
 def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status):
     """Insere os dados de emprestimos do banco de dados"""
-    cursor.execute('INSERT INTO emprestimos (data_emprestimo, data_devoluçao, id_usuario, codigo_livro, status VALUES (?,?,?,?,?)',(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status))
+    cursor.execute('INSERT INTO emprestimos (data_emprestimo, data_devolucao, id_usuario, codigo_livro, status) VALUES (?,?,?,?,?)',(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status))
     conexao.commit()
 
 
