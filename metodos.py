@@ -128,10 +128,9 @@ def getLivros(**filtros):
                     break
             i += 1
         if Valuable:
+            item = list(item)
+            item.append(disponibilidadeLivro(item[3]))
             resultados.append(item)
-    
-    for resultado in resultados:
-        resultado = tuple(list(resultado).append(disponibilidadeLivro(resultado[3])))
 
     return resultados
 
