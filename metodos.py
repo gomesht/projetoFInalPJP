@@ -183,7 +183,7 @@ def EmprestimosUsuario(id):
 def atualizaStatus():
     """Altera o status dos usuários em atraso para 0"""
     data_atual = datetime()
-    cursor.execute('UPDATE emprestimos SET status = ? WHERE data_atual > data_entrega', 'atrasado')
+    cursor.execute(f'UPDATE emprestimos SET status = ? WHERE {data_atual} > data_entrega', 'atrasado')
     conexao.commit()
 
 def usuariosComAtraso():
@@ -199,11 +199,11 @@ def usuariosComAtraso():
 
 def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status):
     """Insere os dados de emprestimos do banco de dados"""
-    cursor.execute('INSERT INTO emprestimos (data_emprestimo, data_devoluçao, id_usuario, codigo_livro, status VALUES (?,?,?,?,?)',(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status))
+    cursor.execute('INSERT INTO emprestimos (data_emprestimo, data_devolucao, id_usuario, codigo_livro, status) VALUES (?,?,?,?,?)',(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status))
     conexao.commit()
 
 
-def baixaEmprestimo(codigo):
+def devolucaoLivros(codigo):
 
     cursor.execute('UPDATE emprestimos SET status = ? WHERE codigo_livro = ?', ('entregue', codigo))
     conexao.commit()
