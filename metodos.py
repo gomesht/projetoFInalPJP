@@ -140,6 +140,13 @@ def sugestoes_livros(livro,id_usuario):
     cursor.execute('INSERT INTO sugestoes(livro,id_usuario) VALUES (?,?)',(livro,id_usuario))
     conexao.commit()
 
+def disponibilidadeLivro(codigo):
+    cursor.execute('SELECT codigo_livro,status FROM emprestimos')
+    for item in cursor.fetchall():
+        if codigo == item[0] and item[1] != "entregue":
+            return item[1]
+    return "disponivel"
+
 ########################################################################################
 # Métodos de usuário
 ########################################################################################
@@ -199,12 +206,7 @@ def renovaçãoEmprestimo(nova_data_devolução,codigo_livro):
     cursor.execute('UPDATE emprestimos SET data_devoluçao = ? WHERE codigo_livro = ?', (nova_data_devolução,codigo_livro))
     conexao.commit()
 
-def disponibilidadeLivro(codigo):
-    cursor.execute('SELECT codigo_livro,status FROM emprestimos')
-    for item in cursor.fetchall():
-        if codigo == item[0] and item[1] != "entregue":
-            return item[1]
-    return "disponivel"
+
     
     
     
