@@ -1,4 +1,3 @@
-from multiprocessing.sharedctypes import Value
 import sqlite3, datetime
 global conexao, cursor
 
