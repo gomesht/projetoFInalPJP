@@ -68,7 +68,7 @@ def criarTabelaSugestoes():
 
 def cadastro_livros(l_nome,l_autor,l_genero,l_estante,l_link_amostra):
 
-    cursor.execute('INSERT INTO Livros(Nome,Autor,Gênero,Quantidade,Estante,"Link de Amostra") VALUES (?,?,?,?,?,?)',(l_nome,l_autor,l_genero,l_quantidade,l_estante,l_link_amostra))
+    cursor.execute('INSERT INTO Livros(Nome,Autor,Gênero,Estante,"Link de Amostra") VALUES (?,?,?,?,?)',(l_nome,l_autor,l_estante,l_link_amostra))
     conexao.commit()
 
 def remover_livro(codigo):
