@@ -1,4 +1,5 @@
 import sqlite3, datetime
+import time, datetime
 global conexao, cursor
 
 def inicializar():
@@ -24,13 +25,13 @@ def criarTabelaLivros():
 	'Codigo	INTEGER NOT NULL UNIQUE,'
 	'Estante	TEXT,'
 	'Link_de_Amostra	TEXT,'
-	'PRIMARY KEY(Código AUTOINCREMENT)'
+	'PRIMARY KEY(Codigo AUTOINCREMENT)'
     ')')
 
 def criarTabelaContas():
 
     cursor.execute('CREATE TABLE IF NOT EXISTS cadastro('
-    'id	INTEGER,'
+    'id	INTEGER NOT NULL UNIQUE,'
 	'nome	TEXT NOT NULL,'
 	'endereco	TEXT NOT NULL,'
 	'cpf	TEXT NOT NULL UNIQUE,'
@@ -50,7 +51,7 @@ def criarTabelaEmprestimos():
     'codigo_livro INTEGER NOT NULL,'
     'status TEXT NOT NULL,'
     'FOREIGN KEY (id_usuario) REFERENCES cadastro (id) ON DELETE CASCADE ON UPDATE CASCADE,'
-    'FOREIGN KEY (codigo_livro) REFERENCES Livros (codigo)'
+    'FOREIGN KEY (codigo_livro) REFERENCES Livros (Codigo)'
     ')')
 
 
@@ -66,14 +67,14 @@ def criarTabelaSugestoes():
 # Métodos de livros
 ########################################################################################
 
-def cadastro_livros(l_nome,l_autor,l_genero,l_quantidade,l_estante,l_link_amostra):
+def cadastro_livros(l_nome,l_autor,l_genero,l_estante,l_link_amostra):
 
-    cursor.execute('INSERT INTO Livros(Nome,Autor,Gênero,Quantidade,Estante,"Link de Amostra") VALUES (?,?,?,?,?,?)',(l_nome,l_autor,l_genero,l_quantidade,l_estante,l_link_amostra))
+    cursor.execute('INSERT INTO Livros(Nome,Autor,Genero,Estante,"Link de Amostra") VALUES (?,?,?,?,?)',(l_nome,l_autor,l_genero,l_estante,l_link_amostra))
     conexao.commit()
 
 def remover_livro(codigo):
 
-    cursor.execute('DELETE FROM Livros WHERE Código = ? ', (codigo,))
+    cursor.execute('DELETE FROM Livros WHERE Codigo = ? ', (codigo,))
     conexao.commit()
 
 def getLivros(**filtros):
@@ -168,8 +169,7 @@ def Login(email, senha):
 def remover_usuario(id):
 
     cursor.execute('DELETE FROM cadastro WHERE id = ? ', (id,))
-    cursor.commit()
-
+    conexao.commit()
 
 def EmprestimosUsuario(id):
     """Entrada ID do usuário, saída relatório dos emprestimos de livros com código do livro, data de emprestimo e data de devolução"""
