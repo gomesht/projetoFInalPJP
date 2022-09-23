@@ -66,7 +66,7 @@ def criarTabelaSugestoes():
 # Métodos de livros
 ########################################################################################
 
-def cadastro_livros(l_nome,l_autor,l_genero,l_quantidade,l_estante,l_link_amostra):
+def cadastro_livros(l_nome,l_autor,l_genero,l_estante,l_link_amostra):
 
     cursor.execute('INSERT INTO Livros(Nome,Autor,Gênero,Quantidade,Estante,"Link de Amostra") VALUES (?,?,?,?,?,?)',(l_nome,l_autor,l_genero,l_quantidade,l_estante,l_link_amostra))
     conexao.commit()
@@ -183,7 +183,7 @@ def EmprestimosUsuario(id):
 def atualizaStatus():
     """Altera o status dos usuários em atraso para 0"""
     data_atual = datetime()
-    cursor.execute('UPDATE emprestimos SET status = ? WHERE data_atual > data_entrega', 'atrasado')
+    cursor.execute(f'UPDATE emprestimos SET status = ? WHERE {data_atual} > data_entrega', 'atrasado')
     conexao.commit()
 
 def usuariosComAtraso():
@@ -203,7 +203,7 @@ def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livr
     conexao.commit()
 
 
-def baixaEmprestimo(codigo):
+def devolucaoLivros(codigo):
 
     cursor.execute('UPDATE emprestimos SET status = ? WHERE codigo_livro = ?', ('entregue', codigo))
     conexao.commit()
