@@ -61,6 +61,7 @@ def criarTabelaSugestoes():
     'FOREIGN KEY (id_usuario) REFERENCES cadastro (id) ON DELETE CASCADE ON UPDATE CASCADE'
     ')')
 
+  
 ########################################################################################
 # Métodos de livros
 ########################################################################################
