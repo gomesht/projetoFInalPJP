@@ -129,10 +129,9 @@ def getLivros(**filtros):
                     break
             i += 1
         if Valuable:
+            item = list(item)
+            item.append(disponibilidadeLivro(item[3]))
             resultados.append(item)
-    
-    for resultado in resultados:
-        resultado = tuple(list(resultado).append(disponibilidadeLivro(resultado[3])))
 
     return resultados
 
@@ -175,9 +174,12 @@ def remover_usuario(id):
 def EmprestimosUsuario(id):
     """Entrada ID do usuário, saída relatório dos emprestimos de livros com código do livro, data de emprestimo e data de devolução"""
 
-    cursor.execute('SELECT codigo_livro, data_emprestimo, data_devolucao FROM emprestimos WHERE id_usuario = ?', (id,))
-    return cursor.fetchall()
-
+    cursor.execute('SELECT codigo_livro, data_emprestimo, data_devolucao, id_usuario FROM emprestimos')
+    emprestimos = []
+    for line in cursor.fetchall():
+        if line[3] == id:
+            emprestimos.append(line)
+    return emprestimos      
 def atualizaStatus():
     """Altera o status dos usuários em atraso para 0"""
     data_atual = datetime()
@@ -186,8 +188,13 @@ def atualizaStatus():
 
 def usuariosComAtraso():
     """Retorna uma lista com os id dos usuários em atraso"""
-    cursor.execute('SELECT id_usuario FROM emprestimos WHERE status = ?', 'atrasado')
-    return cursor.fetchall()
+    cursor.execute('SELECT id_usuario, status FROM emprestimos')
+    idAtrasados = []
+    for line in cursor.fetchall():
+        if line[1] == "atrasado":
+            idAtrasados.append(line[0])
+    return idAtrasados
+
 
 
 def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status):
