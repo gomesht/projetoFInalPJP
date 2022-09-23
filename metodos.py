@@ -191,8 +191,8 @@ def usuariosComAtraso():
     cursor.execute('SELECT id_usuario, status FROM emprestimos')
     idAtrasados = []
     for line in cursor.fetchall():
-        if line[1] == "atrasado"
-        idAtrasados.append(line[0])
+        if line[1] == "atrasado":
+            idAtrasados.append(line[0])
     return idAtrasados
 
 
