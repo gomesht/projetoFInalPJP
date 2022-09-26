@@ -1,12 +1,12 @@
 from metodos import *
 from datetime import timedelta,datetime
 
-def painelUsuario():
+def painelUsuario(email,id):
     while True:
-        op = input('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro ')
+        op = input('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5 - Sair')
         match op:
             case '1':
-                #op = input('')
+                #tera alteraçoes
                 inicializar()
                 lista = getLivros()
                 for i in lista:
@@ -17,69 +17,75 @@ def painelUsuario():
                 inicializar()
                 data_emprestimo = datetime.today()
                 data_devolucao = data_emprestimo + timedelta(days=7)
-                id_usuario = int(input("ID do usuário: "))
-                codigo_livro = int(input("Código do livro: "))
-                registrosEmprestimos(data_emprestimo,data_devolucao,id_usuario,codigo_livro,'resevado')
+                c = 0
+                while True:
+                    if c == 5:
+                        break
+                    id_usuario = id
+                    while True:
+                        codigo_livro = int(input("Código do livro: "))
+                        c = 0
+                        while True:
+                            if c == 2:
+                                print('\nCodigo incorreto\n')
+                                break
+                            if c == 1:
+                                break
+                            cursor.execute("SELECT Codigo FROM Livros")
+                            for i in cursor.fetchall():
+                                if codigo_livro == i[0]:
+                                    c = 1
+                                    break
+                                else:
+                                    c = 2
+                        if c == 1 and disponibilidadeLivro(codigo_livro) == "disponivel":
+                            registrosEmprestimos(data_emprestimo,data_devolucao,id_usuario,codigo_livro,'resevado')
+                            print('\nLivro Reservado\n')
+                            c = 5
+                            break
+                        else:
+                            print('\nLivro já reservado\n')
+                            c = 5
+                            break                    
                 fechar()
             case '3':
                 inicializar()
-                codigo_livro = int(input('Código do livro: '))
-                data_devolucao = data_devolucao + timedelta(days=7)
-                renovaçãoEmprestimo(data_devolucao,codigo_livro)
-                print('Renovado com sucesso')
+                while True:                    
+                    data_devolucao = data_devolucao + timedelta(days=7)
+                    codigo_livro = int(input("Código do livro: "))
+                    c = 0
+                    while True:
+                        if c == 2:
+                            print('\nCodigo incorreto\n')
+                            break
+                        if c == 1:
+                            break
+                        cursor.execute("SELECT Codigo FROM Livros")
+                        for i in cursor.fetchall():
+                            if codigo_livro == i[0]:
+                                c = 1
+                                break
+                            else:
+                                c = 2
+                    if c == 1:
+                        renovaçãoEmprestimo(data_devolucao,codigo_livro)
+                        print('\nRenovado com sucesso\n')
+                        break
+                    else:
+                        print('\nNão foi possivel renovar\n')
                 fechar()
             case '4':
                 inicializar()
-                livro = str(input('Livro: '))
-                id_usuario = int(input('ID do usuario: '))
-                sugestoes_livros(livro,id_usuario)
+                while True:
+                    livro = str(input('Livro: '))
+                    if livro == "":
+                        print('znLivro deve ter pelomenos 1 caractere\n')
+                    else:
+                        id_usuario = id
+                        sugestoes_livros(livro,id_usuario)
+                        break
                 fechar()
+            case '5':
+                break
             case _:
                 print('\nOpção incorreta\n')
-painelUsuario()
-
-# inicializar()
-# lista_de_livros = list(getLivros())
-
-# print(lista_de_livros[1][2])
-# fechar()
-
-# Gêneros de ficção
-# Fantasia
-# Ficção científica
-# Distopia
-# Ação e aventura
-# Ficção Policial
-# Horror
-# Thriller e Suspense
-# Ficção histórica
-# Romance
-# Ficção Feminina
-# LGBTQ+
-# Ficção Contemporânea
-# Realismo mágico
-# Graphic Novel
-# Conto
-# Young adult – Jovem adulto
-# New adult – Novo Adulto 
-# Infantil
-
-
-
-# Gêneros de não ficção
-# Memórias e autobiografia
-# Biografia
-# Gastronomia
-# Arte e Fotografia
-# Autoajuda
-# História
-# Viajem
-# Crimes Reais
-# Humor
-# Ensaios
-# Guias & Como fazer 
-# Religião e Espiritualidade
-# Humanidades e Ciências Sociais
-# Paternidade e família
-# Tecnologia e Ciência
-# Infantil
