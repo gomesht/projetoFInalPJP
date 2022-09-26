@@ -23,7 +23,7 @@ def painelUsuario(email,id):
                         break
                     id_usuario = id
                     codigo_livro = int(input("Código do livro: "))
-                    cursor.execute('SELECT Codigo FROM Livros')
+                    cursor.execute('SELECT Codigo,status FROM Livros')
                     for i in cursor.fetchall():
                         if codigo_livro == i:
                             registrosEmprestimos(data_emprestimo,data_devolucao,id_usuario,codigo_livro,'resevado')
