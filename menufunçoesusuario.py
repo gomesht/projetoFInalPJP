@@ -1,9 +1,9 @@
 from metodos import *
 from datetime import timedelta,datetime
 
-def painelUsuario():
+def painelUsuario(email,id):
     while True:
-        op = input('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro ')
+        op = input('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5 - Sair')
         match op:
             case '1':
                 #op = input('')
@@ -17,9 +17,21 @@ def painelUsuario():
                 inicializar()
                 data_emprestimo = datetime.today()
                 data_devolucao = data_emprestimo + timedelta(days=7)
-                id_usuario = int(input("ID do usuário: "))
-                codigo_livro = int(input("Código do livro: "))
-                registrosEmprestimos(data_emprestimo,data_devolucao,id_usuario,codigo_livro,'resevado')
+                c = 0
+                while True:
+                    if c == 2:
+                        break
+                    id_usuario = id
+                    codigo_livro = int(input("Código do livro: "))
+                    cursor.execute('SELECT Codigo,status FROM Livros')
+                    for i in cursor.fetchall():
+                        if codigo_livro == i:
+                            registrosEmprestimos(data_emprestimo,data_devolucao,id_usuario,codigo_livro,'resevado')
+                            print('Livro Reservado')
+                            c = 2
+                            break
+                        else:
+                            c = 1                       
                 fechar()
             case '3':
                 inicializar()
@@ -31,9 +43,11 @@ def painelUsuario():
             case '4':
                 inicializar()
                 livro = str(input('Livro: '))
-                id_usuario = int(input('ID do usuario: '))
+                id_usuario = id
                 sugestoes_livros(livro,id_usuario)
                 fechar()
+            case '5':
+                break
             case _:
                 print('\nOpção incorreta\n')
 painelUsuario()
