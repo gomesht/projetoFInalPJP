@@ -165,10 +165,10 @@ def cadastroUsuario(nome, endereco, cpf, telefone, email, senha, tipo_de_conta):
 def Login(email, senha):
     """Entrada email e senha de um usuário, saída True se email e senha estiverem corretos e Falso caso contrário."""
 
-    cursor.execute('SELECT email,senha FROM cadastro')
+    cursor.execute('SELECT email,senha, id FROM cadastro')
     for item in cursor.fetchall():
         if email == item[0] and senha == item[1]:
-            return True              
+            return item[2]           
     return False
 
 def remover_usuario(id):
