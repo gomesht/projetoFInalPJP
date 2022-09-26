@@ -42,12 +42,6 @@ def menuCadastroUsuario():
     telefone = input("Telefone: ")
     endereco = input("Endereço: ")
     cpf = input("CPF: ")
-    while True:
-        tipo = input("Tipo de conta (0 = Administrador|1 = Usuário): ")
-        if tipo != "0" and tipo != "1":
-            break
-        else:
-            print("Opção inválida! Digite 0 para Administrador ou 1 para Usuário.")
     email = input("E-mail: ")
     while True:
         senha = input("Digite uma senha: ")
@@ -57,16 +51,15 @@ def menuCadastroUsuario():
         else:
             print("As senhas precisam ser iguais! Digite novamente.")
 
-    
-        inicializar()
+    inicializar()
     try:    
         contaCadastrada = UsuarioNormal(nome, endereco, cpf, telefone, email, senha)
     except:
         print("Erro ao cadastrar usuário!")
 
-        fechar()
+    fechar()
 
-        menuUsuario(contaCadastrada)
+    menuUsuario(contaCadastrada)
         
         
     
@@ -80,7 +73,7 @@ def menuAdmin(conta):
                 id_usuario = int(input("ID do usuário: "))
                 codigo_livro = int(input("Código do livro: "))
                 inicializar()
-                registrosEmprestimos(data_emprestimo, data_devolucao, id_usuario, codigo_livro, "emprestado")
+                registrosEmprestimos(str(data_emprestimo), str(data_devolucao), id_usuario, codigo_livro, "emprestado")
                 fechar()
             case '2':
                 codigo = int(input("Código do livro:"))
@@ -88,6 +81,7 @@ def menuAdmin(conta):
                 devolucaoLivros(codigo)
                 fechar()
             case '3':
+                # esperar classe ficar pronta para implementar
                 pass
             case '4':
                 inicializar()
@@ -109,11 +103,33 @@ def menuAdmin(conta):
                 remover_livro(codigo)
                 fechar()
             case '7':
+                id_user = int(input("Apagar usuário com ID: ")) 
                 inicializar()
-                #...
+                remover_usuario(id_user)
                 fechar()
             case '8':
-                ...
+                nome = input("Nome: ")
+                telefone = input("Telefone: ")
+                endereco = input("Endereço: ")
+                cpf = input("CPF: ")
+                email = input("E-mail: ")
+                while True:
+                    senha = input("Digite uma senha: ")
+                    confirmaSenha = input("Digite a senha novamente")
+                    if senha == confirmaSenha:
+                        break
+                    else:
+                        print("As senhas precisam ser iguais! Digite novamente.")
+                try:
+                    inicializar()
+
+                    UsuarioADM(nome, endereco, cpf, telefone, email, senha)
+
+                    fechar()
+                except:
+                    print("Erro ao cadastrar usuário!")
+
+                
             case '9':
                 break
             case _:

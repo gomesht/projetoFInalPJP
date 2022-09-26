@@ -46,8 +46,8 @@ def criarTabelaContas():
 def criarTabelaEmprestimos():
 
     cursor.execute('CREATE TABLE IF NOT EXISTS emprestimos ('
-    'data_emprestimo BLOB NOT NULL,'
-    'data_devolucao BLOB NOT NULL,'
+    'data_emprestimo TEXT NOT NULL,'
+    'data_devolucao TEXT NOT NULL,'
     'id_usuario INTEGER NOT NULL,'
     'codigo_livro INTEGER NOT NULL,'
     'status TEXT NOT NULL,'
@@ -192,7 +192,7 @@ def EmprestimosUsuario(id):
     return emprestimos 
      
 def atualizaStatus():
-    """Altera o status dos usuários em atraso para 0"""
+    """Altera o status dos emprestimos em atraso para atrasado """
     data_atual = datetime()
     cursor.execute(f'UPDATE emprestimos SET status = ? WHERE {data_atual} > data_entrega', 'atrasado')
     conexao.commit()
