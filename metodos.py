@@ -1,6 +1,9 @@
 import sqlite3, datetime
 import time, datetime
-from typing import Tuple
+from typing import Tuple, overload
+from validacaoCPF import *  
+from abc import *          
+
 global conexao, cursor
 
 def inicializar():
@@ -138,7 +141,7 @@ def getLivros(**filtros):
             item = list(item)
             item.append(disponibilidadeLivro(item[3]))
             resultados.append(item)
-
+    
     return resultados
 
 def sugestoes_livros(livro,id_usuario):
@@ -238,11 +241,23 @@ def countUsuários(tipo: int | None = None):
     
     return i
 
+##############################################################################################
+# Emprestimos
+##############################################################################################
+
 def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status):
     """Insere os dados de emprestimos do banco de dados"""
     cursor.execute('INSERT INTO emprestimos (data_emprestimo, data_devolucao, id_usuario, codigo_livro, status) VALUES (?,?,?,?,?)',(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status))
     conexao.commit()
 
+@overload
+def LeEmprestimos(key: int): ...
+@overload
+def LeEmprestimos(key: str): ...
+
+def LeEmprestimos(key):
+    """ Lê todos os empréstimos relacionados a uma instância de usuário ou livro """
+        
 
 def devolucaoLivros(codigo):
 
@@ -254,17 +269,9 @@ def renovaçãoEmprestimo(nova_data_devolução,codigo_livro):
     cursor.execute('UPDATE emprestimos SET data_devoluçao = ? WHERE codigo_livro = ?', (nova_data_devolução,codigo_livro))
     conexao.commit()
 
-class EmailSenhaIncorreto(ValueError):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)
-
 ##############################################################################################
 # Classes
 ##############################################################################################
-from typing import overload
-from validacaoCPF import * 
-from metodos import *      
-from abc import *          
 
 class Livro():
     """
@@ -284,17 +291,17 @@ class Livro():
     @overload 
     def __init__(self, Codigo:int): ...
 
-    def __init__(self, Codigo, Nome, Autor, Genero, Estante, LdeAmostra) -> None:
-        if not Codigo:
-            if type(Nome) != str or type(Autor) != str or type(Genero) != str or type(Estante) != str or type(LdeAmostra) != str:
+    def __init__(self, CodigoNome, Autor, Genero, Estante, LdeAmostra) -> None:
+        if type(CodigoNome) == str:
+            if type(CodigoNome) != str or type(Autor) != str or type(Genero) != str or type(Estante) != str or type(LdeAmostra) != str:
                 raise TypeError()
 
-            cadastro_livros(Nome, Autor, Genero, Estante, LdeAmostra)
+            cadastro_livros(CodigoNome, Autor, Genero, Estante, LdeAmostra)
         else:
-            if type(Codigo) != int:
+            if type(CodigoNome) != int:
                 raise TypeError()
             
-            self.__Codigo = Codigo
+            self.__Codigo = CodigoNome
 
     @property
     def nome(self):
@@ -309,6 +316,10 @@ class Livro():
     @codigo.setter
     def codigo(self,value):
         self.__Codigo = value
+
+    @property
+    def disponibilidade():
+        pass 
 
     def apagar(self):
         """ 
@@ -465,6 +476,14 @@ class UsuarioADM(Conta):
         else:
             raise ApagarUnicoAdmError("Não é possível apagar o único ADM")
 
+##############################################################################################
+# Exceptions
+##############################################################################################
+
 class ApagarUnicoAdmError(BaseException):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+class EmailSenhaIncorreto(ValueError):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
