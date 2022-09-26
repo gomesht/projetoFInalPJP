@@ -148,7 +148,7 @@ def sugestoes_livros(livro,id_usuario):
 def disponibilidadeLivro(codigo):
     cursor.execute('SELECT codigo_livro,status FROM emprestimos')
     for item in cursor.fetchall():
-        if codigo == item[0] and item[1] != "entregue":
+        if codigo == item[0] and item[1] != "entregue" and item[1] != "reservado":
             return item[1]
     return "disponivel"
 
