@@ -1,5 +1,6 @@
 import sqlite3, datetime
 import time, datetime
+from typing import Tuple
 global conexao, cursor
 
 def inicializar():
@@ -108,11 +109,15 @@ def getLivros(**filtros):
                 Codigo = tuple(filtros.values())[count]
             case "Estante":
                 Estante = tuple(filtros.values())[count]
-            case "Link de Amostra":
+            case "Link_de_amostra":
                 LdeAmostra = tuple(filtros.values())[count]
             case _:
-                raise ValueError
-        
+                if filtro.count("á") > 0 or filtro.count("ó") > 0 or filtro.count("ê") > 0:
+                    raise ValueError(f"Filtro {filtro} não existe no banco de dados. \n Lembre-se que os nomes das variáveis não possuem acentos...")
+                if filtro.lower() == "nome" or filtro.lower() == "autor" or filtro.lower() == "genero" or filtro.lower() == "codigo" or filtro.lower() == "estante" or filtro.lower() == "Link_de_amostra":
+                    raise ValueError(f"Filtro {filtro} não existe no banco de dados. \n As variáveis estão com com a primeira letra maiúscula e o resto minúsculo?")
+                raise ValueError(f"Filtro {filtro} não existe no banco de dados")
+
         count += 1
     
     valDeFiltragem = [ Nome,Autor,Genero,Codigo,Estante,LdeAmostra ]
@@ -179,7 +184,8 @@ def EmprestimosUsuario(id):
     for line in cursor.fetchall():
         if line[3] == id:
             emprestimos.append(line)
-    return emprestimos      
+    return emprestimos 
+     
 def atualizaStatus():
     """Altera o status dos usuários em atraso para 0"""
     data_atual = datetime()
@@ -195,7 +201,37 @@ def usuariosComAtraso():
             idAtrasados.append(line[0])
     return idAtrasados
 
+def getUsuario(id) -> Tuple:
+    """ Retorna o usuario de acordo com o id """
+    cursor.execute("SELECT * FROM cadastro")
+    for conta in cursor.fetchall():
+        if conta[0] == id:
+            return conta
+    raise ValueError("Nenhum usuário com este id")
 
+def getID(email) -> int:
+    """ Retorna o id de acordo com o email """
+    cursor.execute("SELECT * FROM cadastro")
+    for conta in cursor.fetchall():
+        if conta[5] == email:
+            return conta[0]
+    raise ValueError("Nenhum usuário com este email")
+
+def setInUsuarios(id:int, vr:str, vl:str):
+    """ Muda a coluna (vr) pelo valor (vl) onde se encontra o id (id) """
+    cursor.execute(f"UPDATE cadastro SET {vr} = ? WHERE id = ?", (vl, id))
+    conexao.commit()
+
+def countUsuários(tipo: int | None = None):
+    cursor.execute("SELECT * FROM cadastro")
+    i = 0
+    for conta in cursor.fetchall():
+        if tipo == None:
+            i += 1
+        elif conta[6] == tipo:
+            i += 1
+    
+    return i
 
 def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status):
     """Insere os dados de emprestimos do banco de dados"""
