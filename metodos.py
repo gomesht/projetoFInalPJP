@@ -1,7 +1,7 @@
 import sqlite3, datetime
-import time, datetime
+from datetime import date, timedelta
 from typing import Tuple, overload
-from validacaoCPF import *  
+from validacaoCPF import validarCpf  
 from abc import *          
 
 global conexao, cursor
@@ -200,10 +200,10 @@ def usuariosComAtraso():
     idAtrasados = []
     for line in cursor.fetchall():
         data = str(line[1])
-        data_atual = datetime.today()
+        data_atual = date.today()
         data_entrega = datetime.strptime(data, '%Y-%m-%d').date()
         if data_atual > data_entrega:
-            idAtrasados.append(line[0])
+            idAtrasados.append(line[2])
     return idAtrasados
 
 def getUsuario(id) -> Tuple:

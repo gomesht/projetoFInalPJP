@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, date
 from classes import *
 from metodos import *
 def menuInicial():
@@ -17,50 +17,61 @@ def menuLogin():
     while True:
         email = input("Email: ")
         senha = input("Senha: ")
-        id_usuaio = getID(email)
         inicializar()
+        id_usuaio = getID(email)
+        
         try:
+            global conta
             conta = Login(email, senha)
-        except EmailSenhaIncorretoError:
+            
+        
+        except EmailSenhaIncorretoError  :
             print("Usuário e/ou senha inválido(s)!")
-
+            conta = None
+        except ValueError as erro:
+            print("Usuário e/ou senha inválido(s)!", erro)
+            conta = None
+        
             # inicializar()
             # cursor.execute('SELECT tipo_de_conta, email FROM cadastro')
             # for line in cursor.fetchall():
             #     if line[1] == email:
             #         tipo = line[0]
-            
-        if type(conta) == UsuarioADM:
-            menuAdmin()
-            break
-        elif type(conta) == UsuarioNormal:
-            menuUsuario(email,id_usuaio)
-            break
-    
+        
+        if conta != None:
+            if type(conta) == UsuarioADM:
+                menuAdmin(conta)
+                break
+            elif type(conta) == UsuarioNormal:
+                id_usuario = getID(email)
+                menuUsuario(id_usuario)
+                break
+        
 def menuCadastroUsuario():
     
     nome = input("Nome: ")
-    telefone = input("Telefone: ")
+    telefone = int(input("Telefone: "))
     endereco = input("Endereço: ")
     cpf = input("CPF: ")
     email = input("E-mail: ")
     while True:
         senha = input("Digite uma senha: ")
-        confirmaSenha = input("Digite a senha novamente")
+        confirmaSenha = input("Digite a senha novamente: ")
         if senha == confirmaSenha:
             break
         else:
             print("As senhas precisam ser iguais! Digite novamente.")
 
     inicializar()
-    try:    
+    try:  
+        
         contaCadastrada = UsuarioNormal(nome, endereco, cpf, telefone, email, senha)
-    except:
-        print("Erro ao cadastrar usuário!")
+    except Exception as erro:
+        print("Erro ao cadastrar usuário!", erro)
 
     fechar()
 
-    menuUsuario(contaCadastrada)
+    # menuUsuario(contaCadastrada)
         
         
     
@@ -69,7 +80,7 @@ def menuAdmin(conta):
         op = input('1 - Empréstimo de livro\n2 - Devolução de livro\n3 - Ver usuário\n4 - Usuários em atraso\n5 - Cadastrar livro\n6 - Remover livro\n7 - Remover usuario\n8 - Cadastro Admin\n9 - Sair\n ')
         match op:
             case '1':
-                data_emprestimo = datetime.today()
+                data_emprestimo = date.today()
                 data_devolucao = data_emprestimo + timedelta(days = 7)
                 id_usuario = int(input("ID do usuário: "))
                 codigo_livro = int(input("Código do livro: "))
@@ -82,8 +93,7 @@ def menuAdmin(conta):
                 devolucaoLivros(codigo)
                 fechar()
             case '3':
-                # esperar classe ficar pronta para implementar
-                id_usuario = int(input("ID do usuário: "))
+                id_usuario = int(input("ID do usuário: ")) 
                 print(Conta.getConta(id_usuario))
             case '4':
                 inicializar()
@@ -136,16 +146,19 @@ def menuAdmin(conta):
                 break
             case _:
                 print("Opção inválida!")
-def menuUsuario(email,id):
+def menuUsuario(id):
     while True:
-        op = input('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5 - Sair')
+        print('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5 - Sair')
+        op = input('')
         match op:
             case '1':
                 #tera alteraçoes
                 inicializar()
                 lista = getLivros()
+                print('')
                 for i in lista:
-                    print(f'Livro: {i.nome} / Autor: {i.autor} / Gênero: {i.genero} / Código: {i[3]} / Estante: {i[4]} / Link de Amostra: {i[5]}')
+                    print(f'Livro: {i[0]} / Autor: {i[1]} / Gênero: {i[2]} / Código: {i[3]} / Estante: {i[4]} / Link de Amostra: {i[5]}')
+                print('')
                 fechar()
             case '2':
                 #em vez de pedir o id do usuario, pegar altomaticamente.
@@ -225,3 +238,4 @@ def menuUsuario(email,id):
             case _:
                 print('\nOpção incorreta\n')
 
+menuInicial()
