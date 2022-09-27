@@ -213,7 +213,7 @@ def menuUsuario(email,id):
                 while True:
                     livro = str(input('Livro: '))
                     if livro == "":
-                        print('znLivro deve ter pelomenos 1 caractere\n')
+                        print('\nLivro deve ter pelomenos 1 caractere\n')
                     else:
                         id_usuario = id
                         sugestoes_livros(livro,id_usuario)
