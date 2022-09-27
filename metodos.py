@@ -190,7 +190,7 @@ def remover_usuario(id):
 
 def EmprestimosUsuario(id):
     """Entrada ID do usuário, saída relatório dos emprestimos de livros com código do livro, data de emprestimo e data de devolução"""
-
+    
     cursor.execute('SELECT codigo_livro, data_emprestimo, data_devolucao, id_usuario FROM emprestimos')
     emprestimos = []
     for line in cursor.fetchall():
