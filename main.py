@@ -162,9 +162,8 @@ def menuUsuario(id):
                 fechar()
             case '2':
                 #em vez de pedir o id do usuario, pegar altomaticamente.
-                inicializar()
-                data_emprestimo = datetime.today()
-                data_devolucao = data_emprestimo + timedelta(days=7)
+                data_emprestimo = date.today()
+                data_devolucao = data_emprestimo + timedelta(days = 7)
                 c = 0
                 while True:
                     if c == 5:
@@ -179,6 +178,7 @@ def menuUsuario(id):
                                 break
                             if c == 1:
                                 break
+                            inicializar()
                             cursor.execute("SELECT Codigo FROM Livros")
                             for i in cursor.fetchall():
                                 if codigo_livro == i[0]:
@@ -187,7 +187,7 @@ def menuUsuario(id):
                                 else:
                                     c = 2
                         if c == 1 and disponibilidadeLivro(codigo_livro) == "disponivel":
-                            registrosEmprestimos(data_emprestimo,data_devolucao,id_usuario,codigo_livro,'resevado')
+                            registrosEmprestimos(str(data_emprestimo), str(data_devolucao), id_usuario, codigo_livro,'resevado')
                             print('\nLivro Reservado\n')
                             c = 5
                             break
