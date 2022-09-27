@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, date
 from classes import *
 from metodos import *
 def menuInicial():
@@ -19,27 +19,34 @@ def menuLogin():
         senha = input("Senha: ")
         inicializar()
         id_usuaio = getID(email)
-       
+        
         try:
             global conta
             conta = Login(email, senha)
-        except EmailSenhaIncorretoError:
+            
+        
+        except EmailSenhaIncorretoError  :
             print("Usuário e/ou senha inválido(s)!")
-
+            conta = None
+        except ValueError as erro:
+            print("Usuário e/ou senha inválido(s)!", erro)
+            conta = None
+        
             # inicializar()
             # cursor.execute('SELECT tipo_de_conta, email FROM cadastro')
             # for line in cursor.fetchall():
             #     if line[1] == email:
             #         tipo = line[0]
-            
-        if type(conta) == UsuarioADM:
-            menuAdmin(conta)
-            break
-        elif type(conta) == UsuarioNormal:
-            id_usuario = getID(email)
-            menuUsuario(id_usuario)
-            break
-    
+        
+        if conta != None:
+            if type(conta) == UsuarioADM:
+                menuAdmin(conta)
+                break
+            elif type(conta) == UsuarioNormal:
+                id_usuario = getID(email)
+                menuUsuario(id_usuario)
+                break
+        
 def menuCadastroUsuario():
     
     nome = input("Nome: ")
@@ -73,7 +80,7 @@ def menuAdmin(conta):
         op = input('1 - Empréstimo de livro\n2 - Devolução de livro\n3 - Ver usuário\n4 - Usuários em atraso\n5 - Cadastrar livro\n6 - Remover livro\n7 - Remover usuario\n8 - Cadastro Admin\n9 - Sair\n ')
         match op:
             case '1':
-                data_emprestimo = datetime.today()
+                data_emprestimo = date.today()
                 data_devolucao = data_emprestimo + timedelta(days = 7)
                 id_usuario = int(input("ID do usuário: "))
                 codigo_livro = int(input("Código do livro: "))
@@ -86,7 +93,7 @@ def menuAdmin(conta):
                 devolucaoLivros(codigo)
                 fechar()
             case '3':
-                id_usuario = int(input("ID do usuário: "))
+                id_usuario = int(input("ID do usuário: ")) 
                 print(Conta.getConta(id_usuario))
             case '4':
                 inicializar()
