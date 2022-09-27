@@ -145,7 +145,7 @@ def menuUsuario(email,id):
                 inicializar()
                 lista = getLivros()
                 for i in lista:
-                    print(f'Livro: {i.nome} / Autor: {i.autor} / Gênero: {i.genero} / Código: {i[3]} / Estante: {i[4]} / Link de Amostra: {i[5]}')
+                    print(f'Livro: {i[0]} / Autor: {i[1]} / Gênero: {i[2]} / Código: {i[3]} / Estante: {i[4]} / Link de Amostra: {i[5]}')
                 fechar()
             case '2':
                 #em vez de pedir o id do usuario, pegar altomaticamente.
