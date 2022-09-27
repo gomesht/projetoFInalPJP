@@ -18,7 +18,6 @@ def menuLogin():
         email = input("Email: ")
         senha = input("Senha: ")
         inicializar()
-        id_usuaio = getID(email)
         
         try:
             global conta
@@ -27,9 +26,6 @@ def menuLogin():
         
         except EmailSenhaIncorretoError  :
             print("Usuário e/ou senha inválido(s)!")
-            conta = None
-        except ValueError as erro:
-            print("Usuário e/ou senha inválido(s)!", erro)
             conta = None
         
             # inicializar()
@@ -43,8 +39,7 @@ def menuLogin():
                 menuAdmin(conta)
                 break
             elif type(conta) == UsuarioNormal:
-                id_usuario = getID(email)
-                menuUsuario(id_usuario)
+                menuUsuario(conta.id)
                 break
         
 def menuCadastroUsuario():
