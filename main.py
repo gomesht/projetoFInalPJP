@@ -83,7 +83,8 @@ def menuAdmin(conta):
                 fechar()
             case '3':
                 # esperar classe ficar pronta para implementar
-                pass
+                id_usuario = int(input("ID do usuário: "))
+                print(Conta.getConta(id_usuario))
             case '4':
                 inicializar()
                 print(usuariosComAtraso())
