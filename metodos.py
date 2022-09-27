@@ -147,13 +147,13 @@ def getLivros(**filtros):
 def sugestoes_livros(livro,id_usuario):
     cursor.execute('INSERT INTO sugestoes(livro,id_usuario) VALUES (?,?)',(livro,id_usuario))
     conexao.commit()
-
-def disponibilidadeLivro(codigo):
-    cursor.execute('SELECT codigo_livro,status FROM emprestimos')
-    for item in cursor.fetchall():
-        if codigo == item[0] and item[1] != "entregue" and item[1] != "reservado":
-            return item[1]
-    return "disponivel"
+##############################  ARRUMAR ###############################################
+# def disponibilidadeLivro(codigo):
+#     cursor.execute('SELECT codigo_livro,status FROM emprestimos')
+#     for item in cursor.fetchall():
+#         if codigo == item[0] and item[1] != "entregue" and item[1] != "reservado":
+#             return item[1]
+#     return "disponivel"
 
 ########################################################################################
 # Métodos de usuário

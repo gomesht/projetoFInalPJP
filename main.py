@@ -156,7 +156,7 @@ def menuUsuario(id):
                 print('')
                 fechar()
             case '2':
-                #em vez de pedir o id do usuario, pegar altomaticamente.
+                inicializar()
                 data_emprestimo = date.today()
                 data_devolucao = data_emprestimo + timedelta(days = 7)
                 c = 0
@@ -164,33 +164,24 @@ def menuUsuario(id):
                     if c == 5:
                         break
                     id_usuario = id
+                        
                     while True:
                         codigo_livro = int(input("Código do livro: "))
-                        c = 0
-                        while True:
-                            if c == 2:
-                                print('\nCodigo incorreto\n')
-                                break
-                            if c == 1:
-                                break
-                            inicializar()
-                            cursor.execute("SELECT Codigo FROM Livros")
-                            for i in cursor.fetchall():
-                                if codigo_livro == i[0]:
-                                    c = 1
-                                    break
-                                else:
-                                    c = 2
-                        if c == 1 and disponibilidadeLivro(codigo_livro) == "disponivel":
-                            registrosEmprestimos(str(data_emprestimo), str(data_devolucao), id_usuario, codigo_livro,'resevado')
-                            print('\nLivro Reservado\n')
-                            c = 5
-                            break
+                        try:
+                            Livro(codigo_livro)
+                        except Exception:
+                            print('Codigo do livro não existe')
                         else:
-                            print('\nLivro já reservado\n')
-                            c = 5
-                            break                    
-                fechar()
+                            break
+                    if Livro(codigo_livro).disponibilidade == "disponivel":
+                        registrosEmprestimos(str(data_emprestimo), str(data_devolucao), id_usuario, codigo_livro,'resevado')
+                        print('\nLivro Reservado\n')
+                        fechar()
+                        break
+                    else:
+                        print('\nLivro já reservado\n')
+                        fechar()
+                        break                    
             case '3':
                 inicializar()
                 while True:                    
