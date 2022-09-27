@@ -142,7 +142,12 @@ def getLivros(**filtros):
             item.append(disponibilidadeLivro(item[3]))
             resultados.append(item)
     
-    return resultados
+    retorno = []
+    for resultado in resultados:
+        retorno.append(Livro(resultado[3]))
+    
+    return retorno
+
 def sugestoes_livros(livro,id_usuario):
     cursor.execute('INSERT INTO sugestoes(livro,id_usuario) VALUES (?,?)',(livro,id_usuario))
     conexao.commit()
@@ -485,7 +490,7 @@ class Conta(ABC):
         return conta
             
     def __str__(self) -> str:
-        return f"Tipo: {type(self)}; Nome: {self.nome}; Endereço: {self.endereço}; Cpf: {self.cpf}; Telefone: {self.telefone}; Email: {self.email}; Senha: {self.senha}"
+        return f"Tipo: {type(self)}; Nome: {self.nome}; Endereço: {self.endereço}; Cpf: {self.cpf}; Telefone: {self.telefone}; Email: {self.email}; Senha: {self.senha}; Livros emprestados: {self.livrosEmprestados}"
 
 class UsuarioNormal(Conta):
     @overload
