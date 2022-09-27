@@ -49,8 +49,8 @@ def criarTabelaContas():
 def criarTabelaEmprestimos():
 
     cursor.execute('CREATE TABLE IF NOT EXISTS emprestimos ('
-    'data_emprestimo BLOB NOT NULL,'
-    'data_devolucao BLOB NOT NULL,'
+    'data_emprestimo TEXT NOT NULL,'
+    'data_devolucao TEXT NOT NULL,'
     'id_usuario INTEGER NOT NULL,'
     'codigo_livro INTEGER NOT NULL,'
     'status TEXT NOT NULL,'
@@ -151,7 +151,7 @@ def sugestoes_livros(livro,id_usuario):
 def disponibilidadeLivro(codigo):
     cursor.execute('SELECT codigo_livro,status FROM emprestimos')
     for item in cursor.fetchall():
-        if codigo == item[0] and item[1] != "entregue":
+        if codigo == item[0] and item[1] != "entregue" and item[1] != "reservado":
             return item[1]
     return "disponivel"
 
@@ -177,7 +177,7 @@ def Login(email, senha):
                 return UsuarioADM(item[0])
             elif item[6] > 1 or item[6] < 0:
                 return Exception("Erro: encontrada conta com tipo inválido")
-    raise EmailSenhaIncorreto()
+    raise EmailSenhaIncorretoError()
 
 def remover_usuario(id):
 
@@ -195,7 +195,7 @@ def EmprestimosUsuario(id):
     return emprestimos 
      
 def atualizaStatus():
-    """Altera o status dos usuários em atraso para 0"""
+    """Altera o status dos emprestimos em atraso para atrasado """
     data_atual = datetime()
     cursor.execute(f'UPDATE emprestimos SET status = ? WHERE {data_atual} > data_entrega', 'atrasado')
     conexao.commit()
@@ -238,7 +238,7 @@ def countUsuários(tipo: int | None = None):
             i += 1
         elif conta[6] == tipo:
             i += 1
-    
+
     return i
 
 ##############################################################################################
@@ -251,13 +251,32 @@ def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livr
     conexao.commit()
 
 @overload
-def LeEmprestimos(key: int): ...
+def LeEmprestimos(livro, id: int): ...
 @overload
-def LeEmprestimos(key: str): ...
+def LeEmprestimos(usuario, id: int): ...
 
-def LeEmprestimos(key):
+def LeEmprestimos(key, id):
     """ Lê todos os empréstimos relacionados a uma instância de usuário ou livro """
-        
+
+    if type(key) == UsuarioNormal or type(key) == UsuarioADM:
+        idLoc = 2           
+    elif type(key) == Livro:
+        idLoc = 3
+    else:
+        raise TypeError
+
+    resultados = []
+    cursor.execute("SELECT * FROM emprestimos")
+    for valor in cursor.fetchall():
+        if valor[idLoc] == id:
+            resultados.append(valor)
+
+    return resultados
+    
+    retorno = []
+    for resultado in resultados:
+        retorno.append(Emprestimo(resultado[0],resultado[1],resultado[2],resultado[3]))
+    return retorno
 
 def devolucaoLivros(codigo):
 
@@ -291,7 +310,7 @@ class Livro():
     @overload 
     def __init__(self, Codigo:int): ...
 
-    def __init__(self, CodigoNome, Autor, Genero, Estante, LdeAmostra) -> None:
+    def __init__(self, CodigoNome, Autor = None, Genero = None, Estante = None, LdeAmostra = None) -> None:
         if type(CodigoNome) == str:
             if type(CodigoNome) != str or type(Autor) != str or type(Genero) != str or type(Estante) != str or type(LdeAmostra) != str:
                 raise TypeError()
@@ -318,8 +337,20 @@ class Livro():
         self.__Codigo = value
 
     @property
-    def disponibilidade():
-        pass 
+    def disponibilidade(self):
+        for emprestimo in LeEmprestimos(self, self.codigo):
+            if emprestimo[4] != "Entregue":
+                return emprestimo[4]
+        return "disponível"
+
+        emprestimo = LeEmprestimos(self, self.codigo) 
+        if len(emprestimo) > 0:
+            if Emprestimo.dataEmprestimo < datetime.datetime.today:
+                return "reservado"
+            if Emprestimo.dataDevolução > datetime.datetime.today:
+                return "atrasado"
+        else:
+            return "disponível"
 
     def apagar(self):
         """ 
@@ -356,9 +387,9 @@ class Conta(ABC):
                 raise ValueError("O cpf não é válido")
             if tipo != 0 and tipo != 1:
                 raise ValueError("Tipo fora do raio previsto (0-1)")
-
+        
             cadastroUsuario(idNome, endereço, cpf, telefone, email, senha, tipo)
-
+        
             self.__id = getID(email)
         else:
             if type(idNome) != int:
@@ -429,6 +460,10 @@ class Conta(ABC):
     def id(self, value):
         self.__id = value
 
+    @property
+    def livrosEmprestados(self):
+        return LeEmprestimos(self, self.id)
+
     @abstractmethod
     def apagar(self):
         """ 
@@ -438,8 +473,20 @@ class Conta(ABC):
         """
         remover_usuario(self.id)
 
+    @staticmethod
+    def getConta(id):
+        """ Insere o id e retorna diretamente uma instância de classe Usuário ou ADM dependendo do tipo de conta """
+        try:
+            conta = UsuarioNormal(id)
+        except TipoDeContaErradoError:
+            conta = UsuarioADM(id)
+        except ValueError as error:
+            raise ValueError(error)
+        
+        return conta
+            
     def __str__(self) -> str:
-        return f"Tipo: {type(self)}; Nome: {self.nome}; Endereço: {self.endereço}; Cpf: {self.cpf}; Telefone: {self.telefone}; Email: {self.email}; Senha: {self.senha}"
+        return f"Tipo: {type(self)}; Nome: {self.nome}; Endereço: {self.endereço}; Cpf: {self.cpf}; Telefone: {self.telefone}; Email: {self.email}; Senha: {self.senha}; Livros emprestados: {self.livrosEmprestados}"
 
 class UsuarioNormal(Conta):
     @overload
@@ -450,11 +497,15 @@ class UsuarioNormal(Conta):
         if type(idNome) == int:
             super().__init__(idNome)
             if getUsuario(idNome)[6] != 1:
-                raise ValueError(f"O id {idNome} referencia uma conta ADM. Use uma classe UsuarioADM no lugar")
+                raise TipoDeContaErradoError(f"O id {idNome} referencia uma conta ADM. Use uma classe UsuarioADM no lugar")
         else:
             super().__init__(idNome, endereço, cpf, telefone, email, senha, 1)  
     def apagar(self):
-        super().apagar()
+
+        if len(self.livrosEmprestados) == 0:
+            super().apagar()
+        else:
+            raise UsuárioNãoQuitadoError
 
 class UsuarioADM(Conta):
     @overload
@@ -466,24 +517,60 @@ class UsuarioADM(Conta):
         if type(idNome) == int:
             super().__init__(idNome)
             if getUsuario(idNome)[6] != 0:
-                raise ValueError(f"O id {idNome} referencia uma conta normal. Use uma classe UsuarioNormal no lugar")
+                raise TipoDeContaErradoError(f"O id {idNome} referencia uma conta normal. Use uma classe UsuarioNormal no lugar")
         else:
             super().__init__(idNome, endereço, cpf, telefone, email, senha, 0)
 
     def apagar(self):
         if countUsuários(0) > 1:
-            super().apagar()
+            if len(self.livrosEmprestados) == 0:
+                super().apagar()
+            else:
+                raise UsuárioNãoQuitadoError
         else:
             raise ApagarUnicoAdmError("Não é possível apagar o único ADM")
 
+class Emprestimo():
+    def __init__(self, dataEmprestimo, dataDevolução, id, codigo) -> None:
+        self.__dataEmprestimo = dataEmprestimo
+        self.__dataDevolução = dataDevolução
+        self.__id = id
+        self.__codigo = codigo
+
+    @property
+    def dataEmprestimo(self):
+        return self.__dataEmprestimo
+    @property
+    def dataDevolução(self):
+        return self.__dataDevolução
+    @property
+    def id(self):
+        return self.__id
+    @property
+    def codigo(self):
+        return self.__codigo
+
+    def extenderEmprestimo(self) -> None:
+        novaData = self.dataDevolução # + Algo mais
+        cursor.execute(f"UPDATE emprestimos SET data_devolucao = ? WHERE data_emprestimo = ?, data_devolucao = ?, id_usuario = ?, codigo_livro = ?", (novaData, self.dataEmprestimo, self.dataDevolução, self.id, self.codigo))
+        conexao.commit()
+
 ##############################################################################################
-# Exceptions
+# Exceptions 
 ##############################################################################################
 
-class ApagarUnicoAdmError(BaseException):
+class ApagarUnicoAdmError(RuntimeError):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
 
-class EmailSenhaIncorreto(ValueError):
+class EmailSenhaIncorretoError(ValueError):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+class UsuárioNãoQuitadoError(RuntimeError):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+class TipoDeContaErradoError(ValueError):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)

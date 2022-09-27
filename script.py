@@ -1,11 +1,9 @@
-from metodos import atualizaStatus, cadastro_livros, cadastroUsuario, criarTabelaContas, criarTabelaEmprestimos, criarTabelaLivros, criarTabelaSugestoes, EmprestimosUsuario, fechar, getLivros, inicializar, Login, remover_livro, remover_usuario, sugestoes_livros, usuariosComAtraso, baixaEmprestimo, disponibilidadeLivro, registrosEmprestimos, renovaçãoEmprestimo
+from metodos import *
 
 inicializar()
-
-#cadastroUsuario("Pedro", "São José", 2098312,143801938,"pedroh@pedroh.com","123",0)
-
-#EmprestimosUsuario, usuariosComAtraso, baixaEmprestimo, disponibilidadeLivro, registrosEmprestimos, renovaçãoEmprestimo
-
-registrosEmprestimos
-
+print(UsuarioNormal(4).livrosEmprestados)
 fechar()
+
+# Emprestimos ------------> Data Empréstimo - Data Devolução - id Usuário - codigo Livro
+# RegistroEmpréstimos ----> Data Empréstimo - Data Devolução - Nome Usuário - Telefone Usuário - Email Usuário - Endereço Usuário - Nome Livro - Autor Livro
+# 
