@@ -141,14 +141,17 @@ def menuAdmin(conta):
                 print("Opção inválida!")
 def menuUsuario(id):
     while True:
-        op = input('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5 - Sair')
+        print('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5 - Sair')
+        op = input('')
         match op:
             case '1':
                 #tera alteraçoes
                 inicializar()
                 lista = getLivros()
+                print('')
                 for i in lista:
                     print(f'Livro: {i[0]} / Autor: {i[1]} / Gênero: {i[2]} / Código: {i[3]} / Estante: {i[4]} / Link de Amostra: {i[5]}')
+                print('')
                 fechar()
             case '2':
                 #em vez de pedir o id do usuario, pegar altomaticamente.
