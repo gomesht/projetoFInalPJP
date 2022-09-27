@@ -141,12 +141,8 @@ def getLivros(**filtros):
             item = list(item)
             item.append(disponibilidadeLivro(item[3]))
             resultados.append(item)
-    
-    retorno = []
-    for resultado in resultados:
-        retorno.append(Livro(resultado[3]))
-    
-    return retorno
+
+    return resultados
 
 def sugestoes_livros(livro,id_usuario):
     cursor.execute('INSERT INTO sugestoes(livro,id_usuario) VALUES (?,?)',(livro,id_usuario))
@@ -207,7 +203,7 @@ def usuariosComAtraso():
         data_atual = datetime.today()
         data_entrega = datetime.strptime(data, '%Y-%m-%d').date()
         if data_atual > data_entrega:
-            idAtrasados.append(line[0])
+            idAtrasados.append(line[2])
     return idAtrasados
 
 def getUsuario(id) -> Tuple:
@@ -325,24 +321,30 @@ class Livro():
 
     @property
     def nome(self):
-        return getLivros(self.codigo)[3]
-    @nome.setter
-    def nome(self,value):
-        self.__nome = value
+        return getLivros(Codigo=self.codigo)[0][0]
 
+    @property
+    def autor(self):
+        return getLivros(Codigo=self.codigo)[0][1]
+
+    @property
+    def genero(self):
+        return getLivros(Codigo=self.codigo)[0][2]
+    
     @property
     def codigo(self):
         return self.__Codigo
-    @codigo.setter
-    def codigo(self,value):
-        self.__Codigo = value
+    
+    @property
+    def estante(self):
+        return getLivros(Codigo=self.codigo)[0][4]
+
+    @property
+    def linkDeAmostra(self):
+        return getLivros(Codigo=self.codigo)[0][5]
 
     @property
     def disponibilidade(self):
-        for emprestimo in LeEmprestimos(self, self.codigo):
-            if emprestimo[4] != "Entregue":
-                return emprestimo[4]
-        return "disponível"
 
         emprestimo = LeEmprestimos(self, self.codigo) 
         if len(emprestimo) > 0:

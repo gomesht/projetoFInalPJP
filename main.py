@@ -17,9 +17,11 @@ def menuLogin():
     while True:
         email = input("Email: ")
         senha = input("Senha: ")
-        id_usuaio = getID(email)
         inicializar()
+        id_usuaio = getID(email)
+       
         try:
+            global conta
             conta = Login(email, senha)
         except EmailSenhaIncorretoError:
             print("Usuário e/ou senha inválido(s)!")
@@ -31,36 +33,38 @@ def menuLogin():
             #         tipo = line[0]
             
         if type(conta) == UsuarioADM:
-            menuAdmin()
+            menuAdmin(conta)
             break
         elif type(conta) == UsuarioNormal:
-            menuUsuario(email,id_usuaio)
+            id_usuario = getID(email)
+            menuUsuario(id_usuario)
             break
     
 def menuCadastroUsuario():
     
     nome = input("Nome: ")
-    telefone = input("Telefone: ")
+    telefone = int(input("Telefone: "))
     endereco = input("Endereço: ")
     cpf = input("CPF: ")
     email = input("E-mail: ")
     while True:
         senha = input("Digite uma senha: ")
-        confirmaSenha = input("Digite a senha novamente")
+        confirmaSenha = input("Digite a senha novamente: ")
         if senha == confirmaSenha:
             break
         else:
             print("As senhas precisam ser iguais! Digite novamente.")
 
     inicializar()
-    try:    
+    try:  
+        
         contaCadastrada = UsuarioNormal(nome, endereco, cpf, telefone, email, senha)
-    except:
-        print("Erro ao cadastrar usuário!")
+    except Exception as erro:
+        print("Erro ao cadastrar usuário!", erro)
 
     fechar()
 
-    menuUsuario(contaCadastrada)
+    # menuUsuario(contaCadastrada)
         
         
     
@@ -82,7 +86,6 @@ def menuAdmin(conta):
                 devolucaoLivros(codigo)
                 fechar()
             case '3':
-                # esperar classe ficar pronta para implementar
                 id_usuario = int(input("ID do usuário: "))
                 print(Conta.getConta(id_usuario))
             case '4':
@@ -136,7 +139,7 @@ def menuAdmin(conta):
                 break
             case _:
                 print("Opção inválida!")
-def menuUsuario(email,id):
+def menuUsuario(id):
     while True:
         op = input('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5 - Sair')
         match op:
@@ -225,3 +228,4 @@ def menuUsuario(email,id):
             case _:
                 print('\nOpção incorreta\n')
 
+menuInicial()
