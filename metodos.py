@@ -186,7 +186,7 @@ def remover_usuario(id):
 
 def EmprestimosUsuario(id):
     """Entrada ID do usuário, saída relatório dos emprestimos de livros com código do livro, data de emprestimo e data de devolução"""
-
+    
     cursor.execute('SELECT codigo_livro, data_emprestimo, data_devolucao, id_usuario FROM emprestimos')
     emprestimos = []
     for line in cursor.fetchall():
@@ -194,18 +194,15 @@ def EmprestimosUsuario(id):
             emprestimos.append(line)
     return emprestimos 
      
-def atualizaStatus():
-    """Altera o status dos emprestimos em atraso para atrasado """
-    data_atual = datetime()
-    cursor.execute(f'UPDATE emprestimos SET status = ? WHERE {data_atual} > data_entrega', 'atrasado')
-    conexao.commit()
-
 def usuariosComAtraso():
     """Retorna uma lista com os id dos usuários em atraso"""
     cursor.execute('SELECT id_usuario, status FROM emprestimos')
     idAtrasados = []
     for line in cursor.fetchall():
-        if line[1] == "atrasado":
+        data = str(line[1])
+        data_atual = datetime.today()
+        data_entrega = datetime.strptime(data, '%Y-%m-%d').date()
+        if data_atual > data_entrega:
             idAtrasados.append(line[0])
     return idAtrasados
 
