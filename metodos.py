@@ -242,7 +242,7 @@ def countUsuários(tipo: int | None = None):
     return i
 
 ##############################################################################################
-# Emprestimos #
+# Emprestimos
 ##############################################################################################
 
 def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status):
