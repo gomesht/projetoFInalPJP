@@ -1,0 +1,2 @@
+def isEmailValido(email: str):
+    
