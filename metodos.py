@@ -207,7 +207,7 @@ def usuariosComAtraso():
         data_atual = datetime.today()
         data_entrega = datetime.strptime(data, '%Y-%m-%d').date()
         if data_atual > data_entrega:
-            idAtrasados.append(line[0])
+            idAtrasados.append(line[2])
     return idAtrasados
 
 def getUsuario(id) -> Tuple:
