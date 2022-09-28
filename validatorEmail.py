@@ -1,9 +1,7 @@
 def isEmailValido(email: str) -> bool:
     """ 
     Automaticamente analisa se um email é válido ou não \n
-    ATENÇÃO: Remova todos os espaços no começo 
-    e no fim da string antes usar este método
-    senão o resultado será False
+    ATENÇÃO: Remova todos os espaços no começo e no fim da string antes usar este método senão o resultado será False
     """
 
     if type(email) != str:
