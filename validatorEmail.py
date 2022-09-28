@@ -1,8 +1,18 @@
 def isEmailValido(email: str) -> bool:
+    """ 
+    Automaticamente analisa se um email é válido ou não \n
+    ATENÇÃO: Remova todos os espaços no começo 
+    e no fim da string antes usar este método
+    senão o resultado será False
+    """
+
     if type(email) != str:
         raise ValueError(f"Email inserido não é uma string")
 
     if email == "" or not "@" in email:
+        return False
+
+    if " " in email:
         return False
 
     part1 = email.split("@")[0]
