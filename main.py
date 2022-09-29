@@ -176,8 +176,10 @@ def menuUsuario(id):
                             print('Codigo do livro não existe')
                         else:
                             break
-                    if Livro(codigo_livro).disponi1bilidade == "disponivel":
-                        registrosEmprestimos(str(data_emprestimo), str(data_devolucao), id_usuario, codigo_livro,'resevado')
+                    if Livro(codigo_livro).disponibilidade == "disponível":
+                        
+
+                        registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
                         print('\nLivro Reservado\n')
                         fechar()
                         break

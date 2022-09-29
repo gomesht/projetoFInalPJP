@@ -246,9 +246,9 @@ def countUsuários(tipo: int | None = None):
 # Emprestimos
 ##############################################################################################
 
-def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status):
+def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livro):
     """Insere os dados de emprestimos do banco de dados"""
-    cursor.execute('INSERT INTO emprestimos (data_emprestimo, data_devolucao, id_usuario, codigo_livro, status) VALUES (?,?,?,?,?)',(data_emprestimo,data_devoluçao,id_usuario, codigo_livro, status))
+    cursor.execute('INSERT INTO emprestimos (data_emprestimo, data_devolucao, id_usuario, codigo_livro) VALUES (?,?,?,?)',(data_emprestimo,data_devoluçao,id_usuario, codigo_livro))
     conexao.commit()
 
 @overload
@@ -352,10 +352,12 @@ class Livro():
 
         emprestimo = LeEmprestimos(self, self.codigo) 
         if len(emprestimo) > 0:
-            if emprestimo[0][0] < datetime.datetime.today:
+            if emprestimo[0][0] > datetime.datetime.today:
                 return "reservado"
-            if emprestimo[0][1] > datetime.datetime.today:
+            if emprestimo[0][1] < datetime.datetime.today:
                 return "atrasado"
+            else:
+                return "emprestado"
         else:
             return "disponível"
 
