@@ -350,11 +350,11 @@ class Livro():
     @property
     def disponibilidade(self):
         
-        emprestimo = LeEmprestimos(self, self.codigo)
-        dataEmp = datetime.date(int(emprestimo[0][0].split(" ")[0]),int(emprestimo[0][0].split(" ")[1]),int(emprestimo[0][0].split(" ")[2]))
-        dataDev = datetime.date(int(emprestimo[0][1].split(" ")[0]),int(emprestimo[0][1].split(" ")[1]),int(emprestimo[0][1].split(" ")[2]))
-        
+        emprestimo = LeEmprestimos(self, self.codigo)        
         if len(emprestimo) > 0:
+            dataEmp = datetime.date(int(emprestimo[0][0].split(" ")[0]),int(emprestimo[0][0].split(" ")[1]),int(emprestimo[0][0].split(" ")[2]))
+            dataDev = datetime.date(int(emprestimo[0][1].split(" ")[0]),int(emprestimo[0][1].split(" ")[1]),int(emprestimo[0][1].split(" ")[2]))
+
             if dataEmp > datetime.datetime.today().date():
                 return "reservado"
             if dataDev < datetime.datetime.today().date():
