@@ -15,8 +15,8 @@ def menuInicial():
                 print("Opção inválida!")
 def menuLogin():
     while True:
-        email = input("Email: ")
-        senha = input("Senha: ")
+        email = input("Email: ").lower()
+        senha = input("Senha: ").lower()
         inicializar()
         
         try:
@@ -44,11 +44,11 @@ def menuLogin():
         
 def menuCadastroUsuario():
     
-    nome = input("Nome: ")
+    nome = input("Nome: ").capitalize()
     telefone = int(input("Telefone: "))
-    endereco = input("Endereço: ")
+    endereco = input("Endereço: ").capitalize()
     cpf = input("CPF: ")
-    email = input("E-mail: ")
+    email = input("E-mail: ").lower()
     while True:
         senha = input("Digite uma senha: ")
         confirmaSenha = input("Digite a senha novamente: ")
@@ -110,10 +110,13 @@ def menuAdmin(conta):
                 remover_livro(codigo)
                 fechar()
             case '7':
-                id_user = int(input("Apagar usuário com ID: ")) 
-                inicializar()
-                remover_usuario(id_user) # SUGESTÃO: usar Conta.getConta(id_user).apagar() no lugar. Assim, as verificações (Se a conta é a única ADM, se o usuário tem livros em atraso) serão feitas e retornaram erros a serem tratados aqi usando o try
-                fechar()
+                id_user = int(input("Apagar usuário com ID: "))
+                try: 
+                    inicializar()
+                    Conta.getConta(id_user).apagar() # SUGESTÃO: usar Conta.getConta(id_user).apagar() no lugar. Assim, as verificações (Se a conta é a única ADM, se o usuário tem livros em atraso) serão feitas e retornaram erros a serem tratados aqi usando o try
+                except:
+                    print('Erro ao apagar')    
+                    fechar()
             case '8':
                 nome = input("Nome: ")
                 telefone = input("Telefone: ")
@@ -173,7 +176,7 @@ def menuUsuario(id):
                             print('Codigo do livro não existe')
                         else:
                             break
-                    if Livro(codigo_livro).disponibilidade == "disponivel":
+                    if Livro(codigo_livro).disponi1bilidade == "disponivel":
                         registrosEmprestimos(str(data_emprestimo), str(data_devolucao), id_usuario, codigo_livro,'resevado')
                         print('\nLivro Reservado\n')
                         fechar()
