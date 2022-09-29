@@ -1,4 +1,4 @@
-import sqlite3, datetime
+import sqlite3, datetime, time
 from datetime import date, timedelta
 from typing import Tuple, overload
 from validacaoCPF import validarCpf  
@@ -53,7 +53,6 @@ def criarTabelaEmprestimos():
     'data_devolucao TEXT NOT NULL,'
     'id_usuario INTEGER NOT NULL,'
     'codigo_livro INTEGER NOT NULL,'
-    'status TEXT NOT NULL,'
     'FOREIGN KEY (id_usuario) REFERENCES cadastro (id),'
     'FOREIGN KEY (codigo_livro) REFERENCES Livros (Codigo) ON DELETE CASCADE ON UPDATE CASCADE'
     ')')
@@ -149,10 +148,15 @@ def sugestoes_livros(livro,id_usuario):
     conexao.commit()
 
 def disponibilidadeLivro(codigo):
-    cursor.execute('SELECT codigo_livro,status FROM emprestimos')
+    cursor.execute('SELECT * FROM emprestimos')
     for item in cursor.fetchall():
-        if codigo == item[0] and item[1] != "entregue" and item[1] != "reservado":
-            return item[1]
+        if codigo == item[3]:
+            if date(time.strptime(item[1])[0],time.strptime(item[1])[1],time.strptime(item[1])[2]) <= date.today():
+                return "atrasado"
+            elif date(time.strptime(item[0])[0],time.strptime(item[0])[1],time.strptime(item[0])[2]) >= date.today():
+                return "reservado"
+            else:
+                return "emprestado"
     return "disponivel"
 
 ########################################################################################
