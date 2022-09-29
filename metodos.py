@@ -269,11 +269,11 @@ def LeEmprestimos(key, id):
             resultados.append(valor)
 
     return resultados
-    
-    retorno = []
-    for resultado in resultados:
-        retorno.append(Emprestimo(resultado[0],resultado[1],resultado[2],resultado[3]))
-    return retorno
+
+    # retorno = []
+    # for resultado in resultados:
+    #     retorno.append(Emprestimo(resultado[0],resultado[1],resultado[2],resultado[3]))
+    # return retorno
 
 def devolucaoLivros(codigo):
 
@@ -348,9 +348,9 @@ class Livro():
 
         emprestimo = LeEmprestimos(self, self.codigo) 
         if len(emprestimo) > 0:
-            if Emprestimo.dataEmprestimo < datetime.datetime.today:
+            if emprestimo[0][0] < datetime.datetime.today:
                 return "reservado"
-            if Emprestimo.dataDevolução > datetime.datetime.today:
+            if emprestimo[0][1] > datetime.datetime.today:
                 return "atrasado"
         else:
             return "disponível"
@@ -539,6 +539,11 @@ class Emprestimo():
         self.__dataDevolução = dataDevolução
         self.__id = id
         self.__codigo = codigo
+
+        cursor.execute("SELECT * FROM EMPRESTIMOS")
+        for emp in cursor.fetchall():
+            
+            pass
 
     @property
     def dataEmprestimo(self):
