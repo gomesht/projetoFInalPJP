@@ -80,7 +80,7 @@ def menuAdmin(conta):
                 id_usuario = int(input("ID do usuário: "))
                 codigo_livro = int(input("Código do livro: "))
                 inicializar()
-                registrosEmprestimos(str(data_emprestimo), str(data_devolucao), id_usuario, codigo_livro, "emprestado")
+                registrosEmprestimos(str(data_emprestimo), str(data_devolucao), id_usuario, codigo_livro)
                 fechar()
             case '2':
                 codigo = int(input("Código do livro:"))
