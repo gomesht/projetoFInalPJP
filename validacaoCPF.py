@@ -7,7 +7,7 @@ def validarCpf(cpf):
             if i.isnumeric():
                 listacpf.append(int(i))
             else:
-                print("CPF invalido")
+                return False
         
         mult =0
         for j in range (9):
@@ -26,13 +26,9 @@ def validarCpf(cpf):
             res1 = 0
         if res2 == 10:
             res2 = 0
-        print(res1, res2, listacpf[9], listacpf[10])
-        if res1 == listacpf[9] and res2 == listacpf[10]:
-            print ("CPF válido") 
+        if res1 == listacpf[9] and res2 == listacpf[10]: 
             return True  
         else:
-            print("CPF invalido")
             return False 
     else:
-        print("CPF invalido")
         return False                 

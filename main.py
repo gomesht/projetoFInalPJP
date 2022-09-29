@@ -1,6 +1,8 @@
 from datetime import timedelta, date
-from classes import *
 from metodos import *
+from validacaoCPF import validarCpf
+from validatorEmail import isEmailValido
+
 def menuInicial():
     while True:
         op = input("1 - Login\n2 - Cadastro\n3 - Fechar\n")
@@ -43,28 +45,37 @@ def menuLogin():
                 break
         
 def menuCadastroUsuario():
-    
-    nome = input("Nome: ").capitalize()
-    telefone = int(input("Telefone: "))
-    endereco = input("Endereço: ").capitalize()
-    cpf = input("CPF: ")
-    email = input("E-mail: ").lower()
     while True:
-        senha = input("Digite uma senha: ")
-        confirmaSenha = input("Digite a senha novamente: ")
-        if senha == confirmaSenha:
-            break
-        else:
-            print("As senhas precisam ser iguais! Digite novamente.")
-
-    inicializar()
-    try:  
+        inicializar()
+        nome = input("Nome: ").capitalize()
+        telefone = int(input("Telefone: "))
+        endereco = input("Endereço: ").capitalize()
+        cpf = input("CPF: ")
         
-        contaCadastrada = UsuarioNormal(nome, endereco, cpf, telefone, email, senha)
-    except Exception as erro:
-        print("Erro ao cadastrar usuário!", erro)
+        while not validarCpf(cpf):
+            print("CPF inválido, digite novamente:")
+            cpf = input("CPF: ")
 
-    fechar()
+        email = input("E-mail: ").lower()
+
+        while not isEmailValido(email):
+            print('\nEmail invalido, digite novamente\n')
+            email = input("E-mail: ").lower()
+
+        while True:
+            senha = input("\nDigite sua senha: ")
+            confirmaSenha = input("Digite sua senha novamente: ")           
+            if senha == confirmaSenha:
+                break
+            else:
+                print("As senhas precisam ser iguais! Digite novamente.")
+        try:            
+            contaCadastrada = UsuarioNormal(nome, endereco, cpf, telefone, email, senha)
+            print('\nCadastro Concluido\n')
+            menuInicial()
+        except Exception as erro:
+            print("Erro ao cadastrar usuário!", erro)
+            fechar()
 
     # menuUsuario(contaCadastrada)
         
