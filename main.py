@@ -66,7 +66,10 @@ def menuCadastroUsuario():
             senha = input("\nDigite sua senha: ")
             confirmaSenha = input("Digite sua senha novamente: ")           
             if senha == confirmaSenha:
-                break
+                if requisitosSenha():
+                    break
+                else:
+                    print("Senha fraca")
             else:
                 print("As senhas precisam ser iguais! Digite novamente.")
         try:            
