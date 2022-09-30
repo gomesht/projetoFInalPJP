@@ -208,7 +208,7 @@ def menuUsuario(id):
                 lista = getLivros()
                 print('')
                 for i in lista:
-                    print(f'Livro: {i[0]} / Autor: {i[1]} / Gênero: {i[2]} / Código: {i[3]} / Estante: {i[4]} / Link de Amostra: {i[5]}')
+                    print(f'Livro: {i[0]} / Autor: {i[1]} / Gênero: {i[2]} / Código: {i[3]} / Estante: {i[4]} / Link de Amostra: {i[5]} / Status: {i[6]}')
                 print('')
                 fechar()
             case '2':
@@ -243,22 +243,19 @@ def menuUsuario(id):
             case '3':
                 inicializar()
                 while True:                    
-                    data_devolucao = data_devolucao + timedelta(days=7)
+                    data_devolucao = None
+                    data_devolucao + timedelta(days=7)
                     codigo_livro = int(input("Código do livro: "))
                     c = 0
                     while True:
-                        if c == 2:
-                            print('\nCodigo incorreto\n')
+                        codigo_livro = int(input("Código do livro: "))
+                        try:
+                            Livro(codigo_livro)
+                        except Exception:
+                            print('Codigo do livro não existe')
+                        else:
+                            C += 1
                             break
-                        if c == 1:
-                            break
-                        cursor.execute("SELECT Codigo FROM Livros")
-                        for i in cursor.fetchall():
-                            if codigo_livro == i[0]:
-                                c = 1
-                                break
-                            else:
-                                c = 2
                     if c == 1:
                         renovaçãoEmprestimo(data_devolucao,codigo_livro)
                         print('\nRenovado com sucesso\n')
