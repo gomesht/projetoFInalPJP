@@ -164,7 +164,7 @@ def menuAdmin(conta):
                 print("Opção inválida!")
 def menuUsuario(id):
     while True:
-        print('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5 - Sair')
+        print('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5- Alterar senha\n6 - Sair\n')
         op = input('')
         match op:
             case '1':
