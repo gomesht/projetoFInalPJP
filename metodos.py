@@ -151,9 +151,9 @@ def disponibilidadeLivro(codigo):
     cursor.execute('SELECT * FROM emprestimos')
     for item in cursor.fetchall():
         if codigo == item[3]:
-            if date(time.strptime(item[1])[0],time.strptime(item[1])[1],time.strptime(item[1])[2]) <= date.today():
+            if date(time.strptime(item[1], "%Y %m %d")[0],time.strptime(item[1], "%Y %m %d")[1],time.strptime(item[1], "%Y %m %d")[2]) <= date.today():
                 return "atrasado"
-            elif date(time.strptime(item[0])[0],time.strptime(item[0])[1],time.strptime(item[0])[2]) >= date.today():
+            elif date(time.strptime(item[0], "%Y %m %d")[0],time.strptime(item[0], "%Y %m %d")[1],time.strptime(item[0], "%Y %m %d")[2]) >= date.today():
                 return "reservado"
             else:
                 return "emprestado"
