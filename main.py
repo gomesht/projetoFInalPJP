@@ -239,6 +239,20 @@ def menuUsuario(id):
                         break
                 fechar()
             case '5':
+                while True:
+                    senha = input("Novo Senha: ")
+                    senha1 = input("Repita a nova senha: ")
+                    if senha == senha1:
+                        if requisitosSenha(senha):
+                            inicializar()
+                            setInUsuarios(id, 'senha', senha)
+                            fechar()
+                            break
+                        else:
+                            print("Senha fraca")
+                    else:
+                        print("As senhas precisam ser iguais")
+            case '6':
                 break
             case _:
                 print('\nOpção incorreta\n')
