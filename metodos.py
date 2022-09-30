@@ -242,6 +242,38 @@ def countUsuários(tipo: int | None = None):
 
     return i
 
+def requisitosSenha(senha):
+    if len(senha) < 6:
+        return False
+    else:
+        return True
+    # verificaCaracteres = False
+    # verificaNumeros = False
+    # verificaMaiusculas = False
+    # verificaMinusculas = False
+    # verificaTamanho = False
+    # caracteres = "!@#$%*-_+"
+    # for item in senha:
+    #     if item in caracteres:
+    #         verificaCaracteres = True
+    # numeros = "0123456789"
+    # for item in senha:
+    #     if item in numeros:
+    #         verificaNumeros = True
+    # maiusculas = "QWERTYUIOPASDFGHJKLZXCVBNM"
+    # for item in senha:
+    #     if item in maiusculas:
+    #         verificaMaiusculas = True
+    # minusculas = "qwertyuiopasdfghjklzxcvbnm"
+    # for item in senha:
+    #     if item in minusculas:
+    #         verificaMinusculas = True
+    # if len(senha) >= 6:
+    #     verificaTamanho = True
+    # if verificaTamanho == True and verificaCaracteres == True and verificaNumeros == True and verificaMaiusculas == True and verificaMinusculas == True:
+    #     return True
+
+
 ##############################################################################################
 # Emprestimos
 ##############################################################################################
