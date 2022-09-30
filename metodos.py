@@ -200,7 +200,7 @@ def EmprestimosUsuario(id):
      
 def usuariosComAtraso():
     """Retorna uma lista com os id dos usuários em atraso"""
-    cursor.execute('SELECT id_usuario, status FROM emprestimos')
+    cursor.execute('SELECT id_usuario FROM emprestimos')
     idAtrasados = []
     for line in cursor.fetchall():
         data = str(line[1])
