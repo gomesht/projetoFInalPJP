@@ -66,7 +66,10 @@ def menuCadastroUsuario():
             senha = input("\nDigite sua senha: ")
             confirmaSenha = input("Digite sua senha novamente: ")           
             if senha == confirmaSenha:
-                break
+                if requisitosSenha():
+                    break
+                else:
+                    print("Senha fraca")
             else:
                 print("As senhas precisam ser iguais! Digite novamente.")
         try:            
@@ -164,7 +167,7 @@ def menuAdmin(conta):
                 print("Opção inválida!")
 def menuUsuario(id):
     while True:
-        print('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5 - Sair')
+        print('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5- Alterar senha\n6 - Sair\n')
         op = input('')
         match op:
             case '1':
