@@ -83,7 +83,7 @@ def menuCadastroUsuario():
     
 def menuAdmin(conta):
     while True:
-        op = input('1 - Empréstimo de livro\n2 - Devolução de livro\n3 - Ver usuário\n4 - Usuários em atraso\n5 - Cadastrar livro\n6 - Remover livro\n7 - Remover usuario\n8 - Editar usuário\n9 - Cadastro Admin\n10 - Sair\n ')
+        op = input('1 - Empréstimo de livro\n2 - Devolução de livro\n3 - Ver usuário\n4 - Usuários em atraso\n5 - Cadastrar livro\n6 - Remover livro\n7 - Remover usuario\n8 - Cadastro Admin\n9 - Sair\n ')
         match op:
             case '1':
                 data_emprestimo = date.today()
@@ -136,41 +136,6 @@ def menuAdmin(conta):
                     print('Erro ao apagar')    
                     fechar()
             case '8':
-                id_usuario = int(input("ID do usuário: "))
-                while True:
-                    op = input("Editar:\n1 - Nome\n2 - Endereço\n3 -  CPF\n4 - Telefone\n5 - Email\n6 - sair\n")
-                    match op:
-                        case "1":
-                            nome = input("Novo nome: ")
-                            inicializar()
-                            setInUsuarios(id_usuario, 'nome', nome)
-                            fechar()
-                        case "2":
-                            endereco = input("Novo endereço: ")
-                            inicializar()
-                            setInUsuarios(id_usuario, 'endereco', endereco)
-                            fechar()
-                        case "3":
-                            cpf = input("CPF: ")
-                            inicializar()
-                            setInUsuarios(id_usuario, 'cpf', cpf)
-                            fechar()
-                        case "4":
-                            telefone = input("Novo Telefone: ")
-                            inicializar()
-                            setInUsuarios(id_usuario, 'telefone', telefone)
-                            fechar()
-                        case "5":
-                            email = input("Email: ")
-                            inicializar()
-                            setInUsuarios(id_usuario, 'email', email)
-                            fechar()
-                        case "6":
-                            break
-                        case _:
-                            print("Opção inválida!")
-
-            case '9':
                 nome = input("Nome: ").capitalize()
                 telefone = input("Telefone: ")
                 endereco = input("Endereço: ").capitalize()
@@ -193,13 +158,13 @@ def menuAdmin(conta):
                     print("Erro ao cadastrar usuário!")
 
                 
-            case '10':
+            case '9':
                 break
             case _:
                 print("Opção inválida!")
 def menuUsuario(id):
     while True:
-        print('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5 - Alterar senha\n6 - Sair')
+        print('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5 - Sair')
         op = input('')
         match op:
             case '1':
@@ -243,8 +208,7 @@ def menuUsuario(id):
             case '3':
                 inicializar()
                 while True:                    
-                    data_devolucao = None
-                    data_devolucao + timedelta(days=7)
+                    data_devolucao = data_devolucao + timedelta(days=7)
                     codigo_livro = int(input("Código do livro: "))
                     c = 0
                     while True:
@@ -275,17 +239,6 @@ def menuUsuario(id):
                         break
                 fechar()
             case '5':
-                while True:
-                    senha = input("Novo Senha: ")
-                    senha1 = input("Repita a nova senha: ")
-                    if senha == senha1:
-                        inicializar()
-                        setInUsuarios(id, 'senha', senha)
-                        fechar()
-                        break
-                    else:
-                        print("As senhas precisam ser iguais")
-            case '6':
                 break
             case _:
                 print('\nOpção incorreta\n')
