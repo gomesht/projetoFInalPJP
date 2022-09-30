@@ -208,7 +208,7 @@ def menuUsuario(id):
             case '3':
                 inicializar()
                 while True:                    
-                    data_devolucao = data_devolucao + timedelta(days=7)
+                    data_devolucao = timedelta(days=7)
                     codigo_livro = int(input("Código do livro: "))
                     c = 0
                     while True:
@@ -218,7 +218,7 @@ def menuUsuario(id):
                         except Exception:
                             print('Codigo do livro não existe')
                         else:
-                            C += 1
+                            c += 1
                             break
                     if c == 1:
                         renovaçãoEmprestimo(data_devolucao,codigo_livro)
