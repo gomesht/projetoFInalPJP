@@ -168,7 +168,7 @@ def menuAdmin(conta):
                 print("Opção inválida!")
 def menuUsuario(id):
     while True:
-        print('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5- Alterar senha\n6 - Sair\n')
+        print('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5 - Alterar senha\n6 - Sair\n')
         op = input('')
         match op:
             case '1':
@@ -191,11 +191,11 @@ def menuUsuario(id):
                     id_usuario = id
                         
                     while True:
-                        codigo_livro = int(input("Código do livro: "))
+                        codigo_livro = int(input("\nCódigo do livro: "))
                         try:
                             Livro(codigo_livro)
                         except Exception:
-                            print('Codigo do livro não existe')
+                            print('\nCodigo do livro não existe')
                         else:
                             break
                     if Livro(codigo_livro).disponibilidade == "disponível":
@@ -222,13 +222,13 @@ def menuUsuario(id):
                         except Exception:
                             print('Codigo do livro não existe')
                         else:
-                            c += 1
+                            c == 1
                             break
                     if c == 1:
                         renovaçãoEmprestimo(data_devolucao,codigo_livro)
                         print('\nRenovado com sucesso\n')
                         break
-                    else:
+                    if c != 1:
                         print('\nNão foi possivel renovar\n')
                 fechar()
             case '4':

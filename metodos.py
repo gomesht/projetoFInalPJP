@@ -318,7 +318,7 @@ def devolucaoLivros(codigo):
 
 def renovaçãoEmprestimo(nova_data_devolução,codigo_livro):
     """Altera os dados de emprestimos do banco de dados"""
-    cursor.execute('UPDATE emprestimos SET data_devoluçao = ? WHERE codigo_livro = ?', (nova_data_devolução,codigo_livro))
+    cursor.execute('UPDATE emprestimos SET data_devolucao = ? WHERE codigo_livro = ?', (nova_data_devolução,codigo_livro))
     conexao.commit()
 
 ##############################################################################################
