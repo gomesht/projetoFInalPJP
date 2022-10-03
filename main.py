@@ -4,6 +4,14 @@ from validacaoCPF import validarCpf
 from validatorEmail import isEmailValido
 
 def menuInicial():
+    inicializar()
+    criarTabelaDadosInativos()
+    criarTabelaContas()
+    criarTabelaLivros()
+    criarTabelaEmprestimos()
+    criarTabelaSugestoes()
+    fechar()
+
     while True:
         op = input("1 - Login\n2 - Cadastro\n3 - Fechar\n")
         match op:
@@ -19,6 +27,8 @@ def menuLogin():
     while True:
         email = input("Email: ").lower()
         senha = input("Senha: ").lower()
+        global cache_senha
+        cache_senha = senha
         inicializar()
         
         try:
@@ -94,16 +104,16 @@ def menuAdmin(conta):
                 data_devolucao = data_emprestimo + timedelta(days = 7)
                 id_usuario = int(input("ID do usuário: "))
                 codigo_livro = int(input("Código do livro: "))
-                usuario = getUsuario(id_usuario)
                 if id_usuario not in usuariosComAtraso():
-                    if len(LeEmprestimos(usuario, id_usuario)) < 3:
+                    if len(LeEmprestimos(True, id_usuario)) < 3:
                         inicializar()
-                        registrosEmprestimos(str(data_emprestimo), str(data_devolucao), id_usuario, codigo_livro)
+                        registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
+                        print('\nLivro Alugado com sucesso')
                         fechar()
                     else:
-                        print("O empréstimo não pode ser realizado pois o usuário já tem 3 emprestimos ativos.")
+                        print("\nO empréstimo não pode ser realizado pois o usuário já tem 3 emprestimos ativos.")
                 else:
-                    print("O empréstimo não pode ser realizado pois o usuário tem livro(s) em atraso.")
+                    print("\nO empréstimo não pode ser realizado pois o usuário tem livro(s) em atraso.")
             case '2':
                 codigo = int(input("Código do livro:"))
                 inicializar()
@@ -168,7 +178,7 @@ def menuAdmin(conta):
                 print("Opção inválida!")
 def menuUsuario(id):
     while True:
-        print('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5- Alterar senha\n6 - Sair\n')
+        print('1 - Pesquisar Livro\n2 - Reservar livro\n3 - Renovar livro\n4 - Sugerir Livro\n5 - Alterar senha\n6 - Sair\n')
         op = input('')
         match op:
             case '1':
@@ -191,11 +201,11 @@ def menuUsuario(id):
                     id_usuario = id
                         
                     while True:
-                        codigo_livro = int(input("Código do livro: "))
+                        codigo_livro = int(input("\nCódigo do livro: "))
                         try:
                             Livro(codigo_livro)
                         except Exception:
-                            print('Codigo do livro não existe')
+                            print('\nCodigo do livro não existe')
                         else:
                             break
                     if Livro(codigo_livro).disponibilidade == "disponível":
@@ -211,26 +221,22 @@ def menuUsuario(id):
                         break                    
             case '3':
                 inicializar()
-                while True:                    
-                    data_devolucao = timedelta(days=7)
-                    codigo_livro = int(input("Código do livro: "))
-                    c = 0
+                while True:
+                    data_emprestimo = date.today()                    
+                    data_devolucao = data_emprestimo + timedelta(days = 7)                 
                     while True:
                         codigo_livro = int(input("Código do livro: "))
                         try:
-                            Livro(codigo_livro)
-                        except Exception:
-                            print('Codigo do livro não existe')
+                            Livro(codigo_livro)                       
+                        except Exception as a:
+                            print('Codigo do livro não existe', a)
                         else:
-                            c += 1
                             break
-                    if c == 1:
-                        renovaçãoEmprestimo(data_devolucao,codigo_livro)
-                        print('\nRenovado com sucesso\n')
-                        break
-                    else:
-                        print('\nNão foi possivel renovar\n')
-                fechar()
+                    
+                    renovaçãoEmprestimo(str(data_devolucao).replace("-", " "),codigo_livro)
+                    print('\nRenovado com sucesso\n')
+                    fechar()
+                    break
             case '4':
                 inicializar()
                 while True:
@@ -244,18 +250,23 @@ def menuUsuario(id):
                 fechar()
             case '5':
                 while True:
-                    senha = input("Novo Senha: ")
-                    senha1 = input("Repita a nova senha: ")
-                    if senha == senha1:
-                        if requisitosSenha(senha):
-                            inicializar()
-                            setInUsuarios(id, 'senha', senha)
-                            fechar()
-                            break
+                    global cache_senha
+                    senha_atual = input('\nDigite sua senha atual: ')
+                    if senha_atual == cache_senha:
+                        senha = input("Nova Senha: ")
+                        senha1 = input("Repita sua nova senha: ")
+                        if senha == senha1:
+                            if requisitosSenha(senha):
+                                inicializar()
+                                setInUsuarios(id, 'senha', senha)
+                                fechar()
+                                break
+                            else:
+                                print("\nSenha fraca")
                         else:
-                            print("Senha fraca")
+                            print("\nAs senhas precisam ser iguais")
                     else:
-                        print("As senhas precisam ser iguais")
+                        print('\nSenha incorreta')
             case '6':
                 break
             case _:
@@ -263,3 +274,5 @@ def menuUsuario(id):
 
 if __name__ == "__main__":
     menuInicial()
+
+menuInicial()

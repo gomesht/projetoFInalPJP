@@ -1,5 +1,5 @@
 import sqlite3, datetime, time
-from datetime import date, timedelta
+from datetime import date, time, datetime, timedelta
 from typing import Tuple, overload
 from validacaoCPF import validarCpf  
 from abc import *          
@@ -63,6 +63,18 @@ def criarTabelaSugestoes():
     'livro TEXT NOT NULL,'
     'id_usuario INTEGER NOT NULL,'
     'FOREIGN KEY (id_usuario) REFERENCES cadastro (id) ON DELETE CASCADE ON UPDATE CASCADE'
+    ')')
+
+def criarTabelaDadosInativos():
+    cursor.execute('CREATE TABLE IF NOT EXISTS dadosInativos ('
+    'id	INTEGER NOT NULL UNIQUE,'
+    'livro TEXT NOT NULL,'
+    'autor TEXT NOT NULL,'
+    'nome TEXT NOT NULL,'
+    'telefone TEXT NOT NULL,'
+    'email TEXT NOT NULL,'
+    'data_emprestimo TEXT NOT NULL'
+    
     ')')
 
   
@@ -200,12 +212,12 @@ def EmprestimosUsuario(id):
      
 def usuariosComAtraso():
     """Retorna uma lista com os id dos usuários em atraso"""
-    cursor.execute('SELECT id_usuario FROM emprestimos')
+    cursor.execute('SELECT * FROM emprestimos')
     idAtrasados = []
     for line in cursor.fetchall():
         data = str(line[1])
         data_atual = date.today()
-        data_entrega = datetime.strptime(data, '%Y-%m-%d').date()
+        data_entrega = datetime.strptime(data, '%Y %m %d').date()
         if data_atual > data_entrega:
             idAtrasados.append(line[2])
     return idAtrasados
@@ -287,11 +299,18 @@ def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livr
 def LeEmprestimos(livro, id: int): ...
 @overload
 def LeEmprestimos(usuario, id: int): ...
+@overload
+def LeEmprestimos(IsUsuario, id: int): ...
+
 
 def LeEmprestimos(key, id):
     """ Lê todos os empréstimos relacionados a uma instância de usuário ou livro """
-
-    if type(key) == UsuarioNormal or type(key) == UsuarioADM:
+    if type(key) == bool:
+        if key == True:
+            idLoc = 2
+        else:
+            idLoc = 3
+    elif type(key) == UsuarioNormal or type(key) == UsuarioADM:
         idLoc = 2           
     elif type(key) == Livro:
         idLoc = 3
@@ -312,13 +331,31 @@ def LeEmprestimos(key, id):
     # return retorno
 
 def devolucaoLivros(codigo):
+    #passar dados para tabela de dados inativos 
+    cursor.execute("SELECT * FROM emprestimos") 
+    for valor in cursor.fetchall():
+        if valor[3] == codigo:
+            id_usuario = valor[2]
+            data_emprestimo = valor[0]
+    cursor.execute("SELECT * FROM cadastro")
+    for valor in cursor.fetchall():
+        if valor[0] == id_usuario:
+            nome = valor[1]
+            telefone = valor[3]
+            email = valor[4]
+    cursor.execute("SELECT * FROM Livros")
+    for valor in cursor.fetchall():
+        if valor[3] == codigo:
+            livro = valor[0]
+            autor = valor[1]
 
-    cursor.execute('UPDATE emprestimos SET status = ? WHERE codigo_livro = ?', ('entregue', codigo))
+    cursor.execute('INSERT INTO dadosInativos (livro, autor, nome, telefone, email, data_emprestimo) VALUES (?,?,?,?,?,?)',(livro, autor, nome, telefone, email, data_emprestimo))
+    cursor.execute('DELETE emprestimos WHERE codigo_livro = ?', (codigo,))
     conexao.commit()
 
 def renovaçãoEmprestimo(nova_data_devolução,codigo_livro):
     """Altera os dados de emprestimos do banco de dados"""
-    cursor.execute('UPDATE emprestimos SET data_devoluçao = ? WHERE codigo_livro = ?', (nova_data_devolução,codigo_livro))
+    cursor.execute('UPDATE emprestimos SET data_devolucao = ? WHERE codigo_livro = ?', (nova_data_devolução,codigo_livro))
     conexao.commit()
 
 ##############################################################################################
@@ -352,6 +389,9 @@ class Livro():
         else:
             if type(CodigoNome) != int:
                 raise TypeError()
+            
+            if len(getLivros(Codigo = CodigoNome)) == 0:
+                raise ValueError()
             
             self.__Codigo = CodigoNome
 
