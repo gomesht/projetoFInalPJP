@@ -4,11 +4,13 @@ from validacaoCPF import validarCpf
 from validatorEmail import isEmailValido
 
 def menuInicial():
+    inicializar()
     criarTabelaDadosInativos()
     criarTabelaContas()
     criarTabelaLivros()
     criarTabelaEmprestimos()
     criarTabelaSugestoes()
+    fechar()
 
     while True:
         op = input("1 - Login\n2 - Cadastro\n3 - Fechar\n")
@@ -272,3 +274,5 @@ def menuUsuario(id):
 
 if __name__ == "__main__":
     menuInicial()
+
+

@@ -73,7 +73,7 @@ def criarTabelaDadosInativos():
     'nome TEXT NOT NULL,'
     'telefone TEXT NOT NULL,'
     'email TEXT NOT NULL,'
-    'data_emprestimo TEXT NOT NULL,'
+    'data_emprestimo TEXT NOT NULL'
     
     ')')
 
