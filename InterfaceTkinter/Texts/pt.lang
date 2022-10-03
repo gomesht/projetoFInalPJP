@@ -1,0 +1,10 @@
+* Generals
+validarB -> Validar
+voltarB -> Voltar
+* Menu
+loginB -> Login
+cadastroB -> Cadastro
+sairB -> Sair da aplicação
+* Login
+emailL -> Insira seu email
+senhaL -> Insira sua senha

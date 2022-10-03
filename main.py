@@ -260,4 +260,5 @@ def menuUsuario(id):
             case _:
                 print('\nOpção incorreta\n')
 
-menuInicial()
+if __name__ == "__main__":
+    menuInicial()

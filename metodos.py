@@ -180,7 +180,7 @@ def Login(email, senha):
             elif item[6] == 0:
                 return UsuarioADM(item[0])
             elif item[6] > 1 or item[6] < 0:
-                return Exception("Erro: encontrada conta com tipo inválido")
+                return TipoDeContaErradoError("Erro: encontrada conta com tipo inválido")
     raise EmailSenhaIncorretoError()
 
 def remover_usuario(id):
