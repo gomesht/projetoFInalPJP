@@ -4,6 +4,12 @@ from validacaoCPF import validarCpf
 from validatorEmail import isEmailValido
 
 def menuInicial():
+    criarTabelaDadosInativos()
+    criarTabelaContas()
+    criarTabelaLivros()
+    criarTabelaEmprestimos()
+    criarTabelaSugestoes()
+
     while True:
         op = input("1 - Login\n2 - Cadastro\n3 - Fechar\n")
         match op:
