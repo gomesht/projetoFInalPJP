@@ -65,6 +65,18 @@ def criarTabelaSugestoes():
     'FOREIGN KEY (id_usuario) REFERENCES cadastro (id) ON DELETE CASCADE ON UPDATE CASCADE'
     ')')
 
+def criarTabelaDadosInativos():
+    cursor.execute('CREATE TABLE IF NOT EXISTS dadosInativos ('
+    'id	INTEGER NOT NULL UNIQUE,'
+    'livro TEXT NOT NULL,'
+    'autor TEXT NOT NULL,'
+    'nome TEXT NOT NULL,'
+    'telefone TEXT NOT NULL,'
+    'email TEXT NOT NULL,'
+    'data_emprestimo TEXT NOT NULL,'
+    
+    ')')
+
   
 ########################################################################################
 # Métodos de livros
@@ -312,8 +324,26 @@ def LeEmprestimos(key, id):
     # return retorno
 
 def devolucaoLivros(codigo):
+    #passar dados para tabela de dados inativos 
+    cursor.execute("SELECT * FROM emprestimos") 
+    for valor in cursor.fetchall():
+        if valor[3] == codigo:
+            id_usuario = valor[2]
+            data_emprestimo = valor[0]
+    cursor.execute("SELECT * FROM cadastro")
+    for valor in cursor.fetchall():
+        if valor[0] == id_usuario:
+            nome = valor[1]
+            telefone = valor[3]
+            email = valor[4]
+    cursor.execute("SELECT * FROM Livros")
+    for valor in cursor.fetchall():
+        if valor[3] == codigo:
+            livro = valor[0]
+            autor = valor[1]
 
-    cursor.execute('UPDATE emprestimos SET status = ? WHERE codigo_livro = ?', ('entregue', codigo))
+    cursor.execute('INSERT INTO dadosInativos (livro, autor, nome, telefone, email, data_emprestimo) VALUES (?,?,?,?,?,?)',(livro, autor, nome, telefone, email, data_emprestimo))
+    cursor.execute('DELETE emprestimos WHERE codigo_livro = ?', (codigo,))
     conexao.commit()
 
 def renovaçãoEmprestimo(nova_data_devolução,codigo_livro):
