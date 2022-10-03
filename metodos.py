@@ -353,6 +353,9 @@ class Livro():
             if type(CodigoNome) != int:
                 raise TypeError()
             
+            if len(getLivros(Codigo = CodigoNome)) == 0:
+                raise ValueError()
+            
             self.__Codigo = CodigoNome
 
     @property

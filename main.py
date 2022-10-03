@@ -19,6 +19,8 @@ def menuLogin():
     while True:
         email = input("Email: ").lower()
         senha = input("Senha: ").lower()
+        global cache_senha
+        cache_senha = senha
         inicializar()
         
         try:
@@ -211,26 +213,22 @@ def menuUsuario(id):
                         break                    
             case '3':
                 inicializar()
-                while True:                    
-                    data_devolucao = timedelta(days=7)
-                    codigo_livro = int(input("Código do livro: "))
-                    c = 0
+                while True:
+                    data_emprestimo = date.today()                    
+                    data_devolucao = data_emprestimo + timedelta(days = 7)                 
                     while True:
                         codigo_livro = int(input("Código do livro: "))
                         try:
-                            Livro(codigo_livro)
-                        except Exception:
-                            print('Codigo do livro não existe')
+                            Livro(codigo_livro)                       
+                        except Exception as a:
+                            print('Codigo do livro não existe', a)
                         else:
-                            c == 1
                             break
-                    if c == 1:
-                        renovaçãoEmprestimo(data_devolucao,codigo_livro)
-                        print('\nRenovado com sucesso\n')
-                        break
-                    if c != 1:
-                        print('\nNão foi possivel renovar\n')
-                fechar()
+                    
+                    renovaçãoEmprestimo(str(data_devolucao).replace("-", " "),codigo_livro)
+                    print('\nRenovado com sucesso\n')
+                    fechar()
+                    break
             case '4':
                 inicializar()
                 while True:
@@ -244,18 +242,23 @@ def menuUsuario(id):
                 fechar()
             case '5':
                 while True:
-                    senha = input("Novo Senha: ")
-                    senha1 = input("Repita a nova senha: ")
-                    if senha == senha1:
-                        if requisitosSenha(senha):
-                            inicializar()
-                            setInUsuarios(id, 'senha', senha)
-                            fechar()
-                            break
+                    global cache_senha
+                    senha_atual = input('\nDigite sua senha atual: ')
+                    if senha_atual == cache_senha:
+                        senha = input("Nova Senha: ")
+                        senha1 = input("Repita sua nova senha: ")
+                        if senha == senha1:
+                            if requisitosSenha(senha):
+                                inicializar()
+                                setInUsuarios(id, 'senha', senha)
+                                fechar()
+                                break
+                            else:
+                                print("\nSenha fraca")
                         else:
-                            print("Senha fraca")
+                            print("\nAs senhas precisam ser iguais")
                     else:
-                        print("As senhas precisam ser iguais")
+                        print('\nSenha incorreta')
             case '6':
                 break
             case _:
