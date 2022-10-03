@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 
 if __name__ == "InterfaceTkinter.windowDef":
-    import InterfaceTkinter.functions as widgetsDef, InterfaceTkinter.textsDef as textsDef
+    import InterfaceTkinter.functions as functions, InterfaceTkinter.textsDef as textsDef
 elif __name__ == "__main__":
     import functions, textsDef
 
@@ -10,7 +10,6 @@ class ValoresInterface():
     """ Estrutura contendo todos os valores nescessários para a interface """
 
     @staticmethod
-
     def texts():
         """ Textos utilizados na interface """
         alltxt = {}
@@ -31,20 +30,21 @@ class JanelaPrograma():
         for wd in self.children.values():
             wd.tkraise()
         
-
 class JanelaMenuInicial(tk.Frame, JanelaPrograma):
     """ Menu inicial """
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        self.botão_login    = ttk.Button(self, textvariable=ValoresInterface.texts()['loginB'])
-        self.botão_cadastro = ttk.Button(self, textvariable=ValoresInterface.texts()['cadastroB'])
-        self.botão_fechar   = ttk.Button(self, textvariable=ValoresInterface.texts()['sairB'])
+        self.botão_login    = ttk.Button(self,textvariable=ValoresInterface.texts()['loginB'])
+        self.botão_cadastro = ttk.Button(self,textvariable=ValoresInterface.texts()['cadastroB'])
+        self.botão_fechar   = ttk.Button(self,textvariable=ValoresInterface.texts()['sairB'])
 
-        ttk.Label(self, text="a").grid(column=0,row=0)
-        ttk.Label(self, text="a").grid(column=1,row=0)
+        self.botão_login.grid(column=0, row=0)
+        self.botão_cadastro.grid(column=0, row=1)
+        self.botão_fechar.grid(column=0, row=2)
 
-        self.grid(column=0,row=0, ipadx=self.master.winfo_width(), ipady=self.master.winfo_height())
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
 
 class JanelaLogin(tk.Frame, JanelaPrograma):
     """ Janela de login """
@@ -61,13 +61,13 @@ class JanelaLogin(tk.Frame, JanelaPrograma):
         self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'])
         self.botão_voltar  = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'])
 
-        ttk.Label(self, text="b").grid(column=0,row=0)
-        ttk.Label(self, text="b").grid(column=0,row=1)
-        self.master.update() 
+        # ttk.Label(self, text="b").grid(column=0,row=0)
+        # ttk.Label(self, text="b").grid(column=0,row=1)
+        # ttk.Label(self, text="b").grid(column=0,row=2)
+        # ttk.Label(self, text="b").grid(column=0,row=3)
 
-        self.configure(background="blue",padx=self.master.winfo_width(), pady=self.master.winfo_height())
-
-        self.place(in_=master, x=0,y=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
 
 class JanelaCadastro(tk.Frame, JanelaPrograma):
     """ Janela de cadastro """
@@ -101,13 +101,11 @@ class JanelaCadastro(tk.Frame, JanelaPrograma):
         self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'])
         self.botão_voltar  = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'])
 
-        for i in range(0,10):
-            ttk.Label(self, text="c").grid(column=i, row=i)
+        # for i in range(0,10):
+        #     ttk.Label(self, text="c").grid(column=i, row=i)
 
-        self.master.update() 
-
-        self.configure(background="red",padx=self.master.winfo_width(), pady=self.master.winfo_height())
-        self.place(in_=master, x=0, y=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
 
 class JanelaMenuInicialUsuário(tk.Frame, JanelaPrograma):
     """ Menu de uma conta de tipo usuário """
@@ -291,9 +289,9 @@ class Master(tk.Tk):
 
 if __name__ == "InterfaceTkinter.windowDef":
     master = Master()
-    #j1 = JanelaMenuInicial(master)
+    j1 = JanelaMenuInicial(master)
     j2 = JanelaLogin(master)
     j3 = JanelaCadastro(master)
-    print(master.winfo_width(), master.winfo_height())
-    j3.levantarJanela()
+    
+    j1.levantarJanela()
     master.mainloop()

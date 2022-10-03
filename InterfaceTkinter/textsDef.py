@@ -18,9 +18,7 @@ def changerLanguage():
     texts = {}
     i = 1
     for line in lines:
-        if line.startswith("*") or line.strip() == "":
-            ...
-        else:
+        if not (line.startswith("*") or line.strip() == ""):
             if "->" in line:
                 name, value = line.split("->", 1)
                 name, value = name.strip(), value.strip()
