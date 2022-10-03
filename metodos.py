@@ -1,5 +1,5 @@
 import sqlite3, datetime, time
-from datetime import date, timedelta
+from datetime import date, time, datetime, timedelta
 from typing import Tuple, overload
 from validacaoCPF import validarCpf  
 from abc import *          
@@ -212,12 +212,12 @@ def EmprestimosUsuario(id):
      
 def usuariosComAtraso():
     """Retorna uma lista com os id dos usuários em atraso"""
-    cursor.execute('SELECT id_usuario FROM emprestimos')
+    cursor.execute('SELECT * FROM emprestimos')
     idAtrasados = []
     for line in cursor.fetchall():
         data = str(line[1])
         data_atual = date.today()
-        data_entrega = datetime.strptime(data, '%Y-%m-%d').date()
+        data_entrega = datetime.strptime(data, '%Y %m %d').date()
         if data_atual > data_entrega:
             idAtrasados.append(line[2])
     return idAtrasados
@@ -299,11 +299,18 @@ def registrosEmprestimos(data_emprestimo,data_devoluçao,id_usuario, codigo_livr
 def LeEmprestimos(livro, id: int): ...
 @overload
 def LeEmprestimos(usuario, id: int): ...
+@overload
+def LeEmprestimos(IsUsuario, id: int): ...
+
 
 def LeEmprestimos(key, id):
     """ Lê todos os empréstimos relacionados a uma instância de usuário ou livro """
-
-    if type(key) == UsuarioNormal or type(key) == UsuarioADM:
+    if type(key) == bool:
+        if key == True:
+            idLoc = 2
+        else:
+            idLoc = 3
+    elif type(key) == UsuarioNormal or type(key) == UsuarioADM:
         idLoc = 2           
     elif type(key) == Livro:
         idLoc = 3

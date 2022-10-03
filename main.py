@@ -104,16 +104,16 @@ def menuAdmin(conta):
                 data_devolucao = data_emprestimo + timedelta(days = 7)
                 id_usuario = int(input("ID do usuário: "))
                 codigo_livro = int(input("Código do livro: "))
-                usuario = getUsuario(id_usuario)
                 if id_usuario not in usuariosComAtraso():
-                    if len(LeEmprestimos(usuario, id_usuario)) < 3:
+                    if len(LeEmprestimos(True, id_usuario)) < 3:
                         inicializar()
-                        registrosEmprestimos(str(data_emprestimo), str(data_devolucao), id_usuario, codigo_livro)
+                        registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
+                        print('\nLivro Alugado com sucesso')
                         fechar()
                     else:
-                        print("O empréstimo não pode ser realizado pois o usuário já tem 3 emprestimos ativos.")
+                        print("\nO empréstimo não pode ser realizado pois o usuário já tem 3 emprestimos ativos.")
                 else:
-                    print("O empréstimo não pode ser realizado pois o usuário tem livro(s) em atraso.")
+                    print("\nO empréstimo não pode ser realizado pois o usuário tem livro(s) em atraso.")
             case '2':
                 codigo = int(input("Código do livro:"))
                 inicializar()
@@ -275,4 +275,4 @@ def menuUsuario(id):
 if __name__ == "__main__":
     menuInicial()
 
-
+menuInicial()
