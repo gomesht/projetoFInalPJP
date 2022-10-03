@@ -66,10 +66,10 @@ def menuCadastroUsuario():
             senha = input("\nDigite sua senha: ")
             confirmaSenha = input("Digite sua senha novamente: ")           
             if senha == confirmaSenha:
-                if requisitosSenha():
+                if requisitosSenha(senha):
                     break
                 else:
-                    print("Senha fraca")
+                    print("\nSenha fraca")
             else:
                 print("As senhas precisam ser iguais! Digite novamente.")
         try:            
@@ -89,6 +89,7 @@ def menuAdmin(conta):
         op = input('1 - Empréstimo de livro\n2 - Devolução de livro\n3 - Ver usuário\n4 - Usuários em atraso\n5 - Cadastrar livro\n6 - Remover livro\n7 - Remover usuario\n8 - Cadastro Admin\n9 - Sair\n ')
         match op:
             case '1':
+                #Arrumar erro
                 data_emprestimo = date.today()
                 data_devolucao = data_emprestimo + timedelta(days = 7)
                 id_usuario = int(input("ID do usuário: "))
