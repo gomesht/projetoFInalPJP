@@ -1,5 +1,5 @@
 import sqlite3, datetime, time
-from datetime import date, time, datetime, timedelta
+from datetime import date, timedelta
 from typing import Tuple, overload
 from validacaoCPF import validarCpf  
 from abc import *          
@@ -158,6 +158,7 @@ def getLivros(**filtros):
 def sugestoes_livros(livro,id_usuario):
     cursor.execute('INSERT INTO sugestoes(livro,id_usuario) VALUES (?,?)',(livro,id_usuario))
     conexao.commit()
+    
 
 def disponibilidadeLivro(codigo):
     cursor.execute('SELECT * FROM emprestimos')
@@ -217,7 +218,7 @@ def usuariosComAtraso():
     for line in cursor.fetchall():
         data = str(line[1])
         data_atual = date.today()
-        data_entrega = datetime.strptime(data, '%Y %m %d').date()
+        data_entrega = datetime.datetime.strptime(data, '%Y %m %d').date()
         if data_atual > data_entrega:
             idAtrasados.append(line[2])
     return idAtrasados
@@ -341,16 +342,17 @@ def devolucaoLivros(codigo):
     for valor in cursor.fetchall():
         if valor[0] == id_usuario:
             nome = valor[1]
-            telefone = valor[3]
-            email = valor[4]
+            telefone = valor[4]
+            email = valor[5]
     cursor.execute("SELECT * FROM Livros")
     for valor in cursor.fetchall():
         if valor[3] == codigo:
             livro = valor[0]
             autor = valor[1]
 
-    cursor.execute('INSERT INTO dadosInativos (livro, autor, nome, telefone, email, data_emprestimo) VALUES (?,?,?,?,?,?)',(livro, autor, nome, telefone, email, data_emprestimo))
-    cursor.execute('DELETE emprestimos WHERE codigo_livro = ?', (codigo,))
+    cursor.execute('INSERT INTO dadosInativos (id, livro, autor, nome, telefone, email, data_emprestimo) VALUES (?,?,?,?,?,?,?)',(id_usuario, livro, autor, nome, telefone, email, data_emprestimo))
+    conexao.commit()
+    cursor.execute('DELETE FROM emprestimos WHERE codigo_livro = ?', (codigo,))
     conexao.commit()
 
 def renovaçãoEmprestimo(nova_data_devolução,codigo_livro):
