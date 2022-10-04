@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import Menu, ttk
 
 if __name__ == "InterfaceTkinter.windowDef":
     import InterfaceTkinter.functions as functions, InterfaceTkinter.textsDef as textsDef
@@ -12,8 +12,13 @@ class ValoresInterface():
     @staticmethod
     def texts():
         """ Textos utilizados na interface """
-        textsDef.changerLanguage(master)
         return textsDef.allTranslatedTexts
+
+    @staticmethod
+    def atualizarTexts(idioma = None):
+        """ Atualiza os textos da interface variando com o argumento idioma """
+        textsDef.changerLanguage(master, idioma)
+
     @staticmethod
     @property
     def configurações_da_interface():
@@ -26,15 +31,18 @@ class JanelaPrograma():
         self.tkraise()
         for wd in self.children.values():
             wd.tkraise()
+    
+    def onError(self, error:str):
+        print("chegou aqui")
 
 class JanelaMenuInicial(tk.Frame, JanelaPrograma):
     """ Menu inicial """
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        self.botão_login    = ttk.Button(self,textvariable=ValoresInterface.texts()['loginB'],command=ValoresInterface.texts)
-        self.botão_cadastro = ttk.Button(self,textvariable=ValoresInterface.texts()['cadastroB'])
-        self.botão_fechar   = ttk.Button(self,textvariable=ValoresInterface.texts()['sairB'])
+        self.botão_login    = ttk.Button(self,textvariable=ValoresInterface.texts()['loginB'],command=lambda:functions.proximaJanela(j2))
+        self.botão_cadastro = ttk.Button(self,textvariable=ValoresInterface.texts()['cadastroB'],command=lambda:functions.proximaJanela(j3))
+        self.botão_fechar   = ttk.Button(self,textvariable=ValoresInterface.texts()['sairB'],command=self.master.quit)
 
         self.botão_login.grid(column=0, row=0)
         self.botão_cadastro.grid(column=0, row=1)
@@ -48,15 +56,25 @@ class JanelaLogin(tk.Frame, JanelaPrograma):
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        self.value_entrada_email = tk.StringVar(self)
-        self.value_entrada_senha = tk.StringVar(self)
+        self.value_entrada_email  = tk.StringVar(self)
+        self.value_entrada_senha  = tk.StringVar(self)
+        self.value_label_errormsg = tk.StringVar(self, 'erro')
 
-        self.label_email   = ttk.Label(self, textvariable=ValoresInterface.texts()['emailL'])
-        self.label_senha   = ttk.Label(self, textvariable=ValoresInterface.texts()['senhaL'])
-        self.entrada_email = ttk.Entry(self, textvariable=self.value_entrada_email)
-        self.entrada_senha = ttk.Entry(self, textvariable=self.value_entrada_senha)
-        self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'])
-        self.botão_voltar  = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'])
+        self.label_email    = ttk.Label(self, textvariable=ValoresInterface.texts()['emailL'])
+        self.label_senha    = ttk.Label(self, textvariable=ValoresInterface.texts()['senhaL'])
+        self.entrada_email  = ttk.Entry(self, textvariable=self.value_entrada_email)
+        self.entrada_senha  = ttk.Entry(self, textvariable=self.value_entrada_senha)
+        self.botão_validar  = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda eml = self.value_entrada_email.get(), snh = self.value_entrada_senha.get(), jnl=self:functions.validarConta(eml,snh,jnl))
+        self.botão_voltar   = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:functions.proximaJanela(j1))
+        self.label_errormsg = ttk.Label(self, textvariable=self.value_label_errormsg, foreground="red")
+
+        self.label_email    .grid(column=0,row=0)
+        self.label_senha    .grid(column=0,row=1)
+        self.entrada_email  .grid(column=1,row=0)
+        self.entrada_senha  .grid(column=1,row=1)
+        self.botão_validar  .grid(column=0,row=2)
+        self.botão_voltar   .grid(column=1,row=2)
+        self.label_errormsg .grid(column=3,row=2)
 
         self.master.update()
         self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
@@ -74,13 +92,13 @@ class JanelaCadastro(tk.Frame, JanelaPrograma):
         self.value_entrada_endereço        = tk.StringVar(self)
         self.value_entrada_telefone        = tk.StringVar(self)
 
-        self.label_email           = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
-        self.label_senha           = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
-        self.label_senha_novamente = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
-        self.label_nome            = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
-        self.label_cpf             = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
-        self.label_endereço        = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
-        self.label_telefone        = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
+        self.label_email             = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
+        self.label_senha             = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
+        self.label_senha_novamente   = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
+        self.label_nome              = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
+        self.label_cpf               = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
+        self.label_endereço          = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
+        self.label_telefone          = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
 
         self.entrada_email           = ttk.Entry(self, textvariable=self.value_entrada_email          )
         self.entrada_senha           = ttk.Entry(self, textvariable=self.value_entrada_senha          )
@@ -90,11 +108,27 @@ class JanelaCadastro(tk.Frame, JanelaPrograma):
         self.entrada_endereço        = ttk.Entry(self, textvariable=self.value_entrada_endereço       )
         self.entrada_telefone        = ttk.Entry(self, textvariable=self.value_entrada_telefone       )
 
-        self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'])
-        self.botão_voltar  = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'])
+        self.botão_validar           = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'])
+        self.botão_voltar            = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:functions.proximaJanela(j1))
 
-        # for i in range(0,10):
-        #     ttk.Label(self, text="c").grid(column=i, row=i)
+        self.label_email            .grid(column=0, row=0) 
+        self.label_senha            .grid(column=0, row=1) 
+        self.label_senha_novamente  .grid(column=0, row=2) 
+        self.label_nome             .grid(column=0, row=3) 
+        self.label_cpf              .grid(column=0, row=4) 
+        self.label_endereço         .grid(column=0, row=5) 
+        self.label_telefone         .grid(column=0, row=6)
+
+        self.entrada_email          .grid(column=1, row=0) 
+        self.entrada_senha          .grid(column=1, row=1) 
+        self.entrada_senha_novamente.grid(column=1, row=2) 
+        self.entrada_nome           .grid(column=1, row=3) 
+        self.entrada_cpf            .grid(column=1, row=4) 
+        self.entrada_endereço       .grid(column=1, row=5) 
+        self.entrada_telefone       .grid(column=1, row=6) 
+
+        self.botão_validar          .grid(column=0, row=7) 
+        self.botão_voltar           .grid(column=1, row=7) 
 
         self.master.update()
         self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
@@ -279,8 +313,19 @@ class Master(tk.Tk):
         self.geometry(f'{self.winfo_screenwidth()}x{self.winfo_screenheight()}')
         self.resizable(True, True)
 
+        menuI = Menu(self)
+        self.configure(menu=menuI)
+
+        menuIlinguagem = Menu(menuI, tearoff=0)
+        menuIlinguagem.add_command(label='pt', command=lambda:ValoresInterface.atualizarTexts('pt'))
+        menuIlinguagem.add_command(label='fr', command=lambda:ValoresInterface.atualizarTexts('fr'))
+        menuIlinguagem.add_command(label='en', command=lambda:ValoresInterface.atualizarTexts('en'))
+        menuI.add_cascade(label="Mudar idioma",menu=menuIlinguagem)
+
 if __name__ == "InterfaceTkinter.windowDef":
     master = Master()
+    ValoresInterface.atualizarTexts()
+
     j1 = JanelaMenuInicial(master)
     j2 = JanelaLogin(master)
     j3 = JanelaCadastro(master)

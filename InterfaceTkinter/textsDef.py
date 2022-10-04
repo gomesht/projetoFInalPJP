@@ -10,7 +10,11 @@ langInUse = "pt"
 
 allTranslatedTexts = {}
 
-def changerLanguage(master,):
+def changerLanguage(master, língua = None):
+    if not língua == None:
+        global langInUse
+        langInUse = língua
+
     langArq = open(langs[langInUse], "rt", encoding="utf-8")
 
     lines = langArq.read().split("\n")

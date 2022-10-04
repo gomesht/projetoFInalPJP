@@ -1,0 +1,10 @@
+* Generals
+validarB -> Validate
+voltarB -> Return
+* Menu
+loginB -> Login
+cadastroB -> Create an account
+sairB -> Quit
+* Login
+emailL -> Insert your email
+senhaL -> Insert your password

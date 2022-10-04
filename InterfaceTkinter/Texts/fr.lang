@@ -1,0 +1,10 @@
+* Generals
+validarB -> Valider
+voltarB -> Retourner
+* Menu
+loginB -> Se connecter
+cadastroB -> S'abboner
+sairB -> Sortir
+* Login
+emailL -> Entrez ton email
+senhaL -> Entrez ta mot de passe
