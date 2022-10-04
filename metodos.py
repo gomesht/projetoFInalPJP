@@ -1,7 +1,6 @@
 import sqlite3, datetime, time
-from datetime import date, time, datetime, timedelta
+from datetime import date, timedelta
 from typing import Tuple, overload
-from validacaoCPF import validarCpf  
 from abc import *          
 
 global conexao, cursor
@@ -158,6 +157,7 @@ def getLivros(**filtros):
 def sugestoes_livros(livro,id_usuario):
     cursor.execute('INSERT INTO sugestoes(livro,id_usuario) VALUES (?,?)',(livro,id_usuario))
     conexao.commit()
+    
 
 def disponibilidadeLivro(codigo):
     cursor.execute('SELECT * FROM emprestimos')
@@ -217,7 +217,7 @@ def usuariosComAtraso():
     for line in cursor.fetchall():
         data = str(line[1])
         data_atual = date.today()
-        data_entrega = datetime.strptime(data, '%Y %m %d').date()
+        data_entrega = datetime.datetime.strptime(data, '%Y %m %d').date()
         if data_atual > data_entrega:
             idAtrasados.append(line[2])
     return idAtrasados
@@ -341,16 +341,17 @@ def devolucaoLivros(codigo):
     for valor in cursor.fetchall():
         if valor[0] == id_usuario:
             nome = valor[1]
-            telefone = valor[3]
-            email = valor[4]
+            telefone = valor[4]
+            email = valor[5]
     cursor.execute("SELECT * FROM Livros")
     for valor in cursor.fetchall():
         if valor[3] == codigo:
             livro = valor[0]
             autor = valor[1]
 
-    cursor.execute('INSERT INTO dadosInativos (livro, autor, nome, telefone, email, data_emprestimo) VALUES (?,?,?,?,?,?)',(livro, autor, nome, telefone, email, data_emprestimo))
-    cursor.execute('DELETE emprestimos WHERE codigo_livro = ?', (codigo,))
+    cursor.execute('INSERT INTO dadosInativos (id, livro, autor, nome, telefone, email, data_emprestimo) VALUES (?,?,?,?,?,?,?)',(id_usuario, livro, autor, nome, telefone, email, data_emprestimo))
+    conexao.commit()
+    cursor.execute('DELETE FROM emprestimos WHERE codigo_livro = ?', (codigo,))
     conexao.commit()
 
 def renovaçãoEmprestimo(nova_data_devolução,codigo_livro):
@@ -459,16 +460,14 @@ class Conta(ABC):
     Para instanciar, use ContaNormal ou ContaADM no lugar.
     """
     @overload
-    def __init__(self, nome: str, endereço: str, cpf: int, telefone: int, email: str, senha: str, tipo: int): ... 
+    def __init__(self, nome: str, endereço: str, cpf: str, telefone: str, email: str, senha: str, tipo: int): ... 
     @overload 
     def __init__(self, id: int): ...
 
     def __init__(self, idNome = None, endereço = None, cpf = None, telefone = None, email = None, senha = None, tipo = None) -> None:
         if type(idNome) == str:
-            if type(idNome) != str or type(endereço) != str or type(cpf) != str or type(telefone) != int or type(email) != str or type(senha) != str:
+            if type(idNome) != str or type(endereço) != str or type(cpf) != str or type(telefone) != str or type(email) != str or type(senha) != str:
                 raise TypeError("Algum(ns) Argumento(s) tem(têm) o tipo incorreto!")
-            if not validarCpf(str(cpf)):
-                raise ValueError("O cpf não é válido")
             if tipo != 0 and tipo != 1:
                 raise ValueError("Tipo fora do raio previsto (0-1)")
         
@@ -500,10 +499,7 @@ class Conta(ABC):
         return getUsuario(self.id)[3]
     @cpf.setter
     def cpf(self, value):
-        if validarCpf(value):
-            setInUsuarios(self.id,"Cpf",value)
-        else:
-            raise ValueError("CPF inapropriado")
+        setInUsuarios(self.id,"Cpf",value)
 
     @property
     def telefone(self):
@@ -574,7 +570,7 @@ class Conta(ABC):
 
 class UsuarioNormal(Conta):
     @overload
-    def __init__(self, nome: str, endereço: str, cpf: str, telefone: int, email: str, senha: str): ...
+    def __init__(self, nome: str, endereço: str, cpf: str, telefone: str, email: str, senha: str): ...
     @overload
     def __init__(self, id: int): ...    
     def __init__(self, idNome = None, endereço = None, cpf = None, telefone = None, email = None, senha = None):
@@ -593,7 +589,7 @@ class UsuarioNormal(Conta):
 
 class UsuarioADM(Conta):
     @overload
-    def __init__(self, nome: str, endereço: str, cpf: str, telefone: int, email: str, senha: str): ...
+    def __init__(self, nome: str, endereço: str, cpf: str, telefone: str, email: str, senha: str): ...
     @overload
     def __init__(self, id: int): ...
 
