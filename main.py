@@ -26,7 +26,7 @@ def menuInicial():
 def menuLogin():
     while True:
         email = input("Email: ").lower()
-        senha = input("Senha: ").lower()
+        senha = input("Senha: ")
         global cache_senha
         cache_senha = senha
         inicializar()
@@ -57,9 +57,9 @@ def menuLogin():
 def menuCadastroUsuario():
     while True:
         inicializar()
-        nome = input("Nome: ").capitalize()
+        nome = input("Nome: ").title()
         telefone = int(input("Telefone: "))
-        endereco = input("Endereço: ").capitalize()
+        endereco = input("Endereço: ").title()
         cpf = input("CPF: ")
         
         while not validarCpf(cpf):
@@ -130,9 +130,9 @@ def menuAdmin(conta):
             case '5':
                 #Melhorar/padronizar estantes
                 print('')
-                nome = input("Nome do livro: ").capitalize()
-                autor = input("Autor do livro: ").capitalize()
-                genero = input("Gênero do livro: ").capitalize()
+                nome = input("Nome do livro: ").title()
+                autor = input("Autor do livro: ").title()
+                genero = input("Gênero do livro: ").title()
                 estante = input("Estante do livro: ").upper()
                 link = input("Link de amostra do livro: ")
                 inicializar()
@@ -155,12 +155,28 @@ def menuAdmin(conta):
                     print('Erro ao apagar')    
                     fechar()
             case '8':
-                #identificar erro/melhoar? mudar?
-                nome = input("Nome: ").capitalize()
+                while True:
+                    senha = input('digite sua senha: ')
+                    if senha == cache_senha:
+                        break
+                    else:
+                        print("Senha incorreta")
+                
+                nome = input("Nome: ").title()
                 telefone = input("Telefone: ")
-                endereco = input("Endereço: ").capitalize()
-                cpf = input("CPF: ")
-                email = input("E-mail: ").lower()
+                endereco = input("Endereço: ").title()
+                cpf = input('CPF: ')
+
+                while not validarCpf(cpf):
+                    print("CPF inválido, digite novamente:")
+                    cpf = input("CPF: ")
+                        
+                email = input('Email: ').lower()
+
+                while not isEmailValido(email):
+                    print('\nEmail invalido, digite novamente\n')
+                    email = input("E-mail: ").lower()
+
                 while True:
                     senha = input("Digite uma senha: ")
                     confirmaSenha = input("Digite a senha novamente: ")
@@ -174,8 +190,8 @@ def menuAdmin(conta):
                     UsuarioADM(nome, endereco, cpf, telefone, email, senha)
 
                     fechar()
-                except:
-                    print("Erro ao cadastrar usuário!")
+                except Exception as a:
+                    print("Erro ao cadastrar usuário!", a)
 
                 
             case '9':
@@ -198,6 +214,7 @@ def menuUsuario(id):
                 print('')
                 fechar()
             case '2':
+                #não deixar revervar mais de 3 livros
                 inicializar()
                 data_emprestimo = date.today()
                 data_devolucao = data_emprestimo + timedelta(days = 7)

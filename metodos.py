@@ -1,7 +1,6 @@
 import sqlite3, datetime, time
 from datetime import date, timedelta
 from typing import Tuple, overload
-from validacaoCPF import validarCpf  
 from abc import *          
 
 global conexao, cursor
@@ -461,16 +460,14 @@ class Conta(ABC):
     Para instanciar, use ContaNormal ou ContaADM no lugar.
     """
     @overload
-    def __init__(self, nome: str, endereço: str, cpf: int, telefone: int, email: str, senha: str, tipo: int): ... 
+    def __init__(self, nome: str, endereço: str, cpf: str, telefone: str, email: str, senha: str, tipo: int): ... 
     @overload 
     def __init__(self, id: int): ...
 
     def __init__(self, idNome = None, endereço = None, cpf = None, telefone = None, email = None, senha = None, tipo = None) -> None:
         if type(idNome) == str:
-            if type(idNome) != str or type(endereço) != str or type(cpf) != str or type(telefone) != int or type(email) != str or type(senha) != str:
+            if type(idNome) != str or type(endereço) != str or type(cpf) != str or type(telefone) != str or type(email) != str or type(senha) != str:
                 raise TypeError("Algum(ns) Argumento(s) tem(têm) o tipo incorreto!")
-            if not validarCpf(str(cpf)):
-                raise ValueError("O cpf não é válido")
             if tipo != 0 and tipo != 1:
                 raise ValueError("Tipo fora do raio previsto (0-1)")
         
@@ -502,10 +499,7 @@ class Conta(ABC):
         return getUsuario(self.id)[3]
     @cpf.setter
     def cpf(self, value):
-        if validarCpf(value):
-            setInUsuarios(self.id,"Cpf",value)
-        else:
-            raise ValueError("CPF inapropriado")
+        setInUsuarios(self.id,"Cpf",value)
 
     @property
     def telefone(self):
@@ -576,7 +570,7 @@ class Conta(ABC):
 
 class UsuarioNormal(Conta):
     @overload
-    def __init__(self, nome: str, endereço: str, cpf: str, telefone: int, email: str, senha: str): ...
+    def __init__(self, nome: str, endereço: str, cpf: str, telefone: str, email: str, senha: str): ...
     @overload
     def __init__(self, id: int): ...    
     def __init__(self, idNome = None, endereço = None, cpf = None, telefone = None, email = None, senha = None):
@@ -595,7 +589,7 @@ class UsuarioNormal(Conta):
 
 class UsuarioADM(Conta):
     @overload
-    def __init__(self, nome: str, endereço: str, cpf: str, telefone: int, email: str, senha: str): ...
+    def __init__(self, nome: str, endereço: str, cpf: str, telefone: str, email: str, senha: str): ...
     @overload
     def __init__(self, id: int): ...
 
