@@ -12,11 +12,8 @@ class ValoresInterface():
     @staticmethod
     def texts():
         """ Textos utilizados na interface """
-        alltxt = {}
-        for i in range(len(textsDef.allTranslatedTexts)):
-            alltxt.update(  ((   tuple(textsDef.allTranslatedTexts.keys())[i] , tk.StringVar(master,tuple(textsDef.allTranslatedTexts.values())[i])   ),) )
-        return alltxt
-
+        textsDef.changerLanguage(master)
+        return textsDef.allTranslatedTexts
     @staticmethod
     @property
     def configurações_da_interface():
@@ -29,13 +26,13 @@ class JanelaPrograma():
         self.tkraise()
         for wd in self.children.values():
             wd.tkraise()
-        
+
 class JanelaMenuInicial(tk.Frame, JanelaPrograma):
     """ Menu inicial """
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        self.botão_login    = ttk.Button(self,textvariable=ValoresInterface.texts()['loginB'])
+        self.botão_login    = ttk.Button(self,textvariable=ValoresInterface.texts()['loginB'],command=ValoresInterface.texts)
         self.botão_cadastro = ttk.Button(self,textvariable=ValoresInterface.texts()['cadastroB'])
         self.botão_fechar   = ttk.Button(self,textvariable=ValoresInterface.texts()['sairB'])
 
@@ -60,11 +57,6 @@ class JanelaLogin(tk.Frame, JanelaPrograma):
         self.entrada_senha = ttk.Entry(self, textvariable=self.value_entrada_senha)
         self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'])
         self.botão_voltar  = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'])
-
-        # ttk.Label(self, text="b").grid(column=0,row=0)
-        # ttk.Label(self, text="b").grid(column=0,row=1)
-        # ttk.Label(self, text="b").grid(column=0,row=2)
-        # ttk.Label(self, text="b").grid(column=0,row=3)
 
         self.master.update()
         self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())

@@ -2,9 +2,9 @@ import metodos
 from metodos import inicializar, fechar, TipoDeContaErradoError, EmailSenhaIncorretoError, UsuárioNãoQuitadoError, ApagarUnicoAdmError
 
 if __name__ == "InterfaceTkinter.windowDef":
-    import InterfaceTkinter.windowDef as windowDef
+    import InterfaceTkinter.windowDef as windowDef, InterfaceTkinter.textsDef as textsDef
 elif __name__ == "__main__":
-    import windowDef
+    import windowDef, textsDef
 
 def logarConta(email, senha):
     inicializar()
@@ -36,3 +36,7 @@ def cadastrarConta(nome,endereço,cpf,telefone,email,senha,type):
 
 def pesquisarLivros():
     someVarInTheInterface = metodos.getLivros()
+
+def teste():
+    textsDef.changerLanguage()
+    windowDef.ValoresInterface.texts()

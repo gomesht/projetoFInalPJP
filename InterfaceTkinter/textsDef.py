@@ -1,3 +1,5 @@
+import tkinter as tk
+
 langs = {
     "fr":r"InterfaceTkinter\Texts\fr.lang",
     "en":r"InterfaceTkinter\Texts\en.lang",
@@ -8,7 +10,7 @@ langInUse = "pt"
 
 allTranslatedTexts = {}
 
-def changerLanguage():
+def changerLanguage(master,):
     langArq = open(langs[langInUse], "rt", encoding="utf-8")
 
     lines = langArq.read().split("\n")
@@ -28,16 +30,19 @@ def changerLanguage():
                 raise ErroDeSintaxe(f"Expected '->' in {langArq.name} {langs[langInUse]} line {i}")
 
         i += 1
-    
+
     global allTranslatedTexts
-    allTranslatedTexts = texts
+    
+    if allTranslatedTexts == {}:
+        for i in range(0, len(texts)):
+            allTranslatedTexts.update(((   tuple(texts.keys())[i] , tk.StringVar(master=master, value=tuple(texts.values())[i])   ),))
+    else:
+        for i in range(0, len(texts)):
+            tuple(allTranslatedTexts.values())[i].set(tuple(texts.values())[i])
 
 class ErroDeSintaxe(SyntaxError):
     def __init__(self, *args) -> None:
         super().__init__(args)
 
-changerLanguage()
-
 if __name__ == "__main__":
-    changerLanguage()
-    print(allTranslatedTexts)
+    ...
