@@ -1,10 +1,31 @@
 * Generals
 validarB -> Validar
 voltarB -> Voltar
+errodesconhecido -> Um erro desconhecido ocorreu! Por favor, tente novamente mais tarde
+sairB -> Sair
 * Menu
 loginB -> Login
 cadastroB -> Cadastro
-sairB -> Sair da aplicação
 * Login
 emailL -> Insira seu email
 senhaL -> Insira sua senha
+* Cadastro
+nomeL -> Insira seu nome
+endereçoL -> Insira seu endereço
+cpfL -> Insira seu cpf
+telefoneL -> Insira telefone
+senhanovamenteL -> Insira sua senha novamente
+erroemailusado -> Email já está em uso
+erroemailinvalido -> Email inválido!
+errocpfinvalido -> Cpf inválido!
+errosenhasdiferentes -> As senhas inseridas não são iguais!
+* Menu inicial
+psqlivroB ->
+rsvlibroB ->
+sgrlivroB ->
+altsenha ->
+* Visualizar livros
+* Reservar Livro
+codigoL -> 
+errocodigodesconhecido -> Código não foi encontrado!
+errolivroemuso -> Este livro está em uso! Espere o atual dono devolvê-lo para reservar.

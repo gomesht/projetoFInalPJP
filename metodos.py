@@ -1,7 +1,7 @@
 import sqlite3, datetime, time
 from datetime import date, timedelta
 from typing import Tuple, overload
-from abc import *          
+from abc import *
 
 global conexao, cursor
 
@@ -192,7 +192,7 @@ def Login(email, senha):
             elif item[6] == 0:
                 return UsuarioADM(item[0])
             elif item[6] > 1 or item[6] < 0:
-                return TipoDeContaErradoError("Erro: encontrada conta com tipo inválido")
+                raise TipoDeContaErradoError("Erro: encontrada conta com tipo inválido")
     raise EmailSenhaIncorretoError()
 
 def remover_usuario(id):

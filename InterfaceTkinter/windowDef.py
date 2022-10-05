@@ -1,5 +1,8 @@
+from abc import ABC, abstractclassmethod, abstractmethod, abstractproperty
 import tkinter as tk
 from tkinter import Menu, ttk
+
+from InterfaceTkinter.functions import proximaJanela
 
 if __name__ == "InterfaceTkinter.windowDef":
     import InterfaceTkinter.functions as functions, InterfaceTkinter.textsDef as textsDef
@@ -25,23 +28,24 @@ class ValoresInterface():
         """ Configurações de página do programa """
         return
 
-class JanelaPrograma():
+class JanelaPrograma(ABC):
     """ Classe-auxiliar com os métodos que toda janela deve ter """
     def levantarJanela(self):
         self.tkraise()
         for wd in self.children.values():
             wd.tkraise()
-    
-    def onError(self, error:str):
-        print("chegou aqui")
+
+    @abstractmethod
+    def mensage(self, msg:str):
+        print(msg)
 
 class JanelaMenuInicial(tk.Frame, JanelaPrograma):
     """ Menu inicial """
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        self.botão_login    = ttk.Button(self,textvariable=ValoresInterface.texts()['loginB'],command=lambda:functions.proximaJanela(j2))
-        self.botão_cadastro = ttk.Button(self,textvariable=ValoresInterface.texts()['cadastroB'],command=lambda:functions.proximaJanela(j3))
+        self.botão_login    = ttk.Button(self,textvariable=ValoresInterface.texts()['loginB'],command=lambda:functions.proximaJanela(jl))
+        self.botão_cadastro = ttk.Button(self,textvariable=ValoresInterface.texts()['cadastroB'],command=lambda:functions.proximaJanela(jcd))
         self.botão_fechar   = ttk.Button(self,textvariable=ValoresInterface.texts()['sairB'],command=self.master.quit)
 
         self.botão_login.grid(column=0, row=0)
@@ -51,6 +55,9 @@ class JanelaMenuInicial(tk.Frame, JanelaPrograma):
         self.master.update()
         self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
 
+    def mensage(self, msg:str):
+        ...
+
 class JanelaLogin(tk.Frame, JanelaPrograma):
     """ Janela de login """
     def __init__(self, master) -> None:
@@ -58,15 +65,14 @@ class JanelaLogin(tk.Frame, JanelaPrograma):
 
         self.value_entrada_email  = tk.StringVar(self)
         self.value_entrada_senha  = tk.StringVar(self)
-        self.value_label_errormsg = tk.StringVar(self, 'erro')
 
         self.label_email    = ttk.Label(self, textvariable=ValoresInterface.texts()['emailL'])
         self.label_senha    = ttk.Label(self, textvariable=ValoresInterface.texts()['senhaL'])
         self.entrada_email  = ttk.Entry(self, textvariable=self.value_entrada_email)
         self.entrada_senha  = ttk.Entry(self, textvariable=self.value_entrada_senha)
-        self.botão_validar  = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda eml = self.value_entrada_email.get(), snh = self.value_entrada_senha.get(), jnl=self:functions.validarConta(eml,snh,jnl))
-        self.botão_voltar   = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:functions.proximaJanela(j1))
-        self.label_errormsg = ttk.Label(self, textvariable=self.value_label_errormsg, foreground="red")
+        self.botão_validar  = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda jnl=self:functions.validarConta(self.value_entrada_email.get(),self.value_entrada_senha.get(),jnl))
+        self.botão_voltar   = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:functions.proximaJanela(jmi))
+        self.label_errormsg = ttk.Label(self, textvariable=None, foreground="red")
 
         self.label_email    .grid(column=0,row=0)
         self.label_senha    .grid(column=0,row=1)
@@ -78,6 +84,16 @@ class JanelaLogin(tk.Frame, JanelaPrograma):
 
         self.master.update()
         self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+    def mensage(self, msg:str):
+        if msg == "ERRO-EMAIL-SENHA-INCORRETO":
+            self.label_errormsg.configure(textvariable=ValoresInterface.texts()['errosenhaincorreta'])
+        if msg == "ERRO-DESCONHECIDO":
+            self.label_errormsg.configure(textvariable=ValoresInterface.texts()['errodesconhecido'])
+        if msg == "CLEAR":
+            self.label_errormsg = None
+        if msg == "VALIDADO":
+            proximaJanela(jmiu)
 
 class JanelaCadastro(tk.Frame, JanelaPrograma):
     """ Janela de cadastro """
@@ -92,13 +108,14 @@ class JanelaCadastro(tk.Frame, JanelaPrograma):
         self.value_entrada_endereço        = tk.StringVar(self)
         self.value_entrada_telefone        = tk.StringVar(self)
 
-        self.label_email             = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
-        self.label_senha             = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
-        self.label_senha_novamente   = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
-        self.label_nome              = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
-        self.label_cpf               = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
-        self.label_endereço          = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
-        self.label_telefone          = ttk.Label(self, textvariable=ValoresInterface.texts()['voltarB'])
+        self.label_email             = ttk.Label(self, textvariable=ValoresInterface.texts()['emailL'])
+        self.label_senha             = ttk.Label(self, textvariable=ValoresInterface.texts()['senhaL'])
+        self.label_senha_novamente   = ttk.Label(self, textvariable=ValoresInterface.texts()['senhanovamenteL'])
+        self.label_nome              = ttk.Label(self, textvariable=ValoresInterface.texts()['nomeL'])
+        self.label_cpf               = ttk.Label(self, textvariable=ValoresInterface.texts()['cpfL'])
+        self.label_endereço          = ttk.Label(self, textvariable=ValoresInterface.texts()['endereçoL'])
+        self.label_telefone          = ttk.Label(self, textvariable=ValoresInterface.texts()['telefoneL'])
+        self.label_errormsg          = ttk.Label(self, textvariable=None, foreground='red')
 
         self.entrada_email           = ttk.Entry(self, textvariable=self.value_entrada_email          )
         self.entrada_senha           = ttk.Entry(self, textvariable=self.value_entrada_senha          )
@@ -108,8 +125,8 @@ class JanelaCadastro(tk.Frame, JanelaPrograma):
         self.entrada_endereço        = ttk.Entry(self, textvariable=self.value_entrada_endereço       )
         self.entrada_telefone        = ttk.Entry(self, textvariable=self.value_entrada_telefone       )
 
-        self.botão_validar           = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'])
-        self.botão_voltar            = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:functions.proximaJanela(j1))
+        self.botão_validar           = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.cadastrarConta(self.value_entrada_nome.get(), self.value_entrada_endereço.get(), self.value_entrada_cpf.get(),self.value_entrada_telefone.get(),self.value_entrada_email.get(),self.value_entrada_senha.get(),self.value_entrada_senha_novamente.get(),1,self))
+        self.botão_voltar            = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:functions.proximaJanela(jmi))
 
         self.label_email            .grid(column=0, row=0) 
         self.label_senha            .grid(column=0, row=1) 
@@ -129,22 +146,49 @@ class JanelaCadastro(tk.Frame, JanelaPrograma):
 
         self.botão_validar          .grid(column=0, row=7) 
         self.botão_voltar           .grid(column=1, row=7) 
+        self.label_errormsg         .grid(column=0,row=8)
 
         self.master.update()
         self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+    def mensage(self, msg:str):
+        if msg == "ERRO-EMAIL-USADO":
+            self.label_errormsg.configure(textvariable=ValoresInterface.texts()['erroemailusado'])
+        if msg == "ERRO-DESCONHECIDO":
+            self.label_errormsg.configure(textvariable=ValoresInterface.texts()['errodesconhecido'])
+        if msg == "ERRO-EMAIL-INVALIDO":
+            self.label_errormsg.configure(textvariable=ValoresInterface.texts()['erroemailinvalido'])
+        if msg == "ERRO-CPF-INVALIDO":
+            self.label_errormsg.configure(textvariable=ValoresInterface.texts()['errocpfinvalido'])
+        if msg == "ERRO-SENHAS-DIFERENTES":
+            self.label_errormsg.configure(textvariable=ValoresInterface.texts()['errosenhasdiferentes'])
+        if msg == "VALIDADO":
+            proximaJanela(jmi)
 
 class JanelaMenuInicialUsuário(tk.Frame, JanelaPrograma):
     """ Menu de uma conta de tipo usuário """
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        self.botão_pesquisar_livro = tk.Button(self)
-        self.botão_reservar_livro = tk.Button(self)
-        self.botão_sugerir_livro = tk.Button(self)
-        self.botão_alterar_senha = tk.Button(self)
-        self.botão_sair = tk.Button(self)
+        self.label_saudar = ttk.Label(self)
+        self.botão_pesquisar_livro = ttk.Button(self)
+        self.botão_reservar_livro = ttk.Button(self)
+        self.botão_sugerir_livro = ttk.Button(self)
+        self.botão_alterar_senha = ttk.Button(self)
+        self.botão_sair = ttk.Button(self)
 
-        self.grid(column=0,row=0)
+        self.label_saudar          .grid(column=0,row=0)
+        self.botão_pesquisar_livro .grid(column=0,row=1)
+        self.botão_reservar_livro  .grid(column=0,row=2)
+        self.botão_sugerir_livro   .grid(column=0,row=3)
+        self.botão_alterar_senha   .grid(column=0,row=4)
+        self.botão_sair            .grid(column=0,row=5)
+
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+    def mensage(self, msg:str):
+        ...
 
 class JanelaPesquisarLivros(tk.Frame, JanelaPrograma):
     """ Janela de pesquisa de livros """
@@ -156,7 +200,12 @@ class JanelaPesquisarLivros(tk.Frame, JanelaPrograma):
         self.scrollbar_visualização_livros = tk.Button(self)
         self.botão_voltar = tk.Button(self)
 
-        self.grid(column=0,row=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+
+    def mensage(self, msg:str):
+        ...
 
 class JanelaReservarLivro(tk.Frame, JanelaPrograma):
     """ Janela de reserva de livro """
@@ -167,14 +216,24 @@ class JanelaReservarLivro(tk.Frame, JanelaPrograma):
         self.botão_validar = tk.Button(self)
         self.botão_voltar = tk.Button(self)
 
-        self.grid(column=0,row=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+
+    def mensage(self, msg:str):
+        ...
 
 class JanelaSugerirLivro(tk.Frame, JanelaPrograma): # Isso ainda vai existir?
     """ Janela de sugestão de livro """
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        self.grid(column=0,row=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+
+    def mensage(self, msg:str):
+        ...
 
 class JanelaAlterarSenha(tk.Frame, JanelaPrograma):
     """ Janela de mudança de senha """
@@ -186,7 +245,12 @@ class JanelaAlterarSenha(tk.Frame, JanelaPrograma):
         self.botão_validar = tk.Button(self)
         self.botão_voltar = tk.Button(self)
 
-        self.grid(column=0,row=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+
+    def mensage(self, msg:str):
+        ...
 
 class JanelaMenuADM(tk.Frame, JanelaPrograma):
     """ Menu de uma conta de tipo ADM """
@@ -203,7 +267,12 @@ class JanelaMenuADM(tk.Frame, JanelaPrograma):
         self.botão_cadastro_adm = tk.Button(self)
         self.botão_sair = tk.Button(self)
 
-        self.grid(column=0,row=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+
+    def mensage(self, msg:str):
+        ...
 
 class JanelaEmprestimo(tk.Frame, JanelaPrograma):
     """ Janela para um ADM realizar os empréstimos aos usuários """
@@ -215,7 +284,12 @@ class JanelaEmprestimo(tk.Frame, JanelaPrograma):
         self.botão_validar = tk.Button(self)
         self.botão_voltar = tk.Button(self)
 
-        self.grid(column=0,row=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+
+    def mensage(self, msg:str):
+        ...
 
 class JanelaDevolução(tk.Frame, JanelaPrograma):
     """ Janela para quitar um livro """
@@ -226,7 +300,12 @@ class JanelaDevolução(tk.Frame, JanelaPrograma):
         self.botão_validar = tk.Button(self)
         self.botão_voltar = tk.Button(self)
 
-        self.grid(column=0,row=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+
+    def mensage(self, msg:str):
+        ...
 
 class JanelaVerUsuário(tk.Frame, JanelaPrograma):
     """ Menu de uma conta de tipo ADM """
@@ -237,7 +316,12 @@ class JanelaVerUsuário(tk.Frame, JanelaPrograma):
         self.botão_validar = tk.Button(self)
         self.botão_voltar = tk.Button(self)
 
-        self.grid(column=0,row=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+
+    def mensage(self, msg:str):
+        ...
 
 class JanelaVerUsuáriosEmAtraso(tk.Frame, JanelaPrograma):
     """ Janela de visualização de usuários em atraso """
@@ -248,7 +332,12 @@ class JanelaVerUsuáriosEmAtraso(tk.Frame, JanelaPrograma):
         self.scrollbar_visualização_usuários = tk.Button(self)
         self.botão_voltar = tk.Button(self)
 
-        self.grid(column=0,row=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+
+    def mensage(self, msg:str):
+        ...
 
 class JanelaCadastrarLivro(tk.Frame, JanelaPrograma):
     """ Janela de cadastro de livros """
@@ -263,7 +352,12 @@ class JanelaCadastrarLivro(tk.Frame, JanelaPrograma):
         self.botão_validar = tk.Button(self)
         self.botão_voltar = tk.Button(self)
 
-        self.grid(column=0,row=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+
+    def mensage(self, msg:str):
+        ...
 
 class JanelaRemoverLivro(tk.Frame, JanelaPrograma):
     """ Menu de uma conta de tipo ADM """
@@ -274,7 +368,12 @@ class JanelaRemoverLivro(tk.Frame, JanelaPrograma):
         self.botão_validar = tk.Button(self)
         self.botão_voltar = tk.Button(self)
 
-        self.grid(column=0,row=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+
+    def mensage(self, msg:str):
+        ...
 
 class JanelaRemoverUsuário(tk.Frame, JanelaPrograma):
     """ Menu de uma conta de tipo ADM """
@@ -285,7 +384,12 @@ class JanelaRemoverUsuário(tk.Frame, JanelaPrograma):
         self.botão_validar = tk.Button(self)
         self.botão_voltar = tk.Button(self)
 
-        self.grid(column=0,row=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+
+    def mensage(self, msg:str):
+        ...
 
 class JanelaCadastroADM(tk.Frame, JanelaPrograma):
     """ Menu de uma conta de tipo ADM """
@@ -303,7 +407,12 @@ class JanelaCadastroADM(tk.Frame, JanelaPrograma):
         self.botão_validar = ttk.Button(self)
         self.botão_voltar = ttk.Button(self)
 
-        self.grid(column=0,row=0)
+        self.master.update()
+        self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
+
+
+    def mensage(self, msg:str):
+        ...
 
 class Master(tk.Tk):
     def __init__(self):
@@ -326,9 +435,10 @@ if __name__ == "InterfaceTkinter.windowDef":
     master = Master()
     ValoresInterface.atualizarTexts()
 
-    j1 = JanelaMenuInicial(master)
-    j2 = JanelaLogin(master)
-    j3 = JanelaCadastro(master)
-    
-    j1.levantarJanela()
+    jmi = JanelaMenuInicial(master)
+    jl = JanelaLogin(master)
+    jcd = JanelaCadastro(master)
+    jmiu = JanelaMenuInicialUsuário(master)
+
+    jmi.levantarJanela()
     master.mainloop()
