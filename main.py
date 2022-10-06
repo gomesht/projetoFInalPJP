@@ -70,7 +70,7 @@ def menuCadastroUsuario():
     while True:
         inicializar()
         nome = input("Nome: ").title()
-        telefone = int(input("Telefone: "))
+        telefone = input("Telefone: ")
         endereco = input("Endereço: ").title()
         cpf = input("CPF: ")
         
@@ -97,7 +97,8 @@ def menuCadastroUsuario():
         try:            
             contaCadastrada = UsuarioNormal(nome, endereco, cpf, telefone, email, senha)
             print('\nCadastro Concluido\n')
-            menuInicial()
+            fechar()
+            break
         except Exception as erro:
             print("Erro ao cadastrar usuário!", erro)
             fechar()
@@ -117,6 +118,8 @@ def menuAdmin(conta):
                 codigo_livro = int(input("Código do livro: "))
                 if id_usuario not in usuariosComAtraso():
                     if len(LeEmprestimos(True, id_usuario)) < 3:
+                        LeEmprestimos(True, codigo_livro)
+                        # if cogigo_livro not in LeEmprestimos(True, codigo_livro): ( tem que verificar se o codigo livros está em emprestimos, só empresta se não estiver.)
                         inicializar()
                         registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
                         print('\nLivro Alugado com sucesso')
@@ -127,9 +130,12 @@ def menuAdmin(conta):
                     print("\nO empréstimo não pode ser realizado pois o usuário tem livro(s) em atraso.")
             case '2':
                 codigo = int(input("Código do livro:"))
-                inicializar()
-                devolucaoLivros(codigo)
-                fechar()
+                try:
+                    inicializar()
+                    devolucaoLivros(codigo)
+                    fechar()
+                except UnboundLocalError:
+                    print("Este livro já foi devolvido")
             case '3':
                 #Arrumar e melhorar
                 id_usuario = int(input("ID do usuário: ")) 
@@ -240,8 +246,8 @@ def menuUsuario(id):
                         codigo_livro = input("\nCódigo do livro: ")
                         try:
                             Livro(int(codigo_livro))
-                        except Exception:
-                            print('\nCodigo do livro não existe')
+                        except Exception as erro:
+                            print('\nCodigo do livro não existe', erro)
                         else:
                             break
                     if Livro(int(codigo_livro)).disponibilidade == "disponível":
