@@ -11,7 +11,19 @@ def menuInicial():
     criarTabelaEmprestimos()
     criarTabelaSugestoes()
     fechar()
-
+    nome = "admin"
+    telefone = "admin"
+    endereco = "admin"
+    telefone = "admin"
+    cpf = "admin"
+    email = "admin@admin.admin"
+    senha = "Admin_1"
+    try:
+        inicializar()
+        UsuarioADM(nome, endereco, cpf, telefone, email, senha)
+        fechar()
+    except sqlite3.IntegrityError:
+        pass
     while True:
         op = input("1 - Login\n2 - Cadastro\n3 - Fechar\n")
         match op:
@@ -282,7 +294,7 @@ def menuUsuario(id):
                     senha_atual = input('\nDigite sua senha atual: \n')
                     if senha_atual == cache_senha:
                         while True:
-                            senha = input("Digite sua nova senha: ")
+                            senha = input("Digite sua nova senha: \n")
                             senha1 = input("Repita sua nova senha: \n")
                             if senha == senha1:
                                 if requisitosSenha(senha):
