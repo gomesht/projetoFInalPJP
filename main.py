@@ -102,6 +102,7 @@ def menuCadastroUsuario():
         except Exception as erro:
             print("Erro ao cadastrar usuário!", erro)
             fechar()
+            break
 
     # menuUsuario(contaCadastrada)
         

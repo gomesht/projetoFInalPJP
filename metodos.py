@@ -22,10 +22,10 @@ def fechar():
 def criarTabelaLivros():
 
     cursor.execute('CREATE TABLE IF NOT EXISTS Livros('
-    'Codigo	INTEGER NOT NULL UNIQUE,'
     'Nome	TEXT NOT NULL,'
 	'Autor	TEXT NOT NULL,'
 	'Genero	TEXT,'
+    'Codigo	INTEGER NOT NULL UNIQUE,'
 	'Estante	TEXT,'
 	'Link_de_Amostra	TEXT,'
 	'PRIMARY KEY(Codigo AUTOINCREMENT)'
@@ -133,7 +133,7 @@ def getLivros(**filtros):
 
         count += 1
     
-    valDeFiltragem = [ Nome,Autor,Genero,Codigo,Estante,LdeAmostra ]
+    valDeFiltragem = [Nome,Autor,Genero,Codigo,Estante,LdeAmostra ]
 
     cursor.execute("SELECT * FROM Livros")
 
