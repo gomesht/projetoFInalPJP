@@ -137,7 +137,7 @@ def menuAdmin(conta):
                 link = input("Link de amostra do livro: ")
                 inicializar()
                 cadastro_livros(nome, autor, genero, estante, link)
-                print('\nLivro cadastrado com sucesso')
+                print('\nLivro cadastrado com sucesso\n')
                 fechar()
             case '6':
                 #melhorar

@@ -22,10 +22,10 @@ def fechar():
 def criarTabelaLivros():
 
     cursor.execute('CREATE TABLE IF NOT EXISTS Livros('
+    'Codigo	INTEGER NOT NULL UNIQUE,'
     'Nome	TEXT NOT NULL,'
 	'Autor	TEXT NOT NULL,'
 	'Genero	TEXT,'
-	'Codigo	INTEGER NOT NULL UNIQUE,'
 	'Estante	TEXT,'
 	'Link_de_Amostra	TEXT,'
 	'PRIMARY KEY(Codigo AUTOINCREMENT)'
@@ -83,7 +83,7 @@ def criarTabelaDadosInativos():
 
 def cadastro_livros(l_nome,l_autor,l_genero,l_estante,l_link_amostra):
 
-    cursor.execute('INSERT INTO Livros(Nome,Autor,Genero,Estante,"Link de Amostra") VALUES (?,?,?,?,?)',(l_nome,l_autor,l_genero,l_estante,l_link_amostra))
+    cursor.execute('INSERT INTO Livros(Nome,Autor,Genero,Estante,"Link_de_Amostra") VALUES (?,?,?,?,?)',(l_nome,l_autor,l_genero,l_estante,l_link_amostra))
     conexao.commit()
 
 def remover_livro(codigo):
