@@ -70,7 +70,7 @@ def menuCadastroUsuario():
     while True:
         inicializar()
         nome = input("Nome: ").title()
-        telefone = int(input("Telefone: "))
+        telefone = input("Telefone: ")
         endereco = input("Endereço: ").title()
         cpf = input("CPF: ")
         
@@ -97,7 +97,8 @@ def menuCadastroUsuario():
         try:            
             contaCadastrada = UsuarioNormal(nome, endereco, cpf, telefone, email, senha)
             print('\nCadastro Concluido\n')
-            menuInicial()
+            fechar()
+            break
         except Exception as erro:
             print("Erro ao cadastrar usuário!", erro)
             fechar()
