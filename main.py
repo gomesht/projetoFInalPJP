@@ -120,8 +120,12 @@ def menuAdmin(conta):
                 except:
                     print('Não é um codigo valido')
                 codigo_livro = int(input("Código do livro: "))
+                inicializar()
                 if id_usuario not in usuariosComAtraso():
+                    fechar()
+                    inicializar()
                     if len(LeEmprestimos(True, id_usuario)) < 3 and (LeEmprestimos(False, codigo_livro)) == []:
+                        fechar()
                         inicializar()
                         codigos = codigosValidos()
                         fechar()
@@ -136,9 +140,11 @@ def menuAdmin(conta):
                         else:
                             print("ID usuário e/ou codigo do livro invalido(s)")      
                     else:
-                        print("\nO empréstimo não pode ser realizado, livro indisponível ou o usuário atingiu o limite de emprestimos. \n")
+                        fechar()
+                        print("\nO empréstimo não pode ser realizado, livro indisponível ou o usuário atingiu o limite de emprestimos.\n")
                 else:
                     print("\nO empréstimo não pode ser realizado pois o usuário tem livro(s) em atraso.")
+                    fechar()
             case '2':
                 codigo = int(input("Código do livro:"))
                 try:
@@ -172,8 +178,14 @@ def menuAdmin(conta):
                 #melhorar
                 codigo = int(input("Excluir livro com o código: "))
                 inicializar()
-                remover_livro(codigo)
-                fechar()
+                if (LeEmprestimos(False, codigo)) == []:
+                    fechar()
+                    inicializar()
+                    remover_livro(codigo)
+                    fechar()
+                else:
+                    fechar()
+                    print("Não foi possível deletar o livro pois há um emprestimo em andamento, tente novamente após realizar a devolução.")
             case '7':
                 #melhorar
                 id_user = input("Apagar usuário com ID: ")

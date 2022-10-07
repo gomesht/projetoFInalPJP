@@ -174,7 +174,7 @@ def codigosValidos():
     cursor.execute('SELECT Codigo FROM Livros')
     codigos = []
     for item in cursor.fetchall():
-        codigos.append(item)
+        codigos.append(item[0])
     return codigos
 ########################################################################################
 # Métodos de usuário
@@ -293,7 +293,7 @@ def idValidos():
     cursor.execute('SELECT id FROM cadastro')
     usuarios = []
     for item in cursor.fetchall():
-        usuarios.append(item)
+        usuarios.append(item[0])
     return usuarios
         
 
