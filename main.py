@@ -115,16 +115,21 @@ def menuAdmin(conta):
             case '1':
                 data_emprestimo = date.today()
                 data_devolucao = data_emprestimo + timedelta(days = 7)
-                id_usuario = int(input("ID do usuário: "))
+                try:
+                    id_usuario = int(input("ID do usuário: "))
+                except:
+                    print('Não é um codigo valido')
                 codigo_livro = int(input("Código do livro: "))
                 if id_usuario not in usuariosComAtraso():
                     if len(LeEmprestimos(True, id_usuario)) < 3:
-                        LeEmprestimos(True, codigo_livro)
-                        # if cogigo_livro not in LeEmprestimos(True, codigo_livro): ( tem que verificar se o codigo livros está em emprestimos, só empresta se não estiver.)
-                        inicializar()
-                        registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
-                        print('\nLivro Alugado com sucesso')
-                        fechar()
+                        if (LeEmprestimos(False, codigo_livro)) == []:
+                            try:
+                                inicializar()
+                                registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
+                                print('\nLivro Alugado com sucesso')
+                                fechar()
+                            except sqlite3.IntegrityError:
+                                print("ID de usuário e/ou código do livro inválido(s).") 
                     else:
                         print("\nO empréstimo não pode ser realizado pois o usuário já tem 3 emprestimos ativos.\n")
                 else:
@@ -166,10 +171,10 @@ def menuAdmin(conta):
                 fechar()
             case '7':
                 #melhorar
-                id_user = int(input("Apagar usuário com ID: "))
+                id_user = input("Apagar usuário com ID: ")
                 try: 
                     inicializar()
-                    Conta.getConta(id_user).apagar() # SUGESTÃO: usar Conta.getConta(id_user).apagar() no lugar. Assim, as verificações (Se a conta é a única ADM, se o usuário tem livros em atraso) serão feitas e retornaram erros a serem tratados aqi usando o try
+                    Conta.getConta(int(id_user)).apagar() # SUGESTÃO: usar Conta.getConta(id_user).apagar() no lugar. Assim, as verificações (Se a conta é a única ADM, se o usuário tem livros em atraso) serão feitas e retornaram erros a serem tratados aqi usando o try
                 except:
                     print('Erro ao apagar')    
                     fechar()
@@ -252,8 +257,6 @@ def menuUsuario(id):
                         else:
                             break
                     if Livro(int(codigo_livro)).disponibilidade == "disponível":
-                        
-
                         registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
                         print('\nLivro Reservado\n')
                         fechar()
