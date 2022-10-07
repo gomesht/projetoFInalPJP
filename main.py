@@ -120,8 +120,12 @@ def menuAdmin(conta):
                 except:
                     print('Não é um codigo valido')
                 codigo_livro = int(input("Código do livro: "))
+                inicializar()
                 if id_usuario not in usuariosComAtraso():
+                    fechar()
+                    inicializar()
                     if len(LeEmprestimos(True, id_usuario)) < 3 and (LeEmprestimos(False, codigo_livro)) == []:
+                        fechar()
                         inicializar()
                         codigos = codigosValidos()
                         fechar()
@@ -136,15 +140,17 @@ def menuAdmin(conta):
                         else:
                             print("ID usuário e/ou codigo do livro invalido(s)")      
                     else:
-                        print("\nO empréstimo não pode ser realizado, livro indisponível ou o usuário atingiu o limite de emprestimos. \n")
+                        fechar()
+                        print("\nO empréstimo não pode ser realizado, livro indisponível ou o usuário atingiu o limite de emprestimos.\n")
                 else:
                     print("\nO empréstimo não pode ser realizado pois o usuário tem livro(s) em atraso.")
-            case '2':                   
-                    try:
-                        codigo = int(input("\nCódigo do livro:"))
-                    except:
-                        print('\nNão é um codigo valido')
+            case '2':
+                while True:                   
+                    codigo = input("\nCódigo do livro:")
+                    if not codigo.isnumeric():
+                        print('Esse código não é valido')
                     else:
+                        codigo = int(codigo)
                         inicializar()
                         lista = codigosValidos()
                         fechar()
@@ -153,16 +159,15 @@ def menuAdmin(conta):
                             try:
                                 devolucaoLivros(codigo)
                             except UnboundLocalError:
-                                print('Livro ja foi devolvido')
+                                print('Este livro não está emprestado\n')
                                 fechar()
-                                
+                                break                               
                             else:   
                                 print('\nDevolução concluida\n')
                                 fechar()
-                                
+                                break                               
                         else:
                             print('Codigo desse livro não existe')
-
             case '3':
                 #Arrumar e melhorar
                 id_usuario = int(input("ID do usuário: ")) 
@@ -188,8 +193,14 @@ def menuAdmin(conta):
                 #melhorar
                 codigo = int(input("Excluir livro com o código: "))
                 inicializar()
-                remover_livro(codigo)
-                fechar()
+                if (LeEmprestimos(False, codigo)) == []:
+                    fechar()
+                    inicializar()
+                    remover_livro(codigo)
+                    fechar()
+                else:
+                    fechar()
+                    print("Não foi possível deletar o livro pois há um emprestimo em andamento, tente novamente após realizar a devolução.")
             case '7':
                 #melhorar
                 id_user = input("Apagar usuário com ID: ")
