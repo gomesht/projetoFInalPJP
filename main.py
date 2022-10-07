@@ -132,10 +132,14 @@ def menuAdmin(conta):
                 else:
                     print("\nO empréstimo não pode ser realizado pois o usuário tem livro(s) em atraso.")
             case '2':
-                codigo = int(input("Código do livro:"))
-                inicializar()
-                devolucaoLivros(codigo)
-                fechar()
+                try:
+                    codigo = int(input("Código do livro:"))
+                except:
+                    print('Codigo não existe')
+                else:
+                    inicializar()
+                    devolucaoLivros(codigo)
+                    fechar()
             case '3':
                 #Arrumar e melhorar
                 id_usuario = int(input("ID do usuário: ")) 
