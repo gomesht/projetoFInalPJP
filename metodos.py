@@ -170,7 +170,12 @@ def disponibilidadeLivro(codigo):
             else:
                 return "emprestado"
     return "disponivel"
-
+def codigosValidos():
+    cursor.execute('SELECT Codigo FROM Livros')
+    codigos = []
+    for item in cursor.fetchall():
+        codigos.append(item)
+    return codigos
 ########################################################################################
 # Métodos de usuário
 ########################################################################################
@@ -284,7 +289,13 @@ def requisitosSenha(senha):
     #     verificaTamanho = True
     # if verificaTamanho == True and verificaCaracteres == True and verificaNumeros == True and verificaMaiusculas == True and verificaMinusculas == True:
     #     return True
-
+def idValidos():
+    cursor.execute('SELECT id FROM cadastro')
+    usuarios = []
+    for item in cursor.fetchall():
+        usuarios.append(item)
+    return usuarios
+        
 
 ##############################################################################################
 # Emprestimos

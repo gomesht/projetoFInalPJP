@@ -121,17 +121,22 @@ def menuAdmin(conta):
                     print('Não é um codigo valido')
                 codigo_livro = int(input("Código do livro: "))
                 if id_usuario not in usuariosComAtraso():
-                    if len(LeEmprestimos(True, id_usuario)) < 3:
-                        if (LeEmprestimos(False, codigo_livro)) == []:
-                            try:
-                                inicializar()
-                                registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
-                                print('\nLivro Alugado com sucesso')
-                                fechar()
-                            except sqlite3.IntegrityError:
-                                print("ID de usuário e/ou código do livro inválido(s).") 
+                    if len(LeEmprestimos(True, id_usuario)) < 3 and (LeEmprestimos(False, codigo_livro)) == []:
+                        inicializar()
+                        codigos = codigosValidos()
+                        fechar()
+                        inicializar()
+                        usuarios = idValidos()
+                        fechar()
+                        if codigo_livro in codigos and id_usuario in usuarios: 
+                            inicializar()
+                            registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
+                            print('\nLivro Alugado com sucesso')
+                            fechar()  
+                        else:
+                            print("ID usuário e/ou codigo do livro invalido(s)")      
                     else:
-                        print("\nO empréstimo não pode ser realizado pois o usuário já tem 3 emprestimos ativos.\n")
+                        print("\nO empréstimo não pode ser realizado, livro indisponível ou o usuário atingiu o limite de emprestimos. \n")
                 else:
                     print("\nO empréstimo não pode ser realizado pois o usuário tem livro(s) em atraso.")
             case '2':
