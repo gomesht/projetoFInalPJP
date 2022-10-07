@@ -66,7 +66,6 @@ def criarTabelaSugestoes():
 
 def criarTabelaDadosInativos():
     cursor.execute('CREATE TABLE IF NOT EXISTS dadosInativos ('
-    'id	INTEGER NOT NULL UNIQUE,'
     'livro TEXT NOT NULL,'
     'autor TEXT NOT NULL,'
     'nome TEXT NOT NULL,'
@@ -349,7 +348,7 @@ def devolucaoLivros(codigo):
             livro = valor[0]
             autor = valor[1]
 
-    cursor.execute('INSERT INTO dadosInativos (id, livro, autor, nome, telefone, email, data_emprestimo) VALUES (?,?,?,?,?,?,?)',(id_usuario, livro, autor, nome, telefone, email, data_emprestimo))
+    cursor.execute('INSERT INTO dadosInativos (livro, autor, nome, telefone, email, data_emprestimo) VALUES (?,?,?,?,?,?)',(livro, autor, nome, telefone, email, data_emprestimo))
     conexao.commit()
     cursor.execute('DELETE FROM emprestimos WHERE codigo_livro = ?', (codigo,))
     conexao.commit()
