@@ -122,11 +122,14 @@ def menuAdmin(conta):
                 codigo_livro = int(input("Código do livro: "))
                 if id_usuario not in usuariosComAtraso():
                     if len(LeEmprestimos(True, id_usuario)) < 3:
-                        print(LeEmprestimos(True, codigo_livro))
-                        inicializar()
-                        registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
-                        print('\nLivro Alugado com sucesso')
-                        fechar()
+                        if (LeEmprestimos(False, codigo_livro)) == []:
+                            try:
+                                inicializar()
+                                registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
+                                print('\nLivro Alugado com sucesso')
+                                fechar()
+                            except sqlite3.IntegrityError:
+                                print("ID de usuário e/ou código do livro inválido(s).") 
                     else:
                         print("\nO empréstimo não pode ser realizado pois o usuário já tem 3 emprestimos ativos.\n")
                 else:
@@ -139,10 +142,16 @@ def menuAdmin(conta):
                         print('\nCodigo não existe')
                     else:
                         inicializar()
-                        devolucaoLivros(codigo)
-                        print('\nDevolução concluida\n')
-                        fechar()
-                        break
+                        try:
+                            devolucaoLivros(codigo)
+                        except UnboundLocalError:
+                            print('Livro ja foi devolvido')
+                            fechar()
+                            break
+                        else:   
+                            print('\nDevolução concluida\n')
+                            fechar()
+                            break
             case '3':
                 #Arrumar e melhorar
                 id_usuario = int(input("ID do usuário: ")) 
@@ -253,8 +262,8 @@ def menuUsuario(id):
                         codigo_livro = input("\nCódigo do livro: ")
                         try:
                             Livro(int(codigo_livro))
-                        except Exception:
-                            print('\nCodigo do livro não existe')
+                        except Exception as erro:
+                            print('\nCodigo do livro não existe', erro)
                         else:
                             break
                     if Livro(int(codigo_livro)).disponibilidade == "disponível":
