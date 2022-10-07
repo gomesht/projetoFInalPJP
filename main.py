@@ -121,37 +121,48 @@ def menuAdmin(conta):
                     print('Não é um codigo valido')
                 codigo_livro = int(input("Código do livro: "))
                 if id_usuario not in usuariosComAtraso():
-                    if len(LeEmprestimos(True, id_usuario)) < 3:
-                        if (LeEmprestimos(False, codigo_livro)) == []:
-                            try:
-                                inicializar()
-                                registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
-                                print('\nLivro Alugado com sucesso')
-                                fechar()
-                            except sqlite3.IntegrityError:
-                                print("ID de usuário e/ou código do livro inválido(s).") 
+                    if len(LeEmprestimos(True, id_usuario)) < 3 and (LeEmprestimos(False, codigo_livro)) == []:
+                        inicializar()
+                        codigos = codigosValidos()
+                        fechar()
+                        inicializar()
+                        usuarios = idValidos()
+                        fechar()
+                        if codigo_livro in codigos and id_usuario in usuarios: 
+                            inicializar()
+                            registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
+                            print('\nLivro Alugado com sucesso')
+                            fechar()  
+                        else:
+                            print("ID usuário e/ou codigo do livro invalido(s)")      
                     else:
-                        print("\nO empréstimo não pode ser realizado pois o usuário já tem 3 emprestimos ativos.\n")
+                        print("\nO empréstimo não pode ser realizado, livro indisponível ou o usuário atingiu o limite de emprestimos. \n")
                 else:
                     print("\nO empréstimo não pode ser realizado pois o usuário tem livro(s) em atraso.")
-            case '2':
-                while True:
+            case '2':                   
                     try:
                         codigo = int(input("\nCódigo do livro:"))
                     except:
-                        print('\nCodigo não existe')
+                        print('\nNão é um codigo valido')
                     else:
                         inicializar()
-                        try:
-                            devolucaoLivros(codigo)
-                        except UnboundLocalError:
-                            print('Livro ja foi devolvido')
-                            fechar()
-                            break
-                        else:   
-                            print('\nDevolução concluida\n')
-                            fechar()
-                            break
+                        lista = codigosValidos()
+                        fechar()
+                        if codigo in lista:
+                            inicializar()
+                            try:
+                                devolucaoLivros(codigo)
+                            except UnboundLocalError:
+                                print('Livro ja foi devolvido')
+                                fechar()
+                                
+                            else:   
+                                print('\nDevolução concluida\n')
+                                fechar()
+                                
+                        else:
+                            print('Codigo desse livro não existe')
+
             case '3':
                 #Arrumar e melhorar
                 id_usuario = int(input("ID do usuário: ")) 
