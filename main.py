@@ -51,6 +51,7 @@ def menuLogin():
         except EmailSenhaIncorretoError  :
             print("Usuário e/ou senha inválido(s)!")
             conta = None
+            fechar()
         
             # inicializar()
             # cursor.execute('SELECT tipo_de_conta, email FROM cadastro')
@@ -61,9 +62,11 @@ def menuLogin():
         if conta != None:
             if type(conta) == UsuarioADM:
                 menuAdmin(conta)
+                fechar()
                 break
             elif type(conta) == UsuarioNormal:
                 menuUsuario(conta.id)
+                fechar()
                 break
         
 def menuCadastroUsuario():
@@ -170,8 +173,10 @@ def menuAdmin(conta):
                             print('Codigo desse livro não existe')
             case '3':
                 #Arrumar e melhorar
+                inicializar()
                 id_usuario = int(input("ID do usuário: ")) 
                 print(Conta.getConta(id_usuario))
+                fechar()
             case '4':
                 #melhorar
                 inicializar()
