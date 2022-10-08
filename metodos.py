@@ -25,7 +25,7 @@ def criarTabelaLivros():
     'Nome	TEXT NOT NULL,'
 	'Autor	TEXT NOT NULL,'
 	'Genero	TEXT,'
-	'Codigo	INTEGER NOT NULL UNIQUE,'
+    'Codigo	INTEGER NOT NULL UNIQUE,'
 	'Estante	TEXT,'
 	'Link_de_Amostra	TEXT,'
 	'PRIMARY KEY(Codigo AUTOINCREMENT)'
@@ -66,7 +66,6 @@ def criarTabelaSugestoes():
 
 def criarTabelaDadosInativos():
     cursor.execute('CREATE TABLE IF NOT EXISTS dadosInativos ('
-    'id	INTEGER NOT NULL UNIQUE,'
     'livro TEXT NOT NULL,'
     'autor TEXT NOT NULL,'
     'nome TEXT NOT NULL,'
@@ -83,7 +82,7 @@ def criarTabelaDadosInativos():
 
 def cadastro_livros(l_nome,l_autor,l_genero,l_estante,l_link_amostra):
 
-    cursor.execute('INSERT INTO Livros(Nome,Autor,Genero,Estante,"Link de Amostra") VALUES (?,?,?,?,?)',(l_nome,l_autor,l_genero,l_estante,l_link_amostra))
+    cursor.execute('INSERT INTO Livros(Nome,Autor,Genero,Estante,"Link_de_Amostra") VALUES (?,?,?,?,?)',(l_nome,l_autor,l_genero,l_estante,l_link_amostra))
     conexao.commit()
 
 def remover_livro(codigo):
@@ -133,7 +132,7 @@ def getLivros(**filtros):
 
         count += 1
     
-    valDeFiltragem = [ Nome,Autor,Genero,Codigo,Estante,LdeAmostra ]
+    valDeFiltragem = [Nome,Autor,Genero,Codigo,Estante,LdeAmostra ]
 
     cursor.execute("SELECT * FROM Livros")
 
@@ -170,7 +169,12 @@ def disponibilidadeLivro(codigo):
             else:
                 return "emprestado"
     return "disponivel"
-
+def codigosValidos():
+    cursor.execute('SELECT Codigo FROM Livros')
+    codigos = []
+    for item in cursor.fetchall():
+        codigos.append(item[0])
+    return codigos
 ########################################################################################
 # Métodos de usuário
 ########################################################################################
@@ -284,7 +288,13 @@ def requisitosSenha(senha):
     #     verificaTamanho = True
     # if verificaTamanho == True and verificaCaracteres == True and verificaNumeros == True and verificaMaiusculas == True and verificaMinusculas == True:
     #     return True
-
+def idValidos():
+    cursor.execute('SELECT id FROM cadastro')
+    usuarios = []
+    for item in cursor.fetchall():
+        usuarios.append(item[0])
+    return usuarios
+        
 
 ##############################################################################################
 # Emprestimos
@@ -349,7 +359,7 @@ def devolucaoLivros(codigo):
             livro = valor[0]
             autor = valor[1]
 
-    cursor.execute('INSERT INTO dadosInativos (id, livro, autor, nome, telefone, email, data_emprestimo) VALUES (?,?,?,?,?,?,?)',(id_usuario, livro, autor, nome, telefone, email, data_emprestimo))
+    cursor.execute('INSERT INTO dadosInativos (livro, autor, nome, telefone, email, data_emprestimo) VALUES (?,?,?,?,?,?)',(livro, autor, nome, telefone, email, data_emprestimo))
     conexao.commit()
     cursor.execute('DELETE FROM emprestimos WHERE codigo_livro = ?', (codigo,))
     conexao.commit()

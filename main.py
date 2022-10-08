@@ -11,7 +11,19 @@ def menuInicial():
     criarTabelaEmprestimos()
     criarTabelaSugestoes()
     fechar()
-
+    nome = "admin"
+    telefone = "admin"
+    endereco = "admin"
+    telefone = "admin"
+    cpf = "admin"
+    email = "admin@admin.admin"
+    senha = "Admin_1"
+    try:
+        inicializar()
+        UsuarioADM(nome, endereco, cpf, telefone, email, senha)
+        fechar()
+    except sqlite3.IntegrityError:
+        pass
     while True:
         op = input("1 - Login\n2 - Cadastro\n3 - Fechar\n")
         match op:
@@ -39,6 +51,7 @@ def menuLogin():
         except EmailSenhaIncorretoError  :
             print("Usuário e/ou senha inválido(s)!")
             conta = None
+            fechar()
         
             # inicializar()
             # cursor.execute('SELECT tipo_de_conta, email FROM cadastro')
@@ -49,16 +62,18 @@ def menuLogin():
         if conta != None:
             if type(conta) == UsuarioADM:
                 menuAdmin(conta)
+                fechar()
                 break
             elif type(conta) == UsuarioNormal:
                 menuUsuario(conta.id)
+                fechar()
                 break
         
 def menuCadastroUsuario():
     while True:
         inicializar()
         nome = input("Nome: ").title()
-        telefone = int(input("Telefone: "))
+        telefone = input("Telefone: ")
         endereco = input("Endereço: ").title()
         cpf = input("CPF: ")
         
@@ -85,10 +100,12 @@ def menuCadastroUsuario():
         try:            
             contaCadastrada = UsuarioNormal(nome, endereco, cpf, telefone, email, senha)
             print('\nCadastro Concluido\n')
-            menuInicial()
+            fechar()
+            break
         except Exception as erro:
             print("Erro ao cadastrar usuário!", erro)
             fechar()
+            break
 
     # menuUsuario(contaCadastrada)
         
@@ -96,32 +113,70 @@ def menuCadastroUsuario():
     
 def menuAdmin(conta):
     while True:
-        op = input('1 - Empréstimo de livro\n2 - Devolução de livro\n3 - Ver usuário\n4 - Usuários em atraso\n5 - Cadastrar livro\n6 - Remover livro\n7 - Remover usuario\n8 - Cadastro Admin\n9 - Sair\n ')
+        op = input('1 - Empréstimo de livro\n2 - Devolução de livro\n3 - Ver usuário\n4 - Usuários em atraso\n5 - Cadastrar livro\n6 - Remover livro\n7 - Remover usuario\n8 - Cadastro Admin\n9 - Sair\n')
         match op:
             case '1':
                 data_emprestimo = date.today()
                 data_devolucao = data_emprestimo + timedelta(days = 7)
-                id_usuario = int(input("ID do usuário: "))
+                try:
+                    id_usuario = int(input("ID do usuário: "))
+                except:
+                    print('Não é um codigo valido')
                 codigo_livro = int(input("Código do livro: "))
+                inicializar()
                 if id_usuario not in usuariosComAtraso():
-                    if len(LeEmprestimos(True, id_usuario)) < 3:
-                        inicializar()
-                        registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
-                        print('\nLivro Alugado com sucesso')
+                    fechar()
+                    inicializar()
+                    if len(LeEmprestimos(True, id_usuario)) < 3 and (LeEmprestimos(False, codigo_livro)) == []:
                         fechar()
+                        inicializar()
+                        codigos = codigosValidos()
+                        fechar()
+                        inicializar()
+                        usuarios = idValidos()
+                        fechar()
+                        if codigo_livro in codigos and id_usuario in usuarios: 
+                            inicializar()
+                            registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
+                            print('\nLivro Alugado com sucesso')
+                            fechar()  
+                        else:
+                            print("ID usuário e/ou codigo do livro invalido(s)")      
                     else:
-                        print("\nO empréstimo não pode ser realizado pois o usuário já tem 3 emprestimos ativos.\n")
+                        fechar()
+                        print("\nO empréstimo não pode ser realizado, livro indisponível ou o usuário atingiu o limite de emprestimos.\n")
                 else:
                     print("\nO empréstimo não pode ser realizado pois o usuário tem livro(s) em atraso.")
             case '2':
-                codigo = int(input("Código do livro:"))
-                inicializar()
-                devolucaoLivros(codigo)
-                fechar()
+                while True:                   
+                    codigo = input("\nCódigo do livro:")
+                    if not codigo.isnumeric():
+                        print('Esse código não é valido')
+                    else:
+                        codigo = int(codigo)
+                        inicializar()
+                        lista = codigosValidos()
+                        fechar()
+                        if codigo in lista:
+                            inicializar()
+                            try:
+                                devolucaoLivros(codigo)
+                            except UnboundLocalError:
+                                print('Este livro não está emprestado\n')
+                                fechar()
+                                break                               
+                            else:   
+                                print('\nDevolução concluida\n')
+                                fechar()
+                                break                               
+                        else:
+                            print('Codigo desse livro não existe')
             case '3':
                 #Arrumar e melhorar
+                inicializar()
                 id_usuario = int(input("ID do usuário: ")) 
                 print(Conta.getConta(id_usuario))
+                fechar()
             case '4':
                 #melhorar
                 inicializar()
@@ -137,20 +192,26 @@ def menuAdmin(conta):
                 link = input("Link de amostra do livro: ")
                 inicializar()
                 cadastro_livros(nome, autor, genero, estante, link)
-                print('\nLivro cadastrado com sucesso')
+                print('\nLivro cadastrado com sucesso\n')
                 fechar()
             case '6':
                 #melhorar
                 codigo = int(input("Excluir livro com o código: "))
                 inicializar()
-                remover_livro(codigo)
-                fechar()
+                if (LeEmprestimos(False, codigo)) == []:
+                    fechar()
+                    inicializar()
+                    remover_livro(codigo)
+                    fechar()
+                else:
+                    fechar()
+                    print("Não foi possível deletar o livro pois há um emprestimo em andamento, tente novamente após realizar a devolução.")
             case '7':
                 #melhorar
-                id_user = int(input("Apagar usuário com ID: "))
+                id_user = input("Apagar usuário com ID: ")
                 try: 
                     inicializar()
-                    Conta.getConta(id_user).apagar() # SUGESTÃO: usar Conta.getConta(id_user).apagar() no lugar. Assim, as verificações (Se a conta é a única ADM, se o usuário tem livros em atraso) serão feitas e retornaram erros a serem tratados aqi usando o try
+                    Conta.getConta(int(id_user)).apagar() # SUGESTÃO: usar Conta.getConta(id_user).apagar() no lugar. Assim, as verificações (Se a conta é a única ADM, se o usuário tem livros em atraso) serão feitas e retornaram erros a serem tratados aqi usando o try
                 except:
                     print('Erro ao apagar')    
                     fechar()
@@ -228,13 +289,11 @@ def menuUsuario(id):
                         codigo_livro = input("\nCódigo do livro: ")
                         try:
                             Livro(int(codigo_livro))
-                        except Exception:
-                            print('\nCodigo do livro não existe')
+                        except Exception as erro:
+                            print('\nCodigo do livro não existe', erro)
                         else:
                             break
                     if Livro(int(codigo_livro)).disponibilidade == "disponível":
-                        
-
                         registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
                         print('\nLivro Reservado\n')
                         fechar()
@@ -282,7 +341,7 @@ def menuUsuario(id):
                     senha_atual = input('\nDigite sua senha atual: \n')
                     if senha_atual == cache_senha:
                         while True:
-                            senha = input("Digite sua nova senha: ")
+                            senha = input("Digite sua nova senha: \n")
                             senha1 = input("Repita sua nova senha: \n")
                             if senha == senha1:
                                 if requisitosSenha(senha):
