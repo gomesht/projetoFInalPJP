@@ -3,6 +3,8 @@ validarB -> Validar
 voltarB -> Voltar
 errodesconhecido -> Um erro desconhecido ocorreu! Por favor, tente novamente mais tarde
 sairB -> Sair
+msgsucesso -> Sucesso!
+errocritico -> Ocorreu um erro crítico no sistema! \n Por favor contate a biblioteca e informe com \n detalhes o erro ocorrido
 
 * Menu
 loginB -> Login
@@ -45,6 +47,7 @@ linkdeamostraL -> Link
 codigoL -> Insira o código do livro
 errocodigodesconhecido -> Código não foi encontrado!
 errolivroemuso -> Este livro está em uso! Espere o atual dono devolvê-lo para reservar.
+erronan -> O código inserido não é um número!
 
 * Sugerir livros
 sugerirlivrosL -> Tem alguma sugestão a nos dar? \n Digite o nome de um livro que você gostaria \n que existisse em nosso acervo e clique em validar!
@@ -52,7 +55,7 @@ sugerirlivrosL -> Tem alguma sugestão a nos dar? \n Digite o nome de um livro q
 * Alterar senha
 novasenhaL -> Insira sua nova senha
 novasenhanovamenteL -> Insira sua nova senha novamente
-
+errosenhaerrada -> Senha incorreta!
 * Menu ADM
 emprestimosB -> Empréstimos
 devoluçoesB -> Devoluções

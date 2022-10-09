@@ -56,7 +56,6 @@ def criarTabelaEmprestimos():
     'FOREIGN KEY (codigo_livro) REFERENCES Livros (Codigo) ON DELETE CASCADE ON UPDATE CASCADE'
     ')')
 
-
 def criarTabelaSugestoes():
     cursor.execute('CREATE TABLE IF NOT EXISTS sugestoes ('
     'livro TEXT NOT NULL,'
@@ -75,18 +74,15 @@ def criarTabelaDadosInativos():
     
     ')')
 
-  
 ########################################################################################
 # Métodos de livros
 ########################################################################################
 
 def cadastro_livros(l_nome,l_autor,l_genero,l_estante,l_link_amostra):
-
     cursor.execute('INSERT INTO Livros(Nome,Autor,Genero,Estante,"Link_de_Amostra") VALUES (?,?,?,?,?)',(l_nome,l_autor,l_genero,l_estante,l_link_amostra))
     conexao.commit()
 
 def remover_livro(codigo):
-
     cursor.execute('DELETE FROM Livros WHERE Codigo = ? ', (codigo,))
     conexao.commit()
 
@@ -156,7 +152,10 @@ def getLivros(**filtros):
 def sugestoes_livros(livro,id_usuario):
     cursor.execute('INSERT INTO sugestoes(livro,id_usuario) VALUES (?,?)',(livro,id_usuario))
     conexao.commit()
-    
+
+def getSugestões():
+    cursor.execute('SELECT * FROM sugestoes')
+    return cursor.fetchall()
 
 def disponibilidadeLivro(codigo):
     cursor.execute('SELECT * FROM emprestimos')
@@ -295,7 +294,6 @@ def idValidos():
         usuarios.append(item[0])
     return usuarios
         
-
 ##############################################################################################
 # Emprestimos
 ##############################################################################################
@@ -311,7 +309,6 @@ def LeEmprestimos(livro, id: int): ...
 def LeEmprestimos(usuario, id: int): ...
 @overload
 def LeEmprestimos(IsUsuario, id: int): ...
-
 
 def LeEmprestimos(key, id):
     """ Lê todos os empréstimos relacionados a uma instância de usuário ou livro """
@@ -400,10 +397,10 @@ class Livro():
         else:
             if type(CodigoNome) != int:
                 raise TypeError()
-            
+
             if len(getLivros(Codigo = CodigoNome)) == 0:
                 raise ValueError()
-            
+
             self.__Codigo = CodigoNome
 
     @property
@@ -417,11 +414,11 @@ class Livro():
     @property
     def genero(self):
         return getLivros(Codigo=self.codigo)[0][2]
-    
+
     @property
     def codigo(self):
         return self.__Codigo
-    
+
     @property
     def estante(self):
         return getLivros(Codigo=self.codigo)[0][4]
@@ -432,7 +429,7 @@ class Livro():
 
     @property
     def disponibilidade(self):
-        
+
         emprestimo = LeEmprestimos(self, self.codigo)        
         if len(emprestimo) > 0:
             dataEmp = datetime.date(int(emprestimo[0][0].split(" ")[0]),int(emprestimo[0][0].split(" ")[1]),int(emprestimo[0][0].split(" ")[2]))
@@ -464,8 +461,7 @@ class Conta(ABC):
     esse elemento, na segunda, se retorna uma instância de Conta que
     corresponde ao argumento id (nenhum elemento é criado). Tentar
     criar uma conta com um email já em uso ocasionará em um erro. Tentar
-    buscar uma conta com um id inexistente também ocasionará
-    em um erro. \n
+    buscar uma conta com um id inexistente também ocasionará em um erro. \n
     ATENÇÃO: Esta classe, por ser abstrata, não deve ser instanciada.
     Para instanciar, use ContaNormal ou ContaADM no lugar.
     """
@@ -537,9 +533,8 @@ class Conta(ABC):
         """ 
         Propriedade chave de uma classe Conta. 
         O id é a conexão entre a instância da Classe
-        e as contas no banco de dados, portanto
-        mudar o id significa mudar que conta a instância
-        representa. \n
+        e as contas no banco de dados, portanto mudar o 
+        id significa mudar que conta a instância representa. \n
         ATENÇÃO: Isso significa que alterar o id da classe
         não vai mudar o id do banco de dados, apenas mudará 
         a conta usada.

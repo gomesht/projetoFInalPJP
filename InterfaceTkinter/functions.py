@@ -1,7 +1,7 @@
 from validacaoCPF import validarCpf
 from validatorEmail import isEmailValido
-import metodos
-from metodos import UsuarioNormal, inicializar, fechar, TipoDeContaErradoError, EmailSenhaIncorretoError, UsuárioNãoQuitadoError, ApagarUnicoAdmError
+import metodos, datetime, time
+from metodos import Conta, UsuarioNormal, UsuarioADM, Livro, disponibilidadeLivro, inicializar, fechar, TipoDeContaErradoError, EmailSenhaIncorretoError, UsuárioNãoQuitadoError, ApagarUnicoAdmError
 
 if __name__ == "InterfaceTkinter.windowDef":
     import InterfaceTkinter.windowDef as windowDef, InterfaceTkinter.textsDef as textsDef
@@ -82,3 +82,85 @@ def pesquisarLivros():
 
 def proximaJanela(janela):
     janela.levantarJanela()
+
+def reservarLivro(cod, janela):
+    if not cod.isnumeric():
+        janela.mensage("ERRO-ENTRADA-INVALIDA")
+        return
+    
+    cod = int(cod)
+
+    inicializar()
+
+    disponibilidadeLivro(cod)
+    try:
+        Livro(cod)
+    except ValueError:
+       janela.mensage("ERRO-CODIGO-INEXISTENTE")
+       fechar()
+       return
+
+    if Livro(cod).disponibilidade != 'disponível':
+        janela.mensage("ERRO-LIVRO-INDISPONIVEL")
+        fechar()
+        return
+
+    dataDeEmprestimo = str(datetime.date.today() + datetime.timedelta(7)).replace("-", " ")
+    dataDeDevolução = str(datetime.date.today() + datetime.timedelta(14)).replace("-", " ")
+
+    try:
+        metodos.registrosEmprestimos(dataDeEmprestimo, dataDeDevolução, ContaAtual.id, cod)
+    except Exception:
+        janela.mensage("ERRO-DESCONHECIDO")
+        fechar()
+    else:
+        janela.mensage("SUCESSO")
+        fechar()
+
+def addSugestão(nome:str, janela):
+    inicializar()
+    if nome.strip() == "":
+        janela.mensage("ERRO-CAMPO-NULO")
+        fechar()
+    else:
+        if not (nome,ContaAtual.id) in metodos.getSugestões():
+            metodos.sugestoes_livros(nome.strip(),ContaAtual.id)
+        janela.mensage("SUCESSO")
+        fechar()
+
+def alterarSenha(senhaAntiga:str, senhaNova:str, senhaNovaNovamente:str, janela):
+    inicializar()
+    if senhaAntiga.strip() == "" or senhaNova.strip() == "" or senhaNovaNovamente.strip() == "": 
+        janela.mensage("ERRO-CAMPOS-NULOS")
+        fechar()
+        return
+
+    senhaAntiga, senhaNova, senhaNovaNovamente = senhaAntiga.strip(), senhaNova.strip(), senhaNovaNovamente.strip()
+    try:
+        metodos.Login(ContaAtual.email,senhaAntiga)
+    except EmailSenhaIncorretoError:
+        janela.mensage("ERRO-SENHA-INCORRETA")
+        fechar()
+        return
+    except TipoDeContaErradoError:
+        janela.mensage("ERRO-CRITICO")
+        fechar()
+        return
+    except Exception:
+        janela.mensage("ERRO-DESCONHECIDO")
+        fechar()
+        return
+
+    if senhaNova != senhaNovaNovamente:
+        janela.mensage("ERRO-SENHAS-DIFERENTES")
+        fechar()
+        return
+
+    if not metodos.requisitosSenha(senhaNova):
+        janela.mensage("ERRO-SENHA-FRACA")
+        fechar()
+        return
+
+    ContaAtual.senha = senhaNova
+    fechar()
+    janela.mensage("SUCESSO")

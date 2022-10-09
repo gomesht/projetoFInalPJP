@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import Menu, ttk
 
 from InterfaceTkinter.functions import proximaJanela
+import metodos
 
 if __name__ == "InterfaceTkinter.windowDef":
     import InterfaceTkinter.functions as functions, InterfaceTkinter.textsDef as textsDef
@@ -63,8 +64,8 @@ class JanelaLogin(tk.Frame, JanelaPrograma):
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        self.value_entrada_email = tk.StringVar(self)
-        self.value_entrada_senha = tk.StringVar(self)
+        self.value_entrada_email = tk.StringVar(self, "2@2.com")
+        self.value_entrada_senha = tk.StringVar(self, "2")
 
         self.label_email    = ttk.Label(self, textvariable=ValoresInterface.texts()['emailL'])
         self.label_senha    = ttk.Label(self, textvariable=ValoresInterface.texts()['senhaL'])
@@ -199,7 +200,7 @@ class JanelaMenuInicialUsuário(tk.Frame, JanelaPrograma):
         if msg == 'LOGOUT':
             functions.proximaJanela(jmi)
 
-class JanelaPesquisarLivros(tk.Frame, JanelaPrograma):
+class JanelaPesquisarLivros(tk.Frame, JanelaPrograma): # here
     """ Janela de pesquisa de livros """
     def __init__(self, master) -> None:
         super().__init__(master)
@@ -223,22 +224,33 @@ class JanelaReservarLivro(tk.Frame, JanelaPrograma):
     """ Janela de reserva de livro """
     def __init__(self, master) -> None:
         super().__init__(master)
-        self.value_id = tk.StringVar(self)
+        self.value_codigo = tk.StringVar(self)
 
-        self.entrada_id = ttk.Entry(self)
-        self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'])
+        self.label_codigo = ttk.Label(self, textvariable=ValoresInterface.texts()['codigoL'])
+        self.entrada_codigo = ttk.Entry(self, textvariable=self.value_codigo)
+        self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.reservarLivro(self.entrada_codigo.get(), self))
         self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:proximaJanela(jmiu))
+        self.label_erro = tk.Label(self)
 
-        self.entrada_id    .grid(column=0,row=0)
-        self.botão_validar .grid(column=0,row=1)
-        self.botão_voltar  .grid(column=1,row=1)
+        self.entrada_codigo .grid(column=0,row=0)
+        self.botão_validar  .grid(column=0,row=1)
+        self.botão_voltar   .grid(column=1,row=1)
+        self.label_erro     .grid(column=0,row=2)
 
         self.master.update()
         self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
 
-
     def mensage(self, msg:str):
-        ...
+        if msg == "ERRO-ENTRADA-INVALIDA":
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['erronan'], foreground='red')
+        if msg == "ERRO-CODIGO-INEXISTENTE":
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['errocodigodesconhecido'], foreground='red')
+        if msg == "ERRO-LIVRO-INDISPONIVEL":
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['errolivroemuso'], foreground='red')
+        if msg == "ERRO-DESCONHECIDO":
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['errodesconhecido'], foreground='red')
+        if msg == "SUCESSO":
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['msgsucesso'], foreground='green')
 
 class JanelaSugerirLivro(tk.Frame, JanelaPrograma):
     """ Janela de sugestão de livro """
@@ -248,20 +260,25 @@ class JanelaSugerirLivro(tk.Frame, JanelaPrograma):
         self.value_livrosugerido = tk.StringVar(self)
 
         self.label_explain = ttk.Label(self, textvariable=ValoresInterface.texts()['sugerirlivrosL'])
-        self.entry_livrosugerido = ttk.Entry(self)
-        self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'])
+        self.entry_livrosugerido = ttk.Entry(self, textvariable=self.value_livrosugerido)
+        self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.addSugestão(self.value_livrosugerido.get(), jsl))
         self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'],command=lambda:proximaJanela(jmiu))
+        self.label_erro = ttk.Label(self)
 
         self.label_explain      .grid(column=0,row=0)
         self.entry_livrosugerido.grid(column=0,row=1, sticky=tk.W)
         self.botão_validar      .grid(column=0,row=2, sticky=tk.W)
         self.botão_voltar       .grid(column=0,row=2, sticky=tk.E)
+        self.label_erro         .grid(column=0,row=3, sticky=tk.W)
 
         self.master.update()
         self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
 
     def mensage(self, msg:str):
-        ...
+        if msg == "ERRO-CAMPO-NULO":
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['errocamposnulos'], foreground='red')
+        if msg == "SUCESSO":
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['msgsucesso'], foreground='green')
 
 class JanelaAlterarSenha(tk.Frame, JanelaPrograma):
     """ Janela de mudança de senha """
@@ -278,8 +295,9 @@ class JanelaAlterarSenha(tk.Frame, JanelaPrograma):
         self.entrada_senha_atual = ttk.Entry(self, textvariable=self.value_senha_atual)
         self.entrada_mudança_de_senha = ttk.Entry(self, textvariable=self.value_mudança_de_senha)
         self.entrada_mudança_de_senha_novamente = ttk.Entry(self, textvariable=self.value_mudança_de_senha_novamente)
-        self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'])
+        self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.alterarSenha(self.value_senha_atual.get(), self.value_mudança_de_senha.get(), self.value_mudança_de_senha_novamente.get(), self))
         self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:proximaJanela(jmiu))
+        self.label_erro = ttk.Label(self)
 
         self.label_senha_atual                  .grid(column=0,row=0)
         self.label_mudança_de_senha             .grid(column=0,row=1)
@@ -289,13 +307,28 @@ class JanelaAlterarSenha(tk.Frame, JanelaPrograma):
         self.entrada_mudança_de_senha_novamente .grid(column=1,row=2)
         self.botão_validar                      .grid(column=0,row=3)
         self.botão_voltar                       .grid(column=1,row=3)
+        self.label_erro                         .grid(column=0,row=4)
+
 
         self.master.update()
         self.place(in_=master, height=self.master.winfo_screenheight(), width=self.master.winfo_screenwidth())
 
 
     def mensage(self, msg:str):
-        ...
+        if msg == "ERRO-CAMPOS-NULOS":
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['errocamposnulos'], foreground='red')
+        if msg == "ERRO-SENHA-INCORRETA": 
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['errosenhaerrada'], foreground='red')
+        if msg == "ERRO-CRITICO":
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['errocritico'], foreground='red')
+        if msg == "ERRO-DESCONHECIDO":
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['errodesconhecido'], foreground='red')
+        if msg == "ERRO-SENHAS-DIFERENTES":
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['errosenhasdiferentes'], foreground='red')
+        if msg == "ERRO-SENHA-FRACA":
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['errosenhainsuficiente'], foreground='red')
+        if msg == "SUCESSO":
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['msgsucesso'], foreground='green')
 
 class JanelaMenuADM(tk.Frame, JanelaPrograma):
     """ Menu de uma conta de tipo ADM """
@@ -331,7 +364,7 @@ class JanelaMenuADM(tk.Frame, JanelaPrograma):
     def mensage(self, msg:str):
         ...
 
-class JanelaEmprestimo(tk.Frame, JanelaPrograma):
+class JanelaEmprestimo(tk.Frame, JanelaPrograma): # here
     """ Janela para um ADM realizar os empréstimos aos usuários """
     def __init__(self, master) -> None:
         super().__init__(master)
@@ -360,7 +393,7 @@ class JanelaEmprestimo(tk.Frame, JanelaPrograma):
     def mensage(self, msg:str):
         ...
 
-class JanelaDevolução(tk.Frame, JanelaPrograma):
+class JanelaDevolução(tk.Frame, JanelaPrograma): # here
     """ Janela para quitar um livro """
     def __init__(self, master) -> None:
         super().__init__(master)
@@ -384,7 +417,7 @@ class JanelaDevolução(tk.Frame, JanelaPrograma):
     def mensage(self, msg:str):
         ...
 
-class JanelaVerUsuário(tk.Frame, JanelaPrograma):
+class JanelaVerUsuário(tk.Frame, JanelaPrograma): # here
     """ Menu de uma conta de tipo ADM """
     def __init__(self, master) -> None:
         super().__init__(master)
@@ -406,7 +439,7 @@ class JanelaVerUsuário(tk.Frame, JanelaPrograma):
 
     def mensage(self, msg:str): ...
 
-class JanelaVerUsuáriosEmAtraso(tk.Frame, JanelaPrograma):
+class JanelaVerUsuáriosEmAtraso(tk.Frame, JanelaPrograma): # here
     """ Janela de visualização de usuários em atraso """
     def __init__(self, master) -> None:
         super().__init__(master)
@@ -426,7 +459,7 @@ class JanelaVerUsuáriosEmAtraso(tk.Frame, JanelaPrograma):
     def mensage(self, msg:str):
         ...
 
-class JanelaCadastrarLivro(tk.Frame, JanelaPrograma):
+class JanelaCadastrarLivro(tk.Frame, JanelaPrograma): # here
     """ Janela de cadastro de livros """
     def __init__(self, master) -> None:
         super().__init__(master)
@@ -471,7 +504,7 @@ class JanelaCadastrarLivro(tk.Frame, JanelaPrograma):
     def mensage(self, msg:str):
         ...
 
-class JanelaRemoverLivro(tk.Frame, JanelaPrograma):
+class JanelaRemoverLivro(tk.Frame, JanelaPrograma): # here
     """ Menu de uma conta de tipo ADM """
     def __init__(self, master) -> None:
         super().__init__(master)
@@ -495,7 +528,7 @@ class JanelaRemoverLivro(tk.Frame, JanelaPrograma):
     def mensage(self, msg:str):
         ...
 
-class JanelaRemoverUsuário(tk.Frame, JanelaPrograma):
+class JanelaRemoverUsuário(tk.Frame, JanelaPrograma): # here
     """ Menu de uma conta de tipo ADM """
     def __init__(self, master) -> None:
         super().__init__(master)
@@ -519,7 +552,7 @@ class JanelaRemoverUsuário(tk.Frame, JanelaPrograma):
     def mensage(self, msg:str):
         ...
 
-class JanelaCadastroADM(tk.Frame, JanelaPrograma):
+class JanelaCadastroADM(tk.Frame, JanelaPrograma): # here
     """ Menu de uma conta de tipo ADM """
     def __init__(self, master) -> None:
         super().__init__(master)
