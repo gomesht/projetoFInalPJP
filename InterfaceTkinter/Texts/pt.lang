@@ -3,12 +3,18 @@ validarB -> Validar
 voltarB -> Voltar
 errodesconhecido -> Um erro desconhecido ocorreu! Por favor, tente novamente mais tarde
 sairB -> Sair
+msgsucesso -> Sucesso!
+errocritico -> Ocorreu um erro crítico no sistema! \n Por favor contate a biblioteca e informe com \n detalhes o erro ocorrido
+
 * Menu
 loginB -> Login
 cadastroB -> Cadastro
+
 * Login
 emailL -> Insira seu email
 senhaL -> Insira sua senha
+errosenhaincorreta -> Senha ou email incorretos!
+
 * Cadastro
 nomeL -> Insira seu nome
 endereçoL -> Insira seu endereço
@@ -19,13 +25,73 @@ erroemailusado -> Email já está em uso
 erroemailinvalido -> Email inválido!
 errocpfinvalido -> Cpf inválido!
 errosenhasdiferentes -> As senhas inseridas não são iguais!
+errocamposnulos -> Há campos vazios!
+errosenhainsuficiente -> A senha é fraca demais!
+
 * Menu inicial
-psqlivroB ->
-rsvlibroB ->
-sgrlivroB ->
-altsenha ->
+saudaçaoL -> Olá, como vai?
+psqlivroB -> Pesquisar livro
+rsvlibroB -> Reservar livro
+sgrlivroB -> Sugerir livro
+altsenhaB -> Alterar senha
+
 * Visualizar livros
+codlivroL -> Código
+nomelivroL -> Nome
+autorlivroL -> Autor
+generolivroL -> Gênero
+estantelivroL -> Estante
+linkdeamostraL -> Link
+
 * Reservar Livro
-codigoL -> 
+codigoL -> Insira o código do livro
 errocodigodesconhecido -> Código não foi encontrado!
 errolivroemuso -> Este livro está em uso! Espere o atual dono devolvê-lo para reservar.
+erronan -> O código inserido não é um número!
+
+* Sugerir livros
+sugerirlivrosL -> Tem alguma sugestão a nos dar? \n Digite o nome de um livro que você gostaria \n que existisse em nosso acervo e clique em validar!
+
+* Alterar senha
+novasenhaL -> Insira sua nova senha
+novasenhanovamenteL -> Insira sua nova senha novamente
+errosenhaerrada -> Senha incorreta!
+* Menu ADM
+emprestimosB -> Empréstimos
+devoluçoesB -> Devoluções
+verusuarioB -> Ver Usuário
+usuariosematrasoB -> Usuários em atraso
+cadastrolivrosB -> Cadastro de novos livros
+removerlivrosB -> Remover livros
+removerusuariosB -> Remover usuários
+cadastroadmB -> Cadastro de ADM
+
+* Janela de empréstimos
+entradaidL -> Insira o id
+entradacodL -> Insira o código
+errocodigodesconhecido -> Código não existe!
+erroiddesconhecido -> Id não existe!
+errousuarionolimite -> Usuário já possui 3 livros emprestados, não é possível emprestar mais!
+
+* Janela de devolução (usa apenas entradaidL da seção acima)
+
+* Visualizar usuário
+nomeexibiçaoL -> Nome:
+endereçoexibiçaoL -> Endereço:
+emailexibiçaoL -> Email:
+cpfexibiçãoL -> Cpf:
+telefoneexibiçaoL -> Telefone:
+tipodecontaL -> Tipo:
+
+* Visualizar usuários em atraso (mesmos textos que visualizar usuário)
+
+* Cadastro de livros
+entradanomeL -> Insira o nome
+entradaautorL -> Insira o autor
+entradageneroL -> Insira o gênero
+entradaestanteL -> Insira a estante
+entradalinkL -> Insira o link
+
+* Remoção de livros (usa apenas entradaidL da seção empréstimos)
+
+* Cadastro ADM (usa os mesmos textos que cadastro)

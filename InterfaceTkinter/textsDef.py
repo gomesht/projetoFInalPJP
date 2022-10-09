@@ -29,6 +29,8 @@ def changerLanguage(master, língua = None):
                 name, value = line.split("->", 1)
                 name, value = name.strip(), value.strip()
 
+                value = value.replace(r"\n", "\n")
+
                 texts.update(((name, value),))
             else:
                 raise ErroDeSintaxe(f"Expected '->' in {langArq.name} {langs[langInUse]} line {i}")
