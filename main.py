@@ -135,7 +135,7 @@ def menuAdmin(conta):
                         if codigo_livro in codigos and id_usuario in usuarios: 
                             inicializar()
                             registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
-                            print('\nLivro Alugado com sucesso')
+                            print('\nLivro Alugado com sucesso\n')
                             fechar()  
                         else:
                             print("ID usuário e/ou codigo do livro invalido(s)")      
@@ -170,7 +170,7 @@ def menuAdmin(conta):
                             print('Codigo desse livro não existe')
             case '3':
                 #Arrumar e melhorar
-                id_usuario = int(input("ID do usuário: ")) 
+                id_usuario = int(input("ID do usuário: "))
                 print(Conta.getConta(id_usuario))
             case '4':
                 #melhorar
