@@ -5,6 +5,8 @@ errodesconhecido -> Um erro desconhecido ocorreu! Por favor, tente novamente mai
 sairB -> Sair
 msgsucesso -> Sucesso!
 errocritico -> Ocorreu um erro crítico no sistema! \n Por favor contate a biblioteca e informe com \n detalhes o erro ocorrido
+normal -> normal
+administrador -> administrador
 
 * Menu
 loginB -> Login
@@ -21,7 +23,7 @@ endereçoL -> Insira seu endereço
 cpfL -> Insira seu cpf
 telefoneL -> Insira telefone
 senhanovamenteL -> Insira sua senha novamente
-erroemailusado -> Email já está em uso
+erroemailusado -> Email ou cpf já estão em uso
 erroemailinvalido -> Email inválido!
 errocpfinvalido -> Cpf inválido!
 errosenhasdiferentes -> As senhas inseridas não são iguais!
@@ -42,12 +44,13 @@ autorlivroL -> Autor
 generolivroL -> Gênero
 estantelivroL -> Estante
 linkdeamostraL -> Link
+reloadB -> Atualizar
 
 * Reservar Livro
 codigoL -> Insira o código do livro
 errocodigodesconhecido -> Código não foi encontrado!
 errolivroemuso -> Este livro está em uso! Espere o atual dono devolvê-lo para reservar.
-erronan -> O código inserido não é um número!
+erronan -> O valor inserido não é um número!
 
 * Sugerir livros
 sugerirlivrosL -> Tem alguma sugestão a nos dar? \n Digite o nome de um livro que você gostaria \n que existisse em nosso acervo e clique em validar!
@@ -73,9 +76,12 @@ errocodigodesconhecido -> Código não existe!
 erroiddesconhecido -> Id não existe!
 errousuarionolimite -> Usuário já possui 3 livros emprestados, não é possível emprestar mais!
 
-* Janela de devolução (usa apenas entradaidL da seção acima)
+* Janela de devolução
+msgjaquitado -> O livro já está quitado, então nada foi feito.
 
 * Visualizar usuário
+tituloexibiçãoL -> Exibindo usuário
+idexibiçãoL -> id:
 nomeexibiçaoL -> Nome:
 endereçoexibiçaoL -> Endereço:
 emailexibiçaoL -> Email:
@@ -91,7 +97,14 @@ entradaautorL -> Insira o autor
 entradageneroL -> Insira o gênero
 entradaestanteL -> Insira a estante
 entradalinkL -> Insira o link
+confirmaçaoadicionarlivroTP -> Criar livro?
+confirmaçaoadicionarlivroMP -> Deseja realmente adicionar este livro a biblioteca?
+msgcancelado -> Operação cancelada
 
-* Remoção de livros (usa apenas entradaidL da seção empréstimos)
+* Remoção de livros
+errolivroinquitado -> Este livro está em posse de algum usuário! Execute a devolução para removê-lo
+
+* Remoção de usuário
+errousuarioinquitado -> Este usuário está em posse de um livro! Quite o livro para removê-lo
 
 * Cadastro ADM (usa os mesmos textos que cadastro)
