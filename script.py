@@ -1,10 +1,11 @@
 
-# import datetime, time
+dic = {
+    "a":"1",
+    "b":"2",
+    "c":"3",
+    "d":"4"
+    }
 
-# aniversárioDateTime = datetime.date(2006,1,7)
-# aniversárioTuple = datetime.date.timetuple(aniversárioDateTime)
-# aniversárioSTR = time.strftime("%Y %m %d",aniversárioTuple)
+dic["a"] = 2
 
-# print(aniversárioDateTime,aniversárioTuple,aniversárioSTR)
-
-# print(datetime.date(time.strptime(aniversárioSTR, "%Y %m %d")[0],time.strptime(aniversárioSTR, "%Y %m %d")[1],time.strptime(aniversárioSTR, "%Y %m %d")[2]))
+print(dic)

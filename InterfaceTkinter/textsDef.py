@@ -39,12 +39,22 @@ def changerLanguage(master, língua = None):
 
     global allTranslatedTexts
     
+
     if allTranslatedTexts == {}:
-        for i in range(0, len(texts)):
-            allTranslatedTexts.update(((   tuple(texts.keys())[i] , tk.StringVar(master=master, value=tuple(texts.values())[i])   ),))
+        for item in texts.items():
+
+            allTranslatedTexts.update( ( (   item[0] , tk.StringVar(master=master, value=item[1])   ),   ) )
     else:
-        for i in range(0, len(texts)):
-            tuple(allTranslatedTexts.values())[i].set(tuple(texts.values())[i])
+        for item in texts.items():
+            allTranslatedTexts[item[0]].set(item[1])
+
+    # if allTranslatedTexts == {}:
+    #     for i in range(0, len(texts)):
+
+    #         allTranslatedTexts.update(( (   tuple(texts.keys())[i] , tk.StringVar(master=master, value=tuple(texts.values())[i])   ),   ))
+    # else:
+    #     for i in range(0, len(texts)):
+    #         tuple(allTranslatedTexts.values())[i].set(tuple(texts.values())[i])
 
 class ErroDeSintaxe(SyntaxError):
     def __init__(self, *args) -> None:

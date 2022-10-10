@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import tkinter as tk, tkinter.ttk as ttk, tkinter.messagebox as mtk
+import tkinter.font as ftk
 
 from InterfaceTkinter.functions import proximaJanela
 
@@ -22,10 +23,15 @@ class ValoresInterface():
         textsDef.changerLanguage(master, idioma)
 
     @staticmethod
-    @property
-    def configurações_da_interface():
-        """ Configurações de página do programa """
-        return
+    def fonte():
+        """ Tamanho do texto e fonte usados """
+        return ('Old English Text MT', 20)
+
+    @staticmethod
+    def tamanhoJanela():
+        """ Tamanho do texto usado """
+        # return f'{self.winfo_screenwidth()}x{self.winfo_screenheight()}'
+        return "800x600+200+200"
 
 class JanelaPrograma(ABC):
     """ Classe-auxiliar com os métodos que toda janela deve ter """
@@ -62,15 +68,15 @@ class JanelaLogin(tk.Frame, JanelaPrograma):
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        self.value_entrada_email = tk.StringVar(self, "2@2.com")
-        self.value_entrada_senha = tk.StringVar(self, "2")
+        self.value_entrada_email = tk.StringVar(self, "biblioteca@tec.br.com")
+        self.value_entrada_senha = tk.StringVar(self, "121212")
 
         self.label_email    = ttk.Label(self, textvariable=ValoresInterface.texts()['emailL'])
         self.label_senha    = ttk.Label(self, textvariable=ValoresInterface.texts()['senhaL'])
-        self.entrada_email  = ttk.Entry(self, textvariable=self.value_entrada_email)
-        self.entrada_senha  = ttk.Entry(self, textvariable=self.value_entrada_senha)
-        self.botão_validar  = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda jnl=self:functions.validarConta(self.value_entrada_email.get().strip(),self.value_entrada_senha.get().strip(),jnl))
-        self.botão_voltar   = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:functions.proximaJanela(jmi))
+        self.entrada_email  = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_entrada_email)
+        self.entrada_senha  = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_entrada_senha)
+        self.botão_validar  = ttk.Button(self,textvariable=ValoresInterface.texts()['validarB'], command=lambda jnl=self:functions.validarConta(self.value_entrada_email.get().strip(),self.value_entrada_senha.get().strip(),jnl))
+        self.botão_voltar   = ttk.Button(self,textvariable=ValoresInterface.texts()['voltarB'], command=lambda:functions.proximaJanela(jmi))
         self.label_errormsg = ttk.Label(self, textvariable=None, foreground="red")
 
         self.label_email    .grid(column=0,row=0)
@@ -120,13 +126,13 @@ class JanelaCadastro(tk.Frame, JanelaPrograma):
         self.label_telefone          = ttk.Label(self, textvariable=ValoresInterface.texts()['telefoneL'])
         self.label_errormsg          = ttk.Label(self, textvariable=None, foreground='red')
 
-        self.entrada_email           = ttk.Entry(self, textvariable=self.value_entrada_email          )
-        self.entrada_senha           = ttk.Entry(self, textvariable=self.value_entrada_senha          )
-        self.entrada_senha_novamente = ttk.Entry(self, textvariable=self.value_entrada_senha_novamente)
-        self.entrada_nome            = ttk.Entry(self, textvariable=self.value_entrada_nome           )
-        self.entrada_cpf             = ttk.Entry(self, textvariable=self.value_entrada_cpf            )
-        self.entrada_endereço        = ttk.Entry(self, textvariable=self.value_entrada_endereço       )
-        self.entrada_telefone        = ttk.Entry(self, textvariable=self.value_entrada_telefone       )
+        self.entrada_email           = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_entrada_email          )
+        self.entrada_senha           = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_entrada_senha          )
+        self.entrada_senha_novamente = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_entrada_senha_novamente)
+        self.entrada_nome            = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_entrada_nome           )
+        self.entrada_cpf             = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_entrada_cpf            )
+        self.entrada_endereço        = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_entrada_endereço       )
+        self.entrada_telefone        = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_entrada_telefone       )
 
         self.botão_validar           = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.cadastrarConta(self.value_entrada_nome.get().strip(), self.value_entrada_endereço.get().strip(), self.value_entrada_cpf.get().strip(),self.value_entrada_telefone.get().strip(),self.value_entrada_email.get().strip(),self.value_entrada_senha.get().strip(),self.value_entrada_senha_novamente.get().strip(),1,self))
         self.botão_voltar            = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:functions.proximaJanela(jmi))
@@ -215,10 +221,10 @@ class JanelaPesquisarLivros(tk.Frame, JanelaPrograma):
         self.scrollbar_visualização_livros = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.visualização_livros.yview)
         self.visualização_livros.configure(yscrollcommand=self.scrollbar_visualização_livros.set)
 
-        self.botão_reload = ttk.Button(self, textvariable=ValoresInterface.texts()['reloadB'],command=lambda:functions.carregarInformações(self))
+        self.botão_reload = ttk.Button(self, textvariable=ValoresInterface.texts()['reloadB'],command=lambda:functions.carregarInformações(self, True))
         self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'],command=lambda:proximaJanela(jmiu))
 
-        functions.carregarInformações(self)
+        functions.carregarInformações(self, True)
 
         self.visualização_livros            .grid(column=0,row=0,columnspan=4)
         self.scrollbar_visualização_livros  .grid(column=5,row=0, sticky='ns')
@@ -245,7 +251,7 @@ class JanelaReservarLivro(tk.Frame, JanelaPrograma):
         self.value_codigo = tk.StringVar(self)
 
         self.label_codigo = ttk.Label(self, textvariable=ValoresInterface.texts()['codigoL'])
-        self.entrada_codigo = ttk.Entry(self, textvariable=self.value_codigo)
+        self.entrada_codigo = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_codigo)
         self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.emprestimoLivro(self.entrada_codigo.get().strip(),'r', self))
         self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:proximaJanela(jmiu))
         self.label_erro = tk.Label(self)
@@ -278,7 +284,7 @@ class JanelaSugerirLivro(tk.Frame, JanelaPrograma):
         self.value_livrosugerido = tk.StringVar(self)
 
         self.label_explain = ttk.Label(self, textvariable=ValoresInterface.texts()['sugerirlivrosL'])
-        self.entry_livrosugerido = ttk.Entry(self, textvariable=self.value_livrosugerido)
+        self.entry_livrosugerido = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_livrosugerido)
         self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.addSugestão(self.value_livrosugerido.get().strip(), jsl))
         self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'],command=lambda:proximaJanela(jmiu))
         self.label_erro = ttk.Label(self)
@@ -310,9 +316,9 @@ class JanelaAlterarSenha(tk.Frame, JanelaPrograma):
         self.label_senha_atual = ttk.Label(self, textvariable=ValoresInterface.texts()['senhaL'])
         self.label_mudança_de_senha = ttk.Label(self, textvariable=ValoresInterface.texts()['novasenhaL'])
         self.label_mudança_de_senha_novamente = ttk.Label(self, textvariable=ValoresInterface.texts()['novasenhanovamenteL'])
-        self.entrada_senha_atual = ttk.Entry(self, textvariable=self.value_senha_atual)
-        self.entrada_mudança_de_senha = ttk.Entry(self, textvariable=self.value_mudança_de_senha)
-        self.entrada_mudança_de_senha_novamente = ttk.Entry(self, textvariable=self.value_mudança_de_senha_novamente)
+        self.entrada_senha_atual = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_senha_atual)
+        self.entrada_mudança_de_senha = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_mudança_de_senha)
+        self.entrada_mudança_de_senha_novamente = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_mudança_de_senha_novamente)
         self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.alterarSenha(self.value_senha_atual.get().strip(), self.value_mudança_de_senha.get().strip(), self.value_mudança_de_senha_novamente.get().strip(), self))
         self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:proximaJanela(jmiu))
         self.label_erro = ttk.Label(self)
@@ -392,8 +398,8 @@ class JanelaEmprestimo(tk.Frame, JanelaPrograma):
 
         self.label_id = ttk.Label(self, textvariable=ValoresInterface.texts()['entradaidL'])
         self.label_codigo = ttk.Label(self, textvariable=ValoresInterface.texts()['entradacodL'])
-        self.entrada_id = ttk.Entry(self, textvariable=self.value_id)
-        self.entrada_codigo = ttk.Entry(self, textvariable=self.value_codigo)
+        self.entrada_id = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_id)
+        self.entrada_codigo = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_codigo)
         self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.emprestimoLivro(self.value_codigo.get().strip(),'e',self,self.value_id.get().strip()))
         self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:proximaJanela(jmiadm))
         self.label_erro = ttk.Label(self)
@@ -430,7 +436,7 @@ class JanelaDevolução(tk.Frame, JanelaPrograma):
         self.value_código = tk.StringVar(self)
 
         self.label_código = ttk.Label(self, textvariable=ValoresInterface.texts()['entradacodL'])
-        self.entrada_código = ttk.Entry(self, textvariable=self.value_código)
+        self.entrada_código = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_código)
         self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.emprestimoLivro(self.value_código.get().strip(), 'q', self))
         self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:proximaJanela(jmiadm))
         self.label_erro = ttk.Label(self)
@@ -467,8 +473,8 @@ class JanelaVerUsuário(tk.Frame, JanelaPrograma):
         self.value_id = tk.StringVar(self)
 
         self.label_id = ttk.Label(self, textvariable=ValoresInterface.texts()['entradaidL'])
-        self.entrada_id = ttk.Entry(self, textvariable=self.value_id)
-        self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.verUsuário(self.value_id.get(), self))
+        self.entrada_id = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_id)
+        self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.verUsuario(self.value_id.get(), self))
         self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:proximaJanela(jmiadm))
         self.label_erro = ttk.Label(self)
 
@@ -496,27 +502,26 @@ class JanelaVerUsuáriosEmAtraso(tk.Frame, JanelaPrograma):
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        self.visualização_usuarios = ttk.Treeview(self, columns=["nome","autor","genero","codigo","estante","link"], show='headings')
-        self.visualização_usuarios.heading('codigo', text="codigo")
+        self.visualização_usuarios = ttk.Treeview(self, columns=["id","nome","cpf","endereço","telefone","email"], show='headings')
+        self.visualização_usuarios.heading('id', text="id")
         self.visualização_usuarios.heading('nome', text="nome")
-        self.visualização_usuarios.heading('autor', text="autor")
-        self.visualização_usuarios.heading('codigo', text="codigo")
-        self.visualização_usuarios.heading('genero', text="genero")
-        self.visualização_usuarios.heading('estante', text="estante")
-        self.visualização_usuarios.heading('link', text="link")
+        self.visualização_usuarios.heading('cpf', text="cpf")
+        self.visualização_usuarios.heading('endereço', text="endereço")
+        self.visualização_usuarios.heading('telefone', text="telefone")
+        self.visualização_usuarios.heading('email', text="email")
 
         self.scrollbar_visualização_usuarios = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.visualização_usuarios.yview)
         self.visualização_usuarios.configure(yscrollcommand=self.scrollbar_visualização_usuarios.set)
 
-        self.botão_reload = ttk.Button(self, textvariable=ValoresInterface.texts()['reloadB'],command=lambda:functions.carregarInformações(self))
+        self.botão_reload = ttk.Button(self, textvariable=ValoresInterface.texts()['reloadB'],command=lambda:functions.carregarInformações(self, False))
         self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'],command=lambda:proximaJanela(jmiu))
 
-        functions.carregarInformações(self)
+        functions.carregarInformações(self, False)
 
         self.visualização_usuarios            .grid(column=0,row=0,columnspan=4)
         self.scrollbar_visualização_usuarios  .grid(column=5,row=0, sticky='ns')
-        self.botão_reload                   .grid(column=0,row=1, sticky='w')
-        self.botão_voltar                   .grid(column=0,row=1, sticky='e')
+        self.botão_reload                     .grid(column=0,row=1, sticky='w')
+        self.botão_voltar                     .grid(column=0,row=1, sticky='e')
 
 
         self.master.update()
@@ -525,8 +530,8 @@ class JanelaVerUsuáriosEmAtraso(tk.Frame, JanelaPrograma):
     def atualizar(self, values):
         self.visualização_usuarios.delete(*self.visualização_usuarios.get_children())
 
-        for livro in values:
-            self.visualização_usuarios.insert('', tk.END, values=livro)
+        for user in values:
+            self.visualização_usuarios.insert('', tk.END, values=user)
 
     def mensage(self, msg:str):
         ...
@@ -547,11 +552,11 @@ class JanelaCadastrarLivro(tk.Frame, JanelaPrograma):
         self.label_gênero = ttk.Label(self, textvariable=ValoresInterface.texts()['entradageneroL'])
         self.label_estante = ttk.Label(self, textvariable=ValoresInterface.texts()['entradaestanteL'])
         self.label_link = ttk.Label(self, textvariable=ValoresInterface.texts()['entradalinkL'])
-        self.entrada_nome = ttk.Entry(self, textvariable=self.value_nome   )
-        self.entrada_autor = ttk.Entry(self, textvariable=self.value_autor  )
-        self.entrada_gênero = ttk.Entry(self, textvariable=self.value_gênero )
-        self.entrada_estante = ttk.Entry(self, textvariable=self.value_estante)
-        self.entrada_link = ttk.Entry(self, textvariable=self.value_link   )
+        self.entrada_nome = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_nome   )
+        self.entrada_autor = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_autor  )
+        self.entrada_gênero = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_gênero )
+        self.entrada_estante = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_estante)
+        self.entrada_link = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_link   )
         self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.cadastrarLivro(self.value_nome.get().strip(), self.value_autor.get().strip(), self.value_gênero.get().strip(), self.value_estante.get().strip(), self.value_link.get().strip(), self))
         self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:proximaJanela(jmiadm))
         self.label_erro = ttk.Label(self)
@@ -592,7 +597,7 @@ class JanelaRemoverLivro(tk.Frame, JanelaPrograma): # ---ups here
         self.value_codigo = tk.StringVar(self)
 
         self.label_codigo   = ttk.Label(self, textvariable=ValoresInterface.texts()['entradacodL'])
-        self.entrada_codigo = ttk.Entry(self, textvariable=self.value_codigo)
+        self.entrada_codigo = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_codigo)
         self.botão_validar  = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.remover(self.value_codigo.get().strip(), True, self))
         self.botão_voltar   = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:proximaJanela(jmiadm))
         self.label_erro     = ttk.Label(self)
@@ -622,7 +627,7 @@ class JanelaRemoverUsuário(tk.Frame, JanelaPrograma): # ---ups here
         self.value_id = tk.StringVar(self)
 
         self.label_id = ttk.Label(self, textvariable=ValoresInterface.texts()['entradaidL'])
-        self.entrada_id = ttk.Entry(self, textvariable=self.value_id)
+        self.entrada_id = ttk.Entry(self, font=ValoresInterface.fonte(),  textvariable=self.value_id)
         self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.remover(self.value_id.get().strip(), False, self))
         self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:proximaJanela(jmiadm))
         self.label_erro = ttk.Label(self)
@@ -666,13 +671,13 @@ class JanelaCadastroADM(tk.Frame, JanelaPrograma):
         self.label_telefone        = ttk.Label(self, textvariable=ValoresInterface.texts()['telefoneL'])
         self.label_errormsg        = ttk.Label(self)
 
-        self.entrada_email = ttk.Entry(self,textvariable=self.value_email)
-        self.entrada_senha = ttk.Entry(self,textvariable=self.value_senha)
-        self.entrada_senha_novamente = ttk.Entry(self,textvariable=self.value_senha_novamente)
-        self.entrada_nome = ttk.Entry(self,textvariable=self.value_nome)
-        self.entrada_cpf = ttk.Entry(self,textvariable=self.value_cpf)
-        self.entrada_endereço = ttk.Entry(self,textvariable=self.value_endereço)
-        self.entrada_telefone = ttk.Entry(self,textvariable=self.value_telefone)
+        self.entrada_email = ttk.Entry(self, font=ValoresInterface.fonte(), textvariable=self.value_email)
+        self.entrada_senha = ttk.Entry(self, font=ValoresInterface.fonte(), textvariable=self.value_senha)
+        self.entrada_senha_novamente = ttk.Entry(self, font=ValoresInterface.fonte(), textvariable=self.value_senha_novamente)
+        self.entrada_nome = ttk.Entry(self, font=ValoresInterface.fonte(), textvariable=self.value_nome)
+        self.entrada_cpf = ttk.Entry(self, font=ValoresInterface.fonte(), textvariable=self.value_cpf)
+        self.entrada_endereço = ttk.Entry(self, font=ValoresInterface.fonte(), textvariable=self.value_endereço)
+        self.entrada_telefone = ttk.Entry(self, font=ValoresInterface.fonte(), textvariable=self.value_telefone)
 
         self.botão_validar = ttk.Button(self, textvariable=ValoresInterface.texts()['validarB'], command=lambda:functions.cadastrarConta(self.value_nome.get().strip(), self.value_endereço.get().strip(), self.value_cpf.get().strip(), self.value_telefone.get().strip(), self.value_email.get().strip(), self.value_senha.get().strip(), self.value_senha_novamente.get().strip(), 0, self))
         self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'], command=lambda:proximaJanela(jmiadm))
@@ -725,7 +730,7 @@ class Master(tk.Tk):
         super().__init__()
 
         self.title('')
-        self.geometry(f'{self.winfo_screenwidth()}x{self.winfo_screenheight()}')
+        self.geometry(ValoresInterface.tamanhoJanela())
         self.resizable(True, True)
 
         menuI = tk.Menu(self)
@@ -740,6 +745,11 @@ class Master(tk.Tk):
 if __name__ == "InterfaceTkinter.windowDef":
     master = Master()
     ValoresInterface.atualizarTexts()
+
+    ftk.nametofont('TkDefaultFont').configure(size=20, family=ValoresInterface.fonte()[0])
+    ttk.Style().configure('Treeview', rowheight=40)
+
+    print(ftk.families())
 
     jmi = JanelaMenuInicial(master)
     jl = JanelaLogin(master)

@@ -46,18 +46,11 @@ def menuLogin():
         try:
             global conta
             conta = Login(email, senha)
-            
-        
+                  
         except EmailSenhaIncorretoError  :
             print("Usuário e/ou senha inválido(s)!")
             conta = None
             fechar()
-        
-            # inicializar()
-            # cursor.execute('SELECT tipo_de_conta, email FROM cadastro')
-            # for line in cursor.fetchall():
-            #     if line[1] == email:
-            #         tipo = line[0]
         
         if conta != None:
             if type(conta) == UsuarioADM:
@@ -106,23 +99,29 @@ def menuCadastroUsuario():
             print("Erro ao cadastrar usuário!", erro)
             fechar()
             break
-
-    # menuUsuario(contaCadastrada)
-        
-        
-    
+         
 def menuAdmin(conta):
     while True:
         op = input('1 - Empréstimo de livro\n2 - Devolução de livro\n3 - Ver usuário\n4 - Usuários em atraso\n5 - Cadastrar livro\n6 - Remover livro\n7 - Remover usuario\n8 - Cadastro Admin\n9 - Sair\n')
         match op:
             case '1':
+                while True:
+                    id_usuario = input("ID do usuário: ")
+                    if not id_usuario.isnumeric():
+                        print('Esse ID não é valido!')
+                    else:
+                        id_usuario = int(id_usuario)
+                        break
+
                 data_emprestimo = date.today()
                 data_devolucao = data_emprestimo + timedelta(days = 7)
-                try:
-                    id_usuario = int(input("ID do usuário: "))
-                except:
-                    print('Não é um codigo valido')
-                codigo_livro = int(input("Código do livro: "))
+                while True:
+                    codigo_livro = input("Código do livro: ")
+                    if not codigo_livro.isnumeric():
+                        print("Esse código é inválido")
+                    else:
+                        codigo_livro = int(codigo_livro)
+                        break
                 inicializar()
                 if id_usuario not in usuariosComAtraso():
                     fechar()
@@ -149,7 +148,7 @@ def menuAdmin(conta):
                     print("\nO empréstimo não pode ser realizado pois o usuário tem livro(s) em atraso.")
             case '2':
                 while True:                   
-                    codigo = input("\nCódigo do livro:")
+                    codigo = input("\nCódigo do livro: ")
                     if not codigo.isnumeric():
                         print('Esse código não é valido')
                     else:
@@ -201,12 +200,14 @@ def menuAdmin(conta):
                 cadastro_livros(nome, autor, genero, estante, link)
                 print('\nLivro cadastrado com sucesso\n')
                 fechar()
-            case '6':                         
+            case '6':
+                inicializar()                         
                 lista = codigosValidos()
                 while True:
                     codigo = input("Excluir livro com o código: ")
                     if codigo.isnumeric():
-                        codigo = int(codigo)              
+                        codigo = int(codigo)
+                        fechar()              
                         if codigo in lista:
                             inicializar()
                             if (LeEmprestimos(False, codigo)) == []:
@@ -316,7 +317,7 @@ def menuUsuario(id):
                         fechar()
                         break
                     else:
-                        print('\nLivro já reservado\n')
+                        print('\nLivro já foi reservado\n')
                         fechar()
                         break                    
             case '3':
@@ -340,13 +341,13 @@ def menuUsuario(id):
             case '4':
                 inicializar()
                 while True:
-                    livro = str(input('Livro: '))
+                    livro = str(input('Livro: ')).title()
                     if livro == "":
                         print('\nLivro deve ter pelomenos 1 caractere\n')
                     else:
                         id_usuario = id
                         sugestoes_livros(livro,id_usuario)
-                        print('Sua sugestão foi guardado, obrigado xD')
+                        print('Sua sugestão foi guardada, obrigado xD')
                         break
                 fechar()
             case '5':
@@ -364,6 +365,7 @@ def menuUsuario(id):
                                 if requisitosSenha(senha):
                                     inicializar()
                                     setInUsuarios(id, 'senha', senha)
+                                    cache_senha = senha
                                     fechar()
                                     b = 1
                                     break

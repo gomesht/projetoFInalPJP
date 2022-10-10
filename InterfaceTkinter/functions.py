@@ -230,7 +230,7 @@ def remover(key:str, isLivro:bool, janela):
 
     janela.mensage("SUCESSO")
 
-def verUsuário(key:str, janela):
+def verUsuario(key:str, janela):
     if not key.isnumeric():
         janela.mensage("ERRO-CAMPOS-NULOS")
         return
@@ -278,11 +278,23 @@ def verUsuário(key:str, janela):
     janela.mensage("SUCESSO")
     fechar()
 
-def carregarInformações(janela):
-    inicializar()
-    livros = metodos.getLivros()
-    fechar()
+def carregarInformações(janela, isLivros):
     
-    janela.atualizar(livros)
+    if isLivros:
+        inicializar()
+        livros = metodos.getLivros()
+        fechar()
+
+        janela.atualizar(livros)
+    else:
+        inicializar()
+        ids = metodos.usuariosComAtraso()
+
+        users = []
+        for id in ids:
+            users.append([Conta.getConta(id).id, Conta.getConta(id).nome, Conta.getConta(id).cpf, Conta.getConta(id).endereço, Conta.getConta(id).telefone, Conta.getConta(id).email])
+        fechar()
+
+        janela.atualizar(users)
 
 #
