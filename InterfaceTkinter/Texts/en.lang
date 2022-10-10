@@ -1,10 +1,110 @@
 * Generals
-validarB -> Validate
-voltarB -> Return
+validarB -> Validate 
+voltarB -> Return 
+errodesconhecido -> An error occurred! Please, try again later.
+sairB -> Quit
+msgsucesso -> Success!
+errocritico -> An crítical problem occured in the server! \n Please tell us \n in detail what occured.
+normal -> normal
+administrador -> administrator
+
 * Menu
 loginB -> Login
-cadastroB -> Create an account
-sairB -> Quit
+cadastroB -> Create an account 
+
 * Login
-emailL -> Insert your email
-senhaL -> Insert your password
+emailL -> Type your e-mail
+senhaL -> Type your password 
+errosenhaincorreta -> Password and email not match!
+
+* Cadastro
+nomeL -> Type your name
+endereçoL -> Type your address 
+cpfL -> Type your cpf
+telefoneL -> Type your telephone 
+senhanovamenteL -> Type your password again 
+erroemailusado -> E-mail or CPF already in use
+erroemailinvalido -> Invalid email!
+errocpfinvalido -> Invalid Cpf
+errosenhasdiferentes -> The two passwords are not equal!
+errocamposnulos -> There are blank entries!
+errosenhainsuficiente -> The password is too weak
+
+* Menu inicial
+saudaçaoL -> Hello, how are you?
+psqlivroB -> Search by books
+rsvlibroB -> Reserve book
+sgrlivroB -> Suggest a book
+altsenhaB -> Change password 
+
+* Visualizar livros
+codlivroL -> Code
+nomelivroL -> Name
+autorlivroL -> Author 
+generolivroL -> Book type
+estantelivroL -> Section
+linkdeamostraL -> Link
+reloadB -> Reload
+
+* Reservar Livro
+codigoL -> Type the book code
+errocodigodesconhecido -> Code not found!
+errolivroemuso -> This book is under use! Await the devolution for reserving
+erronan -> The value typed is no number!
+
+* Sugerir livros
+sugerirlivrosL -> Do you have some suggestion to give us? \n Type the name of a book \n you desired in our acervo and we may add it!
+
+* Alterar senha
+novasenhaL -> Type your new password 
+novasenhanovamenteL -> Type your new password again
+errosenhaerrada -> Password wrong!
+* Menu ADM
+emprestimosB -> Book lending
+devoluçoesB -> Book return
+verusuarioB -> User view
+usuariosematrasoB -> Users with delayed books
+cadastrolivrosB -> Adding of new books
+removerlivrosB -> Book removal
+removerusuariosB -> User removal
+cadastroadmB -> Adding of new Adm
+
+* Janela de empréstimos
+entradaidL -> Type the id
+entradacodL -> Type the code
+errocodigodesconhecido -> The code does not exist
+erroiddesconhecido -> The id does not exist.
+errousuarionolimite -> The user does have 3 books in his name, so is not possible to take any other!
+
+* Janela de devolução
+msgjaquitado -> The book is already returned, so the system did nothing.
+
+* Visualizar usuário
+tituloexibiçãoL -> View on user
+idexibiçãoL -> id:
+nomeexibiçaoL -> Name:
+endereçoexibiçaoL -> Address:
+emailexibiçaoL -> Email:
+cpfexibiçãoL -> Cpf:
+telefoneexibiçaoL -> telephone number:
+tipodecontaL -> Type:
+
+* Visualizar usuários em atraso (mesmos textos que visualizar usuário)
+
+* Cadastro de livros
+entradanomeL -> Type the name
+entradaautorL -> Type the author 
+entradageneroL -> Type the Book style 
+entradaestanteL -> Type the book section 
+entradalinkL -> Type the link
+confirmaçaoadicionarlivroTP -> Insert the book?
+confirmaçaoadicionarlivroMP -> Do you really want to add this book to the system?
+msgcancelado -> Operation aborted 
+
+* Remoção de livros
+errolivroinquitado -> Este livro está em posse de algum usuário! Execute a devolução para removê-lo
+
+* Remoção de usuário
+errousuarioinquitado -> This user has a book! Return the book back for deleting him
+
+* Cadastro ADM (usa os mesmos textos que cadastro)

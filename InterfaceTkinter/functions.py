@@ -282,7 +282,7 @@ def carregarInformações(janela):
     inicializar()
     livros = metodos.getLivros()
     fechar()
-
+    
     janela.atualizar(livros)
 
 #

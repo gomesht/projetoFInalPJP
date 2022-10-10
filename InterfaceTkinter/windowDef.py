@@ -491,7 +491,7 @@ class JanelaVerUsuário(tk.Frame, JanelaPrograma):
         if msg == "SUCESSO": 
             self.label_erro.configure(textvariable=ValoresInterface.texts()['msgsucesso'],foreground='green')
 
-class JanelaVerUsuáriosEmAtraso(tk.Frame, JanelaPrograma): # here
+class JanelaVerUsuáriosEmAtraso(tk.Frame, JanelaPrograma):
     """ Janela de visualização de usuários em atraso """
     def __init__(self, master) -> None:
         super().__init__(master)

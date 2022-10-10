@@ -1,10 +1,110 @@
 * Generals
 validarB -> Valider
-voltarB -> Retourner
-* Menu
-loginB -> Se connecter
-cadastroB -> S'abboner
+voltarB -> Retourner 
+errodesconhecido -> Un problème deconnu a se passé ! S'il vous plaît, tentez nouvellement plus tard.
 sairB -> Sortir
+msgsucesso -> Succès !
+errocritico -> Un problème critique a se passé ! \n s'il vous plaît, contactez-nous \n pour expliquer ce problème.
+normal -> normal
+administrador -> administrateur
+
+* Menu
+loginB -> Se connecter 
+cadastroB -> S'abonner 
+
 * Login
-emailL -> Entrez ton email
-senhaL -> Entrez ta mot de passe
+emailL -> Écrivez ton email 
+senhaL -> Écrivez ta mot de passe 
+errosenhaincorreta -> Mot de passe ou e-mail incorrect(e)
+
+* Cadastro
+nomeL -> Écrivez ton prénom 
+endereçoL -> Écrivez ton ____
+cpfL -> Écrivez ton CPF
+telefoneL -> Écrivez ton téléphone 
+senhanovamenteL -> Écrivez ta mot de passe
+erroemailusado -> L'email ou le CPF sont usé(s) !
+erroemailinvalido -> L'email écrivez n'est correct!
+errocpfinvalido -> Le cpf écrivez n'est correct!
+errosenhasdiferentes -> Les mots de passe écrivées ne sont pas équivalent !
+errocamposnulos -> il y a des espaces nulles !
+errosenhainsuficiente -> La mot de passe est trop faible !
+
+* Menu inicial
+saudaçaoL -> Salut, ça va bien?
+psqlivroB -> Chercher par un livre
+rsvlibroB -> Reserver un livre
+sgrlivroB -> Suggérer un livre 
+altsenhaB -> Changer la mot de passe
+
+* Visualizar livros
+codlivroL -> Code
+nomelivroL -> Nom
+autorlivroL -> Auteur 
+generolivroL -> Style 
+estantelivroL -> Section 
+linkdeamostraL -> Link
+reloadB -> Actualiser
+
+* Reservar Livro
+codigoL -> Écrivez le code
+errocodigodesconhecido -> Le code n'a pas été trouvé 
+errolivroemuso -> Ce livre est usé ! Attendez la dévolution pour réserver.
+erronan -> Le value écrivez n'est pas un numéro.
+
+* Sugerir livros
+sugerirlivrosL -> Avez vous quelque suggestions à nous donner ? \n Écrivez le prénom du livre \n que vous voulez ici et cliquez sur << valider >> !
+
+* Alterar senha
+novasenhaL -> Écrivez ta nouvelle mot de passe.
+novasenhanovamenteL -> Écrivez ta nouvelle mot de passe. 
+errosenhaerrada -> Mot de passe incorrect !
+* Menu ADM
+emprestimosB -> Prêts
+devoluçoesB -> Dévolutions
+verusuarioB -> Voir l'utilisateur
+usuariosematrasoB -> Abonnés en retard
+cadastrolivrosB -> Insertion des nouvelles livres
+removerlivrosB -> Retirer livres
+removerusuariosB -> Retirer abonnés
+cadastroadmB -> Insertion de administrateurs
+
+* Janela de empréstimos
+entradaidL -> Écrivez le id
+entradacodL -> Écrivez le code
+errocodigodesconhecido -> Le code n'existe pas !
+erroiddesconhecido -> L'id 
+errousuarionolimite -> L'abboné a déjà 3 livres, c'est pas possible prêter plus !
+
+* Janela de devolução
+msgjaquitado -> Le livre est déjà disponible, alors rien a été fait.
+
+* Visualizar usuário
+tituloexibiçãoL -> Voir abbonné
+idexibiçãoL -> id:
+nomeexibiçaoL -> Prénom :
+endereçoexibiçaoL -> Adresse:
+emailexibiçaoL -> Email:
+cpfexibiçãoL -> Cpf:
+telefoneexibiçaoL -> Téléphone:
+tipodecontaL -> Type:
+
+* Visualizar usuários em atraso (mesmos textos que visualizar usuário)
+
+* Cadastro de livros
+entradanomeL -> Écrivez le prénom 
+entradaautorL -> Écrivez le autour 
+entradageneroL -> Écrivez le style 
+entradaestanteL -> Écrivez la section 
+entradalinkL -> Écrivez le link
+confirmaçaoadicionarlivroTP -> Créer livre
+confirmaçaoadicionarlivroMP -> Vous voulez vraiment additionner ce livre au système.
+msgcancelado -> L'opération a été cancellé.
+
+* Remoção de livros
+errolivroinquitado -> Ce livre est en possession de quelqu'un! Exécuter la dévolution pour retirer 
+
+* Remoção de usuário
+errousuarioinquitado -> C'est abbonné est possession d'un livre ! Retournez le livre pour retirer. 
+
+* Cadastro ADM (usa os mesmos textos que cadastro)
