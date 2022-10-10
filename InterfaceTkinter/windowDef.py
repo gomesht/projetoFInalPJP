@@ -746,8 +746,10 @@ if __name__ == "InterfaceTkinter.windowDef":
     master = Master()
     ValoresInterface.atualizarTexts()
 
-    ftk.nametofont('TkDefaultFont').configure(size=20)
+    ftk.nametofont('TkDefaultFont').configure(size=20, family='Old English Text MT')
     ttk.Style().configure('Treeview', rowheight=40)
+
+    print(ftk.families())
 
     jmi = JanelaMenuInicial(master)
     jl = JanelaLogin(master)
