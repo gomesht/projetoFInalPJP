@@ -46,18 +46,11 @@ def menuLogin():
         try:
             global conta
             conta = Login(email, senha)
-            
-        
+                  
         except EmailSenhaIncorretoError  :
             print("Usuário e/ou senha inválido(s)!")
             conta = None
             fechar()
-        
-            # inicializar()
-            # cursor.execute('SELECT tipo_de_conta, email FROM cadastro')
-            # for line in cursor.fetchall():
-            #     if line[1] == email:
-            #         tipo = line[0]
         
         if conta != None:
             if type(conta) == UsuarioADM:
@@ -106,21 +99,29 @@ def menuCadastroUsuario():
             print("Erro ao cadastrar usuário!", erro)
             fechar()
             break
-
-    # menuUsuario(contaCadastrada)
          
 def menuAdmin(conta):
     while True:
         op = input('1 - Empréstimo de livro\n2 - Devolução de livro\n3 - Ver usuário\n4 - Usuários em atraso\n5 - Cadastrar livro\n6 - Remover livro\n7 - Remover usuario\n8 - Cadastro Admin\n9 - Sair\n')
         match op:
             case '1':
+                while True:
+                    id_usuario = input("ID do usuário: ")
+                    if not id_usuario.isnumeric():
+                        print('Esse ID não é valido!')
+                    else:
+                        id_usuario = int(id_usuario)
+                        break
+
                 data_emprestimo = date.today()
                 data_devolucao = data_emprestimo + timedelta(days = 7)
-                try:
-                    id_usuario = int(input("ID do usuário: "))
-                except:
-                    print('Não é um codigo valido')
-                codigo_livro = int(input("Código do livro: "))
+                while True:
+                    codigo_livro = input("Código do livro: ")
+                    if not codigo_livro.isnumeric():
+                        print("Esse código é inválido")
+                    else:
+                        codigo_livro = int(codigo_livro)
+                        break
                 inicializar()
                 if id_usuario not in usuariosComAtraso():
                     fechar()
