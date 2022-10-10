@@ -25,7 +25,7 @@ class ValoresInterface():
     @staticmethod
     def fonte():
         """ Tamanho do texto e fonte usados """
-        return (None, 20)
+        return ('Old English Text MT', 20)
 
     @staticmethod
     def tamanhoJanela():
@@ -746,7 +746,7 @@ if __name__ == "InterfaceTkinter.windowDef":
     master = Master()
     ValoresInterface.atualizarTexts()
 
-    ftk.nametofont('TkDefaultFont').configure(size=20, family='Old English Text MT')
+    ftk.nametofont('TkDefaultFont').configure(size=20, family=ValoresInterface.fonte()[0])
     ttk.Style().configure('Treeview', rowheight=40)
 
     print(ftk.families())
