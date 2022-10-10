@@ -138,7 +138,7 @@ def menuAdmin(conta):
                         if codigo_livro in codigos and id_usuario in usuarios: 
                             inicializar()
                             registrosEmprestimos(str(data_emprestimo).replace("-", " "), str(data_devolucao).replace("-", " "), id_usuario, codigo_livro)
-                            print('\nLivro Alugado com sucesso')
+                            print('\nLivro Alugado com sucesso\n')
                             fechar()  
                         else:
                             print("ID usuário e/ou codigo do livro invalido(s)")      
@@ -172,18 +172,25 @@ def menuAdmin(conta):
                         else:
                             print('Codigo desse livro não existe')
             case '3':
-                #Arrumar e melhorar
-                inicializar()
-                id_usuario = int(input("ID do usuário: ")) 
-                print(Conta.getConta(id_usuario))
-                fechar()
+                while True:
+                    inicializar()
+                    id_usuario = input("ID do usuário: ")
+                    if not id_usuario.isnumeric():
+                        print('\nEsse codigo não é valido')
+                    else:
+                        try:
+                            print(Conta.getConta(int(id_usuario)))
+                            fechar()
+                            break
+                        except:
+                            print("\nEsse codigo não existe\n")
+                            fechar()
+                            break                                                                   
             case '4':
-                #melhorar
                 inicializar()
                 print(usuariosComAtraso())
                 fechar()
             case '5':
-                #Melhorar/padronizar estantes
                 print('')
                 nome = input("Nome do livro: ").title()
                 autor = input("Autor do livro: ").title()
@@ -194,20 +201,30 @@ def menuAdmin(conta):
                 cadastro_livros(nome, autor, genero, estante, link)
                 print('\nLivro cadastrado com sucesso\n')
                 fechar()
-            case '6':
-                #melhorar
-                codigo = int(input("Excluir livro com o código: "))
-                inicializar()
-                if (LeEmprestimos(False, codigo)) == []:
-                    fechar()
-                    inicializar()
-                    remover_livro(codigo)
-                    fechar()
-                else:
-                    fechar()
-                    print("Não foi possível deletar o livro pois há um emprestimo em andamento, tente novamente após realizar a devolução.")
+            case '6':                         
+                lista = codigosValidos()
+                while True:
+                    codigo = input("Excluir livro com o código: ")
+                    if codigo.isnumeric():
+                        codigo = int(codigo)              
+                        if codigo in lista:
+                            inicializar()
+                            if (LeEmprestimos(False, codigo)) == []:
+                                fechar()
+                                inicializar()
+                                remover_livro(codigo)
+                                fechar()
+                                break
+                            else:
+                                print("Não foi possível deletar o livro pois há um emprestimo em andamento, tente novamente após realizar a devolução.")
+                                fechar()
+                                break
+                        else:
+                            print('Esse codigo não existe')
+                    else:
+                        print('Esse codigo não é valido')                     
             case '7':
-                #melhorar
+                #Melhorar?????
                 id_user = input("Apagar usuário com ID: ")
                 try: 
                     inicializar()
@@ -256,6 +273,7 @@ def menuAdmin(conta):
 
                 
             case '9':
+                inicializar()
                 break
             case _:
                 print("Opção inválida!")
@@ -265,8 +283,7 @@ def menuUsuario(id):
         op = input('')
         match op:
             case '1':
-                #tera alteraçoes
-                #arrumar erro disponibilidade
+                #Melhorar????
                 inicializar()
                 lista = getLivros()
                 print('')
@@ -357,6 +374,7 @@ def menuUsuario(id):
                     else:
                         print('\nSenha incorreta')
             case '6':
+                inicializar()
                 break
             case _:
                 print('\nOpção incorreta\n')
