@@ -79,7 +79,7 @@ def criarTabelaDadosInativos():
 ########################################################################################
 
 def cadastro_livros(l_nome,l_autor,l_genero,l_estante,l_link_amostra):
-    cursor.execute('INSERT INTO Livros(Nome,Autor,Genero,Estante,"Link_de_Amostra") VALUES (?,?,?,?,?)',(l_nome,l_autor,l_genero,l_estante,l_link_amostra))
+    cursor.execute('INSERT INTO Livros(Nome,Autor,Genero,Estante,"Link de Amostra") VALUES (?,?,?,?,?)',(l_nome,l_autor,l_genero,l_estante,l_link_amostra))
     conexao.commit()
 
 def remover_livro(codigo):
