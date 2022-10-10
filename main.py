@@ -283,8 +283,7 @@ def menuUsuario(id):
         op = input('')
         match op:
             case '1':
-                #tera alteraçoes
-                #arrumar erro disponibilidade
+                #Melhorar????
                 inicializar()
                 lista = getLivros()
                 print('')
@@ -375,6 +374,7 @@ def menuUsuario(id):
                     else:
                         print('\nSenha incorreta')
             case '6':
+                inicializar()
                 break
             case _:
                 print('\nOpção incorreta\n')
