@@ -46,18 +46,11 @@ def menuLogin():
         try:
             global conta
             conta = Login(email, senha)
-            
-        
+                  
         except EmailSenhaIncorretoError  :
             print("Usuário e/ou senha inválido(s)!")
             conta = None
             fechar()
-        
-            # inicializar()
-            # cursor.execute('SELECT tipo_de_conta, email FROM cadastro')
-            # for line in cursor.fetchall():
-            #     if line[1] == email:
-            #         tipo = line[0]
         
         if conta != None:
             if type(conta) == UsuarioADM:
@@ -106,8 +99,6 @@ def menuCadastroUsuario():
             print("Erro ao cadastrar usuário!", erro)
             fechar()
             break
-
-    # menuUsuario(contaCadastrada)
          
 def menuAdmin(conta):
     while True:
@@ -121,7 +112,6 @@ def menuAdmin(conta):
                     else:
                         id_usuario = int(id_usuario)
                         break
-
 
                 data_emprestimo = date.today()
                 data_devolucao = data_emprestimo + timedelta(days = 7)
