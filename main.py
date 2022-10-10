@@ -108,9 +108,7 @@ def menuCadastroUsuario():
             break
 
     # menuUsuario(contaCadastrada)
-        
-        
-    
+         
 def menuAdmin(conta):
     while True:
         op = input('1 - Empréstimo de livro\n2 - Devolução de livro\n3 - Ver usuário\n4 - Usuários em atraso\n5 - Cadastrar livro\n6 - Remover livro\n7 - Remover usuario\n8 - Cadastro Admin\n9 - Sair\n')
