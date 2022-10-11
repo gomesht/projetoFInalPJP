@@ -118,6 +118,11 @@ def emprestimoLivro(cod:str, tipoAção:Literal['r','e','q'], janela, id = None)
             id = ContaAtual.id
         case "e":
             edate = 0
+            if len(metodos.LeEmprestimos(True, id)) >= 3:
+                janela.mensage("ERRO-EMPRESTIMOS-DEMAIS")
+                fechar()
+                return
+
         case "q":
             metodos.devolucaoLivros(cod)
             janela.mensage("SUCESSO")
@@ -278,8 +283,7 @@ def verUsuario(key:str, janela):
     janela.mensage("SUCESSO")
     fechar()
 
-def carregarInformações(janela, isLivros):
-    
+def carregarInformações(janela, isLivros): 
     if isLivros:
         inicializar()
         livros = metodos.getLivros()
@@ -296,5 +300,3 @@ def carregarInformações(janela, isLivros):
         fechar()
 
         janela.atualizar(users)
-
-#

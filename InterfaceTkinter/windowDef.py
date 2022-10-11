@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 import tkinter as tk, tkinter.ttk as ttk, tkinter.messagebox as mtk
 import tkinter.font as ftk
+from ctypes import windll
+windll.shcore.SetProcessDpiAwareness(1)
 
 from InterfaceTkinter.functions import proximaJanela
 
@@ -25,13 +27,17 @@ class ValoresInterface():
     @staticmethod
     def fonte():
         """ Tamanho do texto e fonte usados """
-        return ('Old English Text MT', 20)
+        if 'Old English Text MT' in ftk.families():
+            return ('Old English Text MT', 20)
+        elif 'Mongolian Baiti' in ftk.families():
+            return ('Mongolian Baiti', 20)
+        elif 'Comic Sans MS' in ftk.families():
+            return ('Comic Sans MS', 20)
 
     @staticmethod
-    def tamanhoJanela():
+    def tamanhoJanela(self):
         """ Tamanho do texto usado """
-        # return f'{self.winfo_screenwidth()}x{self.winfo_screenheight()}'
-        return "800x600+200+200"
+        return f'{self.winfo_screenwidth()}x{self.winfo_screenheight()}'
 
 class JanelaPrograma(ABC):
     """ Classe-auxiliar com os métodos que toda janela deve ter """
@@ -68,8 +74,8 @@ class JanelaLogin(tk.Frame, JanelaPrograma):
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        self.value_entrada_email = tk.StringVar(self, "biblioteca@tec.br.com")
-        self.value_entrada_senha = tk.StringVar(self, "121212")
+        self.value_entrada_email = tk.StringVar(self, "ricardo@hotmail.com")
+        self.value_entrada_senha = tk.StringVar(self, "757275")
 
         self.label_email    = ttk.Label(self, textvariable=ValoresInterface.texts()['emailL'])
         self.label_senha    = ttk.Label(self, textvariable=ValoresInterface.texts()['senhaL'])
@@ -210,13 +216,18 @@ class JanelaPesquisarLivros(tk.Frame, JanelaPrograma):
         super().__init__(master)
 
         self.visualização_livros = ttk.Treeview(self, columns=["nome","autor","genero","codigo","estante","link"], show='headings')
-        self.visualização_livros.heading('codigo', text="codigo")
         self.visualização_livros.heading('nome', text="nome")
+        self.visualização_livros.column('#1', width=500, anchor='center')
         self.visualização_livros.heading('autor', text="autor")
-        self.visualização_livros.heading('codigo', text="codigo")
+        self.visualização_livros.column('#2', width=400, anchor='center')
         self.visualização_livros.heading('genero', text="genero")
+        self.visualização_livros.column('#3', width=400, anchor='center')
+        self.visualização_livros.heading('codigo', text="codigo")
+        self.visualização_livros.column('#4', width=100, anchor='center')
         self.visualização_livros.heading('estante', text="estante")
+        self.visualização_livros.column('#5', width=75, anchor='center')
         self.visualização_livros.heading('link', text="link")
+        self.visualização_livros.column('#6', width=300, anchor='center')
 
         self.scrollbar_visualização_livros = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.visualização_livros.yview)
         self.visualização_livros.configure(yscrollcommand=self.scrollbar_visualização_livros.set)
@@ -425,6 +436,8 @@ class JanelaEmprestimo(tk.Frame, JanelaPrograma):
             self.label_erro.configure(textvariable=ValoresInterface.texts()['errolivroemuso'], foreground='red')
         if msg == "ERRO-DESCONHECIDO":
             self.label_erro.configure(textvariable=ValoresInterface.texts()['errodesconhecido'], foreground='red')
+        if msg == "ERRO-EMPRESTIMOS-DEMAIS":
+            self.label_erro.configure(textvariable=ValoresInterface.texts()['errousuarionolimite'], foreground='red')
         if msg == "SUCESSO":
             self.label_erro.configure(textvariable=ValoresInterface.texts()['msgsucesso'], foreground='green')
 
@@ -504,24 +517,30 @@ class JanelaVerUsuáriosEmAtraso(tk.Frame, JanelaPrograma):
 
         self.visualização_usuarios = ttk.Treeview(self, columns=["id","nome","cpf","endereço","telefone","email"], show='headings')
         self.visualização_usuarios.heading('id', text="id")
+        self.visualização_usuarios.column('#1', width=200, anchor='center')
         self.visualização_usuarios.heading('nome', text="nome")
+        self.visualização_usuarios.column('#2', width=200, anchor='center')
         self.visualização_usuarios.heading('cpf', text="cpf")
+        self.visualização_usuarios.column('#3', width=300, anchor='center')
         self.visualização_usuarios.heading('endereço', text="endereço")
+        self.visualização_usuarios.column('#4', width=300, anchor='center')
         self.visualização_usuarios.heading('telefone', text="telefone")
+        self.visualização_usuarios.column('#5', width=400, anchor='center')
         self.visualização_usuarios.heading('email', text="email")
+        self.visualização_usuarios.column('#6', width=500, anchor='center')
 
         self.scrollbar_visualização_usuarios = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.visualização_usuarios.yview)
         self.visualização_usuarios.configure(yscrollcommand=self.scrollbar_visualização_usuarios.set)
 
         self.botão_reload = ttk.Button(self, textvariable=ValoresInterface.texts()['reloadB'],command=lambda:functions.carregarInformações(self, False))
-        self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'],command=lambda:proximaJanela(jmiu))
+        self.botão_voltar = ttk.Button(self, textvariable=ValoresInterface.texts()['voltarB'],command=lambda:proximaJanela(jmiadm))
 
         functions.carregarInformações(self, False)
 
         self.visualização_usuarios            .grid(column=0,row=0,columnspan=4)
         self.scrollbar_visualização_usuarios  .grid(column=5,row=0, sticky='ns')
-        self.botão_reload                     .grid(column=0,row=1, sticky='w')
-        self.botão_voltar                     .grid(column=0,row=1, sticky='e')
+        self.botão_reload                     .grid(column=0,row=1)
+        self.botão_voltar                     .grid(column=1,row=1)
 
 
         self.master.update()
@@ -589,7 +608,7 @@ class JanelaCadastrarLivro(tk.Frame, JanelaPrograma):
         if msg == "SUCESSO": 
             self.label_erro.configure(textvariable=ValoresInterface.texts()['msgsucesso'],foreground='green')
 
-class JanelaRemoverLivro(tk.Frame, JanelaPrograma): # ---ups here
+class JanelaRemoverLivro(tk.Frame, JanelaPrograma):
     """ Menu de uma conta de tipo ADM """
     def __init__(self, master) -> None:
         super().__init__(master)
@@ -619,7 +638,7 @@ class JanelaRemoverLivro(tk.Frame, JanelaPrograma): # ---ups here
         if msg == "SUCESSO":
             self.label_erro.configure(textvariable=ValoresInterface.texts()['msgsucesso'], foreground='green')
 
-class JanelaRemoverUsuário(tk.Frame, JanelaPrograma): # ---ups here
+class JanelaRemoverUsuário(tk.Frame, JanelaPrograma):
     """ Menu de uma conta de tipo ADM """
     def __init__(self, master) -> None:
         super().__init__(master)
@@ -730,7 +749,7 @@ class Master(tk.Tk):
         super().__init__()
 
         self.title('')
-        self.geometry(ValoresInterface.tamanhoJanela())
+        self.geometry(ValoresInterface.tamanhoJanela(self))
         self.resizable(True, True)
 
         menuI = tk.Menu(self)
@@ -747,9 +766,7 @@ if __name__ == "InterfaceTkinter.windowDef":
     ValoresInterface.atualizarTexts()
 
     ftk.nametofont('TkDefaultFont').configure(size=20, family=ValoresInterface.fonte()[0])
-    ttk.Style().configure('Treeview', rowheight=40)
-
-    print(ftk.families())
+    ttk.Style().configure('Treeview', rowheight=60, columnwidth=80)
 
     jmi = JanelaMenuInicial(master)
     jl = JanelaLogin(master)
