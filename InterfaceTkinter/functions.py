@@ -222,7 +222,7 @@ def remover(key:str, isLivro:bool, janela):
 
     else:
         try:
-            metodos.remover_livro(key)
+            metodos.remover_usuario(key)
         except sqlite3.IntegrityError:
             janela.mensage("ERRO-USUARIO-INQUITADO")
 
