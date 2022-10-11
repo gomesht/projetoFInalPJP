@@ -19,7 +19,7 @@ errosenhaincorreta -> Mot de passe ou e-mail incorrect(e)
 
 * Cadastro
 nomeL -> Écrivez ton prénom 
-endereçoL -> Écrivez ton ____
+endereçoL -> Écrivez ton adresse
 cpfL -> Écrivez ton CPF
 telefoneL -> Écrivez ton téléphone 
 senhanovamenteL -> Écrivez ta mot de passe

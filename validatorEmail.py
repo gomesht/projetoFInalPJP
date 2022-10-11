@@ -13,8 +13,11 @@ def isEmailValido(email: str) -> bool:
     if " " in email:
         return False
 
-    part1 = email.split("@")[0]
-    part2, part3 = email.split("@")[1].split(".",1)
+    try:
+        part1 = email.split("@")[0]
+        part2, part3 = email.split("@")[1].split(".",1)
+    except:
+        return False
 
     for parte in part1.split("."):
         if parte == "" or not parte.isalnum:
